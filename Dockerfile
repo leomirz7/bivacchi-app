@@ -1,19 +1,17 @@
-# Usa un'immagine Node.js
-FROM node:18-alpine
+# Usa una versione leggera di Node.js
+FROM node:20-alpine
 
-# Imposta la directory di lavoro
+# Crea la cartella di lavoro nel container
 WORKDIR /app
 
-# Copia package.json e package-lock.json
+# Copia i file dei pacchetti e installa le dipendenze
 COPY package*.json ./
-
-# Installa le dipendenze
 RUN npm install
 
-# Copia il resto dei file
+# Copia tutto il resto del codice
 COPY . .
 
-# Espone la porta
+# Espone la porta che usa la tua app (es. 3000)
 EXPOSE 3000
 
 # Comando per avviare l'app
