@@ -23,11 +23,7 @@
                 <input type="text" id="search-input" placeholder="Cerca per nome...">
             </header>
             
-            <section class="filters">
-                <div class="view-buttons" id="view-buttons">
-                    <button id="view-list">📋 Lista</button>
-                    <button id="view-map">🗺️ Mappa</button>
-                </div>
+            <section class="filters" id="desktop-filters">
                 <div class="filter-group">
                     <label>Altitudine: <span id="alt-min-val">0</span>m – <span id="alt-max-val">4000</span>m</label>
                     <div id="altitude-slider"></div>
@@ -49,11 +45,13 @@
                         <option value="alt-desc">Altitudine (decrescente)</option>
                         <option value="temp-asc">Temperatura (crescente)</option>
                         <option value="temp-desc">Temperatura (decrescente)</option>
-                        <option value="dist-asc">Distanza da casa (crescente)</option>
-                        <option value="dist-desc">Distanza da casa (decrescente)</option>
+                        <option value="dist-asc" class="distance-sort-option" style="display:none;">Distanza da casa (crescente)</option>
+                        <option value="dist-desc" class="distance-sort-option" style="display:none;">Distanza da casa (decrescente)</option>
                     </select>
                 </div>
             </section>
+            
+            <button id="mobile-filter-btn" class="mobile-filter-btn">🔧 Filtri</button>
 
             <div class="content-wrapper">
                 <div id="bivacchi-list" class="list-container">
@@ -65,8 +63,48 @@
 
     </div>
 
+    <div class="mobile-view-toggle">
+        <button id="view-list-mobile" class="active">📋 Lista</button>
+        <button id="view-map-mobile">🗺️ Mappa</button>
+    </div>
+
+    <div id="mobile-filters-modal" class="modal" style="display:none;">
+        <div class="modal-content filters-modal-content">
+            <span class="close-btn" onclick="closeMobileFilters()">&times;</span>
+            <h3>Filtri e Ordinamento</h3>
+            <div class="mobile-filters-content">
+                <div class="filter-group">
+                    <label>Altitudine: <span id="alt-min-val-mobile">0</span>m – <span id="alt-max-val-mobile">4000</span>m</label>
+                    <div id="altitude-slider-mobile"></div>
+                </div>
+                <div class="filter-group">
+                    <label>Temperatura: <span id="temp-min-val-mobile">-20</span>°C – <span id="temp-max-val-mobile">40</span>°C</label>
+                    <div id="temperature-slider-mobile"></div>
+                </div>
+                <div id="distance-filter-group-mobile" class="filter-group" style="display:none;">
+                    <label>Distanza Max da casa: <span id="dist-max-val-mobile">50</span>km</label>
+                    <input type="range" id="filter-dist-max-mobile" min="0" max="100" step="5" value="50">
+                </div>
+                <div class="filter-group">
+                    <label>Ordina per:</label>
+                    <select id="sort-by-mobile">
+                        <option value="nome">Nome (A-Z)</option>
+                        <option value="nome-desc">Nome (Z-A)</option>
+                        <option value="alt-asc">Altitudine (crescente)</option>
+                        <option value="alt-desc">Altitudine (decrescente)</option>
+                        <option value="temp-asc">Temperatura (crescente)</option>
+                        <option value="temp-desc">Temperatura (decrescente)</option>
+                        <option value="dist-asc" class="distance-sort-option-mobile" style="display:none;">Distanza da casa (crescente)</option>
+                        <option value="dist-desc" class="distance-sort-option-mobile" style="display:none;">Distanza da casa (decrescente)</option>
+                    </select>
+                </div>
+                <button onclick="closeMobileFilters()" class="form-btn">Applica Filtri</button>
+            </div>
+        </div>
+    </div>
+
     <div id="detail-view" class="modal" style="display:none;">
-        <div class="modal-content">
+        <div class="modal-content detail-modal-content">
             <span class="close-btn" onclick="document.getElementById('detail-view').style.display='none'">&times;</span>
             <div id="detail-data">
                 </div>

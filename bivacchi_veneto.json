@@ -9,8 +9,22 @@
       "ele": "1150",
       "name": "Bivacco Scalon",
       "shelter_type": "basic_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881440277
+      "temperature": -5,
+      "temperature_updated_at": 1767892678275,
+      "snow": false,
+      "snow_updated_at": 1767892678275,
+      "slope_deg": 32,
+      "aspect_deg": 144,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890196583,
+      "sunrise": "08:34",
+      "sunset": "17:04",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003645,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -25,7 +39,21 @@
       "name": "Bivacco Tre Fontane",
       "tourism": "wilderness_hut",
       "temperature": -4,
-      "temperature_updated_at": 1767881440666
+      "temperature_updated_at": 1767892678836,
+      "snow": true,
+      "snow_updated_at": 1767892678836,
+      "slope_deg": 1,
+      "aspect_deg": 120,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890197053,
+      "sunrise": "08:31",
+      "sunset": "17:01",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003646,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -38,7 +66,21 @@
       "name": "Bivacco Aia dell'Orsara",
       "tourism": "wilderness_hut",
       "temperature": -4,
-      "temperature_updated_at": 1767881441167
+      "temperature_updated_at": 1767892679406,
+      "snow": true,
+      "snow_updated_at": 1767892679406,
+      "slope_deg": 3,
+      "aspect_deg": 64,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890197524,
+      "sunrise": "08:31",
+      "sunset": "17:01",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003646,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -54,7 +96,21 @@
       "operator": "C.A.I. Sezione di Asiago",
       "tourism": "wilderness_hut",
       "temperature": -4,
-      "temperature_updated_at": 1767881441676
+      "temperature_updated_at": 1767892679963,
+      "snow": true,
+      "snow_updated_at": 1767892679963,
+      "slope_deg": 2,
+      "aspect_deg": 19,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890197987,
+      "sunrise": "08:31",
+      "sunset": "17:01",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003647,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -68,7 +124,21 @@
       "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
       "tourism": "wilderness_hut",
       "temperature": -3,
-      "temperature_updated_at": 1767881442198
+      "temperature_updated_at": 1767892680533,
+      "snow": false,
+      "snow_updated_at": 1767892680533,
+      "slope_deg": 5,
+      "aspect_deg": 70,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890198486,
+      "sunrise": "08:31",
+      "sunset": "17:01",
+      "daylight_hours": 8.51,
+      "daylight_updated_at": 1767892003647,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -81,8 +151,22 @@
       "name": "Bivacco Mont",
       "tourism": "wilderness_hut",
       "ele": 1324,
-      "temperature": -3,
-      "temperature_updated_at": 1767881442686
+      "temperature": -7,
+      "temperature_updated_at": 1767892681084,
+      "snow": false,
+      "snow_updated_at": 1767892681084,
+      "slope_deg": 8,
+      "aspect_deg": 327,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890198976,
+      "sunrise": "08:33",
+      "sunset": "17:04",
+      "daylight_hours": 8.52,
+      "daylight_updated_at": 1767892003647,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -96,8 +180,22 @@
       "mattress": "no",
       "name": "Baita Darè Copada",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881443198
+      "temperature": -8,
+      "temperature_updated_at": 1767892681652,
+      "snow": true,
+      "snow_updated_at": 1767892681652,
+      "slope_deg": 39,
+      "aspect_deg": 80,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890199447,
+      "sunrise": "08:51",
+      "sunset": "16:47",
+      "daylight_hours": 7.92,
+      "daylight_updated_at": 1767892003648,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -111,8 +209,22 @@
       "name": "Bivacco Stalder",
       "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881443700
+      "temperature": -4,
+      "temperature_updated_at": 1767892682205,
+      "snow": false,
+      "snow_updated_at": 1767892682205,
+      "slope_deg": 12,
+      "aspect_deg": 70,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890199923,
+      "sunrise": "08:36",
+      "sunset": "16:57",
+      "daylight_hours": 8.35,
+      "daylight_updated_at": 1767892003648,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -126,7 +238,21 @@
       "tourism": "wilderness_hut",
       "ele": 1533,
       "temperature": -2,
-      "temperature_updated_at": 1767881444196
+      "temperature_updated_at": 1767892682781,
+      "snow": false,
+      "snow_updated_at": 1767892682781,
+      "slope_deg": 13,
+      "aspect_deg": 219,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890200404,
+      "sunrise": "08:28",
+      "sunset": "17:01",
+      "daylight_hours": 8.55,
+      "daylight_updated_at": 1767892003648,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -139,8 +265,22 @@
       "name": "Bivacco Col dei Gai",
       "operator": "Cacciatori di Trichiana",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881444696
+      "temperature": -6,
+      "temperature_updated_at": 1767892683357,
+      "snow": false,
+      "snow_updated_at": 1767892683357,
+      "slope_deg": 17,
+      "aspect_deg": 240,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890200885,
+      "sunrise": "08:33",
+      "sunset": "17:04",
+      "daylight_hours": 8.52,
+      "daylight_updated_at": 1767892003649,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -156,7 +296,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -4,
-      "temperature_updated_at": 1767881445206
+      "temperature_updated_at": 1767892683922,
+      "snow": false,
+      "snow_updated_at": 1767892683922,
+      "slope_deg": 33,
+      "aspect_deg": 47,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890201355,
+      "sunrise": "08:48",
+      "sunset": "16:50",
+      "daylight_hours": 8.03,
+      "daylight_updated_at": 1767892003649,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -170,8 +324,22 @@
       "fireplace": "yes",
       "name": "Ricovero Köpfach",
       "shelter_type": "basic_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767881445706
+      "temperature": -7,
+      "temperature_updated_at": 1767892684482,
+      "snow": true,
+      "snow_updated_at": 1767892684482,
+      "slope_deg": 22,
+      "aspect_deg": 322,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890201823,
+      "sunrise": "08:50",
+      "sunset": "16:58",
+      "daylight_hours": 8.14,
+      "daylight_updated_at": 1767892003649,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -184,8 +352,22 @@
       "ele": "950",
       "name": "Cason Brusà",
       "shelter_type": "basic_hut",
-      "temperature": 0,
-      "temperature_updated_at": 1767881446206
+      "temperature": -3,
+      "temperature_updated_at": 1767892685037,
+      "snow": false,
+      "snow_updated_at": 1767892685037,
+      "slope_deg": 31,
+      "aspect_deg": 198,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890202297,
+      "sunrise": "08:28",
+      "sunset": "17:02",
+      "daylight_hours": 8.56,
+      "daylight_updated_at": 1767892003653,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -7
     }
   },
   {
@@ -200,8 +382,22 @@
       "name": "Ricovero del Piano degli Ontani",
       "old_name": "Casel del Pian dei Auniz",
       "shelter_type": "basic_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881446707
+      "temperature": -3,
+      "temperature_updated_at": 1767892685614,
+      "snow": false,
+      "snow_updated_at": 1767892685614,
+      "slope_deg": 20,
+      "aspect_deg": 32,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890202766,
+      "sunrise": "08:42",
+      "sunset": "16:55",
+      "daylight_hours": 8.21,
+      "daylight_updated_at": 1767892003654,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -219,8 +415,22 @@
       "shelter_type": "basic_hut",
       "toilets": "yes",
       "ele": 1709,
-      "temperature": -4,
-      "temperature_updated_at": 1767881448001
+      "temperature": -5,
+      "temperature_updated_at": 1767892686179,
+      "snow": true,
+      "snow_updated_at": 1767892686179,
+      "slope_deg": 9,
+      "aspect_deg": 100,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890203235,
+      "sunrise": "08:34",
+      "sunset": "17:02",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003654,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -236,8 +446,22 @@
       "tourism": "wilderness_hut",
       "visible_name": "Baito Covolini",
       "ele": 1990,
-      "temperature": -6,
-      "temperature_updated_at": 1767881448966
+      "temperature": -5,
+      "temperature_updated_at": 1767892686750,
+      "snow": true,
+      "snow_updated_at": 1767892686750,
+      "slope_deg": 5,
+      "aspect_deg": 270,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890203694,
+      "sunrise": "08:31",
+      "sunset": "17:00",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003655,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -251,8 +475,22 @@
       "ele": "2165",
       "name": "Bivacco Voltolina",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881449969
+      "temperature": -6,
+      "temperature_updated_at": 1767892687320,
+      "snow": true,
+      "snow_updated_at": 1767892687320,
+      "slope_deg": 22,
+      "aspect_deg": 258,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890204164,
+      "sunrise": "08:37",
+      "sunset": "17:01",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003655,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -267,8 +505,22 @@
       "name": "Bivacco Ricovero Buffa di Perrero",
       "operator": "ANA Associazione Nazionale Alpini",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767881450975
+      "temperature": -9,
+      "temperature_updated_at": 1767892687890,
+      "snow": true,
+      "snow_updated_at": 1767892687890,
+      "slope_deg": 26,
+      "aspect_deg": 356,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890204626,
+      "sunrise": "08:48",
+      "sunset": "16:50",
+      "daylight_hours": 8.03,
+      "daylight_updated_at": 1767892003655,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -19
     }
   },
   {
@@ -285,8 +537,22 @@
       "name": "Bivacco Silvio e Rudi",
       "operator": "Club Alpino Italiano sezione di Sacile",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881451966
+      "temperature": -6,
+      "temperature_updated_at": 1767892688462,
+      "snow": false,
+      "snow_updated_at": 1767892688462,
+      "slope_deg": 7,
+      "aspect_deg": 108,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890205086,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.51,
+      "daylight_updated_at": 1767892003655,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -300,8 +566,22 @@
       "fireplace": "yes",
       "name": "Bivacco Murelon \"A. Scopel\"",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881452976
+      "temperature": -4,
+      "temperature_updated_at": 1767892689030,
+      "snow": false,
+      "snow_updated_at": 1767892689030,
+      "slope_deg": 22,
+      "aspect_deg": 209,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890205575,
+      "sunrise": "08:32",
+      "sunset": "17:03",
+      "daylight_hours": 8.52,
+      "daylight_updated_at": 1767892003656,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -318,8 +598,22 @@
       "wikidata": "Q18288572",
       "wikipedia": "it:Rifugio dei Loff",
       "ele": 1185,
-      "temperature": -3,
-      "temperature_updated_at": 1767881453969
+      "temperature": -6,
+      "temperature_updated_at": 1767892689599,
+      "snow": false,
+      "snow_updated_at": 1767892689599,
+      "slope_deg": 28,
+      "aspect_deg": 98,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890206036,
+      "sunrise": "08:33",
+      "sunset": "17:04",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003656,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -334,8 +628,22 @@
       "name": "Bivacco De Toni",
       "operator": "Club Alpino Italiano Sezione di Padova",
       "shelter_type": "basic_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767881454983
+      "temperature": -8,
+      "temperature_updated_at": 1767892690208,
+      "snow": true,
+      "snow_updated_at": 1767892690209,
+      "slope_deg": 26,
+      "aspect_deg": 193,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890206513,
+      "sunrise": "08:38",
+      "sunset": "17:01",
+      "daylight_hours": 8.38,
+      "daylight_updated_at": 1767892003656,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -18
     }
   },
   {
@@ -350,8 +658,22 @@
       "name": "Bivacco Malga Ardosetta",
       "operator": "Club Alpino Italiano sez. Castelfranco V.to",
       "shelter_type": "basic",
-      "temperature": -2,
-      "temperature_updated_at": 1767881455972
+      "temperature": -3,
+      "temperature_updated_at": 1767892690792,
+      "snow": false,
+      "snow_updated_at": 1767892690792,
+      "slope_deg": 9,
+      "aspect_deg": 38,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890207007,
+      "sunrise": "08:31",
+      "sunset": "17:03",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003656,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -365,8 +687,22 @@
       "fixme": "Check exact position and delete note",
       "name": "Caverna dell'Amicizia - Bivacco Celso Craighero",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767881456985
+      "temperature": -10,
+      "temperature_updated_at": 1767892691372,
+      "snow": true,
+      "snow_updated_at": 1767892691372,
+      "slope_deg": 11,
+      "aspect_deg": 304,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890207480,
+      "sunrise": "08:45",
+      "sunset": "16:59",
+      "daylight_hours": 8.23,
+      "daylight_updated_at": 1767892003657,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -19
     }
   },
   {
@@ -379,8 +715,22 @@
       "name": "Bivacco Edvige Muschi Zuani",
       "shelter_type": "rock_shelter",
       "ele": 1909,
-      "temperature": -9,
-      "temperature_updated_at": 1767881457975
+      "temperature": -8,
+      "temperature_updated_at": 1767892691915,
+      "snow": true,
+      "snow_updated_at": 1767892691915,
+      "slope_deg": 63,
+      "aspect_deg": 163,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890207953,
+      "sunrise": "08:41",
+      "sunset": "17:07",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003657,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -397,7 +747,21 @@
       "name": "Bivacco Chiansaveit",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881458973
+      "temperature_updated_at": 1767892692462,
+      "snow": false,
+      "snow_updated_at": 1767892692462,
+      "slope_deg": 9,
+      "aspect_deg": 327,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890208433,
+      "sunrise": "08:37",
+      "sunset": "17:04",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003657,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -418,8 +782,22 @@
       "shelter_type": "basic_hut",
       "table": "yes",
       "wikidata": "Q65235960",
-      "temperature": -13,
-      "temperature_updated_at": 1767881459977
+      "temperature": -9,
+      "temperature_updated_at": 1767892693013,
+      "snow": true,
+      "snow_updated_at": 1767892693013,
+      "slope_deg": 25,
+      "aspect_deg": 237,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890208903,
+      "sunrise": "08:37",
+      "sunset": "16:59",
+      "daylight_hours": 8.38,
+      "daylight_updated_at": 1767892003658,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -19
     }
   },
   {
@@ -432,8 +810,22 @@
       "description": "bivacco in caverna",
       "name": "Bivacco Stecho",
       "ele": 1904,
-      "temperature": -4,
-      "temperature_updated_at": 1767881460979
+      "temperature": -3,
+      "temperature_updated_at": 1767892693563,
+      "snow": true,
+      "snow_updated_at": 1767892693563,
+      "slope_deg": 57,
+      "aspect_deg": 14,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890209376,
+      "sunrise": "08:57",
+      "sunset": "16:38",
+      "daylight_hours": 7.69,
+      "daylight_updated_at": 1767892003658,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -446,8 +838,22 @@
       "name": "Bivacco Fratelli Fanton",
       "operator": "C.A.I. Auronzo di Cadore",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767881461970
+      "temperature": -8,
+      "temperature_updated_at": 1767892694111,
+      "snow": true,
+      "snow_updated_at": 1767892694111,
+      "slope_deg": 30,
+      "aspect_deg": 34,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890209856,
+      "sunrise": "08:50",
+      "sunset": "16:49",
+      "daylight_hours": 7.99,
+      "daylight_updated_at": 1767892003658,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -18
     }
   },
   {
@@ -459,8 +865,22 @@
       "ele": "1460",
       "name": "Bivacco Oscar Piusi",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881462988
+      "temperature": -6,
+      "temperature_updated_at": 1767892694665,
+      "snow": false,
+      "snow_updated_at": 1767892694665,
+      "slope_deg": 32,
+      "aspect_deg": 154,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890210334,
+      "sunrise": "08:41",
+      "sunset": "17:08",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003658,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -472,8 +892,22 @@
       "name": "Bivacco dei pastori",
       "tourism": "wilderness_hut",
       "ele": 2154,
-      "temperature": -8,
-      "temperature_updated_at": 1767881463968
+      "temperature": -7,
+      "temperature_updated_at": 1767892695213,
+      "snow": true,
+      "snow_updated_at": 1767892695213,
+      "slope_deg": 25,
+      "aspect_deg": 75,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890210806,
+      "sunrise": "08:44",
+      "sunset": "16:50",
+      "daylight_hours": 8.1,
+      "daylight_updated_at": 1767892003659,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -486,7 +920,21 @@
       "tourism": "wilderness_hut",
       "ele": 1905,
       "temperature": -5,
-      "temperature_updated_at": 1767881464974
+      "temperature_updated_at": 1767892695752,
+      "snow": true,
+      "snow_updated_at": 1767892695752,
+      "slope_deg": 18,
+      "aspect_deg": 70,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890211287,
+      "sunrise": "08:41",
+      "sunset": "16:55",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003659,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -505,8 +953,22 @@
       "shelter_type": "basic_hut",
       "source": "survey:CAI",
       "website": "https://www.escursionismo.it/rifugi-bivacchi/val-zea-16192",
-      "temperature": -2,
-      "temperature_updated_at": 1767881465976
+      "temperature": -4,
+      "temperature_updated_at": 1767892696303,
+      "snow": false,
+      "snow_updated_at": 1767892696303,
+      "slope_deg": 22,
+      "aspect_deg": 33,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890211763,
+      "sunrise": "08:44",
+      "sunset": "16:56",
+      "daylight_hours": 8.2,
+      "daylight_updated_at": 1767892003659,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -519,8 +981,22 @@
       "name": "Bivacco Bonafede Giustina",
       "shelter_type": "basic_hut",
       "ele": 2843,
-      "temperature": -14,
-      "temperature_updated_at": 1767881466990
+      "temperature": -10,
+      "temperature_updated_at": 1767892696852,
+      "snow": true,
+      "snow_updated_at": 1767892696852,
+      "slope_deg": 23,
+      "aspect_deg": 13,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890212227,
+      "sunrise": "08:46",
+      "sunset": "16:51",
+      "daylight_hours": 8.09,
+      "daylight_updated_at": 1767892003660,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -19
     }
   },
   {
@@ -533,8 +1009,22 @@
       "ele": "2620",
       "name": "Bivacco Baccon-Barborka",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767881467980
+      "temperature": -8,
+      "temperature_updated_at": 1767892697402,
+      "snow": true,
+      "snow_updated_at": 1767892697402,
+      "slope_deg": 16,
+      "aspect_deg": 61,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890212706,
+      "sunrise": "08:43",
+      "sunset": "16:53",
+      "daylight_hours": 8.17,
+      "daylight_updated_at": 1767892003660,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -18
     }
   },
   {
@@ -560,8 +1050,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Casera Mimoias",
       "shelter_type": "basic_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881468990
+      "temperature": -7,
+      "temperature_updated_at": 1767892697942,
+      "snow": false,
+      "snow_updated_at": 1767892697942,
+      "slope_deg": 19,
+      "aspect_deg": 142,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890213194,
+      "sunrise": "08:38",
+      "sunset": "17:04",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003660,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -589,7 +1093,21 @@
       "name": "Casera For",
       "shelter_type": "basic_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881469980
+      "temperature_updated_at": 1767892698503,
+      "snow": false,
+      "snow_updated_at": 1767892698503,
+      "slope_deg": 18,
+      "aspect_deg": 139,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890213659,
+      "sunrise": "08:40",
+      "sunset": "17:06",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003660,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -616,7 +1134,21 @@
       "name": "Rifugio Forestale Clinach",
       "shelter_type": "basic_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881470992
+      "temperature_updated_at": 1767892699053,
+      "snow": false,
+      "snow_updated_at": 1767892699053,
+      "slope_deg": 6,
+      "aspect_deg": 185,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890214127,
+      "sunrise": "08:40",
+      "sunset": "17:07",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003661,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -646,7 +1178,21 @@
       "source": "PCN",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881471982
+      "temperature_updated_at": 1767892699603,
+      "snow": false,
+      "snow_updated_at": 1767892699603,
+      "slope_deg": 22,
+      "aspect_deg": 293,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890214947,
+      "sunrise": "08:49",
+      "sunset": "16:58",
+      "daylight_hours": 8.15,
+      "daylight_updated_at": 1767892003661,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -676,8 +1222,22 @@
       "ref": "504",
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
-      "temperature": -9,
-      "temperature_updated_at": 1767881472993
+      "temperature": -8,
+      "temperature_updated_at": 1767892700153,
+      "snow": true,
+      "snow_updated_at": 1767892700153,
+      "slope_deg": 38,
+      "aspect_deg": 354,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890215964,
+      "sunrise": "08:57",
+      "sunset": "16:52",
+      "daylight_hours": 7.92,
+      "daylight_updated_at": 1767892003661,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -709,8 +1269,22 @@
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/503-bivacco-busettini/",
-      "temperature": -10,
-      "temperature_updated_at": 1767881473956
+      "temperature": -8,
+      "temperature_updated_at": 1767892700704,
+      "snow": true,
+      "snow_updated_at": 1767892700704,
+      "slope_deg": 45,
+      "aspect_deg": 344,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890216953,
+      "sunrise": "09:00",
+      "sunset": "16:49",
+      "daylight_hours": 7.82,
+      "daylight_updated_at": 1767892003661,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -737,8 +1311,22 @@
       "name": "Casera Meluzzo",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881474996
+      "temperature": -4,
+      "temperature_updated_at": 1767892701252,
+      "snow": false,
+      "snow_updated_at": 1767892701252,
+      "slope_deg": 20,
+      "aspect_deg": 66,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890217884,
+      "sunrise": "08:44",
+      "sunset": "16:56",
+      "daylight_hours": 8.21,
+      "daylight_updated_at": 1767892003662,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -772,7 +1360,21 @@
       "survey:date": "2025-09-19",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881475983
+      "temperature_updated_at": 1767892701805,
+      "snow": true,
+      "snow_updated_at": 1767892701805,
+      "slope_deg": 17,
+      "aspect_deg": 41,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890218346,
+      "sunrise": "08:44",
+      "sunset": "16:57",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003662,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -801,7 +1403,21 @@
       "ref": "314",
       "shelter_type": "basic_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881476992
+      "temperature_updated_at": 1767892702353,
+      "snow": true,
+      "snow_updated_at": 1767892702353,
+      "slope_deg": 11,
+      "aspect_deg": 223,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890218823,
+      "sunrise": "08:37",
+      "sunset": "17:03",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003663,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -831,7 +1447,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881477984
+      "temperature_updated_at": 1767892702906,
+      "snow": true,
+      "snow_updated_at": 1767892702906,
+      "slope_deg": 17,
+      "aspect_deg": 50,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890219303,
+      "sunrise": "08:43",
+      "sunset": "16:57",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003663,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -860,8 +1490,22 @@
       "operator": "CAI Trieste",
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
-      "temperature": -6,
-      "temperature_updated_at": 1767881478993
+      "temperature": -7,
+      "temperature_updated_at": 1767892703453,
+      "snow": true,
+      "snow_updated_at": 1767892703453,
+      "slope_deg": 21,
+      "aspect_deg": 236,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890219773,
+      "sunrise": "08:37",
+      "sunset": "17:04",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003663,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -892,8 +1536,22 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q3661690",
       "wikipedia": "it:Casera Galvana",
-      "temperature": -5,
-      "temperature_updated_at": 1767881479984
+      "temperature": -4,
+      "temperature_updated_at": 1767892704002,
+      "snow": false,
+      "snow_updated_at": 1767892704002,
+      "slope_deg": 36,
+      "aspect_deg": 305,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890220264,
+      "sunrise": "08:50",
+      "sunset": "16:49",
+      "daylight_hours": 7.98,
+      "daylight_updated_at": 1767892003664,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -919,7 +1577,21 @@
       "name": "Bivacco Zanette",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881480992
+      "temperature_updated_at": 1767892704552,
+      "snow": false,
+      "snow_updated_at": 1767892704552,
+      "slope_deg": 16,
+      "aspect_deg": 276,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890220734,
+      "sunrise": "08:42",
+      "sunset": "16:57",
+      "daylight_hours": 8.25,
+      "daylight_updated_at": 1767892003664,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -945,8 +1617,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Ricovero Casera Vasei",
       "shelter_type": "basic_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767881481984
+      "temperature": -7,
+      "temperature_updated_at": 1767892705103,
+      "snow": false,
+      "snow_updated_at": 1767892705103,
+      "slope_deg": 25,
+      "aspect_deg": 188,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890221204,
+      "sunrise": "08:35",
+      "sunset": "17:03",
+      "daylight_hours": 8.47,
+      "daylight_updated_at": 1767892003664,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -972,8 +1658,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Molassa",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881482995
+      "temperature": -7,
+      "temperature_updated_at": 1767892705654,
+      "snow": false,
+      "snow_updated_at": 1767892705654,
+      "slope_deg": 20,
+      "aspect_deg": 336,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890221683,
+      "sunrise": "08:42",
+      "sunset": "16:58",
+      "daylight_hours": 8.27,
+      "daylight_updated_at": 1767892003665,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1001,8 +1701,22 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "winter_shelter": "yes",
-      "temperature": -4,
-      "temperature_updated_at": 1767881483984
+      "temperature": -6,
+      "temperature_updated_at": 1767892706202,
+      "snow": false,
+      "snow_updated_at": 1767892706202,
+      "slope_deg": 16,
+      "aspect_deg": 250,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890222163,
+      "sunrise": "08:37",
+      "sunset": "17:06",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003665,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1035,8 +1749,22 @@
       "name": "Casera dei Conti",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881485024
+      "temperature": -5,
+      "temperature_updated_at": 1767892706758,
+      "snow": false,
+      "snow_updated_at": 1767892706758,
+      "slope_deg": 20,
+      "aspect_deg": 47,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890222654,
+      "sunrise": "08:43",
+      "sunset": "16:58",
+      "daylight_hours": 8.25,
+      "daylight_updated_at": 1767892003665,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -1071,7 +1799,21 @@
       "shelter_type": "basic_hut",
       "wheelchair": "no",
       "temperature": -9,
-      "temperature_updated_at": 1767881485983
+      "temperature_updated_at": 1767892707322,
+      "snow": true,
+      "snow_updated_at": 1767892707322,
+      "slope_deg": 18,
+      "aspect_deg": 327,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890223163,
+      "sunrise": "08:48",
+      "sunset": "16:59",
+      "daylight_hours": 8.19,
+      "daylight_updated_at": 1767892003666,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -1099,7 +1841,21 @@
       "ref": "608",
       "shelter_type": "basic_hut",
       "temperature": -9,
-      "temperature_updated_at": 1767881486991
+      "temperature_updated_at": 1767892707882,
+      "snow": true,
+      "snow_updated_at": 1767892707882,
+      "slope_deg": 4,
+      "aspect_deg": 223,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890223634,
+      "sunrise": "08:41",
+      "sunset": "17:07",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003666,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -1128,7 +1884,21 @@
       "name": "Bivacco Groppa Pastour",
       "shelter_type": "basic_hut",
       "temperature": -5,
-      "temperature_updated_at": 1767881487973
+      "temperature_updated_at": 1767892708443,
+      "snow": false,
+      "snow_updated_at": 1767892708443,
+      "slope_deg": 27,
+      "aspect_deg": 298,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890224093,
+      "sunrise": "08:46",
+      "sunset": "16:53",
+      "daylight_hours": 8.12,
+      "daylight_updated_at": 1767892003666,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -1157,7 +1927,21 @@
       "short_name": "Bivacco Toffolon",
       "ele": 1970,
       "temperature": -8,
-      "temperature_updated_at": 1767881488996
+      "temperature_updated_at": 1767892708996,
+      "snow": true,
+      "snow_updated_at": 1767892708996,
+      "slope_deg": 22,
+      "aspect_deg": 161,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890224554,
+      "sunrise": "08:36",
+      "sunset": "17:04",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003667,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -1185,8 +1969,22 @@
       "ref:refuges.info": "6449",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881489970
+      "temperature": -5,
+      "temperature_updated_at": 1767892709553,
+      "snow": false,
+      "snow_updated_at": 1767892709553,
+      "slope_deg": 10,
+      "aspect_deg": 272,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890225023,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003667,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -1214,8 +2012,22 @@
       "name": "Ricovero Casera Montelonga",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881490978
+      "temperature": -6,
+      "temperature_updated_at": 1767892710102,
+      "snow": false,
+      "snow_updated_at": 1767892710102,
+      "slope_deg": 21,
+      "aspect_deg": 239,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890225486,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003667,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1244,8 +2056,22 @@
       "name": "Ricovero Casera Bitter",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -1,
-      "temperature_updated_at": 1767881491974
+      "temperature": -6,
+      "temperature_updated_at": 1767892710653,
+      "snow": false,
+      "snow_updated_at": 1767892710653,
+      "slope_deg": 13,
+      "aspect_deg": 272,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890225963,
+      "sunrise": "08:40",
+      "sunset": "17:00",
+      "daylight_hours": 8.33,
+      "daylight_updated_at": 1767892003667,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -7
     }
   },
   {
@@ -1271,8 +2097,22 @@
       "name": "Casera Rupeit",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881492977
+      "temperature": -6,
+      "temperature_updated_at": 1767892711192,
+      "snow": false,
+      "snow_updated_at": 1767892711192,
+      "slope_deg": 32,
+      "aspect_deg": 34,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890226458,
+      "sunrise": "08:48",
+      "sunset": "16:53",
+      "daylight_hours": 8.07,
+      "daylight_updated_at": 1767892003668,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -1298,8 +2138,22 @@
       "name": "Casera Caseratte",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881493982
+      "temperature": -5,
+      "temperature_updated_at": 1767892711733,
+      "snow": false,
+      "snow_updated_at": 1767892711733,
+      "slope_deg": 11,
+      "aspect_deg": 25,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890226924,
+      "sunrise": "08:40",
+      "sunset": "17:01",
+      "daylight_hours": 8.35,
+      "daylight_updated_at": 1767892003669,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -1326,8 +2180,22 @@
       "name": "Casera di Giais",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881494975
+      "temperature": -6,
+      "temperature_updated_at": 1767892712283,
+      "snow": false,
+      "snow_updated_at": 1767892712283,
+      "slope_deg": 9,
+      "aspect_deg": 3,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890227413,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003669,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -1355,8 +2223,22 @@
       "name": "Casera Palussa",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881496002
+      "temperature": -4,
+      "temperature_updated_at": 1767892712833,
+      "snow": false,
+      "snow_updated_at": 1767892712833,
+      "slope_deg": 17,
+      "aspect_deg": 17,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890227923,
+      "sunrise": "08:41",
+      "sunset": "17:00",
+      "daylight_hours": 8.31,
+      "daylight_updated_at": 1767892003670,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -6
     }
   },
   {
@@ -1383,8 +2265,22 @@
       "it:fvg:ctrn:revision": "1A0",
       "name": "Casera Valle Friz",
       "shelter_type": "basic_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881496968
+      "temperature": -5,
+      "temperature_updated_at": 1767892713382,
+      "snow": false,
+      "snow_updated_at": 1767892713382,
+      "slope_deg": 8,
+      "aspect_deg": 87,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890228387,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003670,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1414,8 +2310,22 @@
       "name": "Malga Jouf",
       "note": "locali sporchi e trasandati non merita un tourism=wilderness_hut",
       "shelter_type": "basic_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881497467
+      "temperature": -6,
+      "temperature_updated_at": 1767892713923,
+      "snow": false,
+      "snow_updated_at": 1767892713923,
+      "slope_deg": 9,
+      "aspect_deg": 338,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890228864,
+      "sunrise": "08:36",
+      "sunset": "17:06",
+      "daylight_hours": 8.51,
+      "daylight_updated_at": 1767892003670,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -1447,8 +2357,22 @@
       "note": "Baita del \"Club Alpino Italiano\" sezione \"Val Natisone\"",
       "shelter_type": "basic_hut",
       "url": "https://organizzazione.cai.it/sez-val-natisone/baita-cai-val-natisone/",
-      "temperature": -2,
-      "temperature_updated_at": 1767881497968
+      "temperature": -4,
+      "temperature_updated_at": 1767892714474,
+      "snow": false,
+      "snow_updated_at": 1767892714474,
+      "slope_deg": 13,
+      "aspect_deg": 135,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890229359,
+      "sunrise": "08:38",
+      "sunset": "17:11",
+      "daylight_hours": 8.54,
+      "daylight_updated_at": 1767892003671,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -7
     }
   },
   {
@@ -1480,8 +2404,22 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q16532757",
       "wikipedia": "it:Bivacco Giuseppe Zanuso",
-      "temperature": -5,
-      "temperature_updated_at": 1767881498473
+      "temperature": -9,
+      "temperature_updated_at": 1767892715022,
+      "snow": false,
+      "snow_updated_at": 1767892715022,
+      "slope_deg": 12,
+      "aspect_deg": 66,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890229835,
+      "sunrise": "08:44",
+      "sunset": "17:05",
+      "daylight_hours": 8.35,
+      "daylight_updated_at": 1767892003671,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -1507,8 +2445,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco speleologico \"Davanzo - Vianello - Picciola\"",
       "shelter_type": "basic_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767881499012
+      "temperature": -8,
+      "temperature_updated_at": 1767892715587,
+      "snow": true,
+      "snow_updated_at": 1767892715587,
+      "slope_deg": 22,
+      "aspect_deg": 244,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890230314,
+      "sunrise": "08:41",
+      "sunset": "17:07",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003671,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1540,7 +2492,21 @@
       "ref": "601",
       "shelter_type": "basic_hut",
       "temperature": -8,
-      "temperature_updated_at": 1767881499476
+      "temperature_updated_at": 1767892716133,
+      "snow": true,
+      "snow_updated_at": 1767892716133,
+      "slope_deg": 22,
+      "aspect_deg": 55,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890230794,
+      "sunrise": "08:50",
+      "sunset": "16:58",
+      "daylight_hours": 8.14,
+      "daylight_updated_at": 1767892003672,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -1571,8 +2537,22 @@
       "operator": "Società Alpina Friulana",
       "shelter_type": "basic_hut",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/712-bivacco-d-brollo/",
-      "temperature": -7,
-      "temperature_updated_at": 1767881499977
+      "temperature": -10,
+      "temperature_updated_at": 1767892716672,
+      "snow": false,
+      "snow_updated_at": 1767892716672,
+      "slope_deg": 24,
+      "aspect_deg": 163,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890231255,
+      "sunrise": "08:39",
+      "sunset": "17:07",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003672,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1599,8 +2579,22 @@
       "it:fvg:ctrn:revision": "1A0",
       "name": "Ricovero Coi",
       "shelter_type": "basic_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881500632
+      "temperature": -7,
+      "temperature_updated_at": 1767892717214,
+      "snow": false,
+      "snow_updated_at": 1767892717214,
+      "slope_deg": 23,
+      "aspect_deg": 189,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890231735,
+      "sunrise": "08:38",
+      "sunset": "17:07",
+      "daylight_hours": 8.47,
+      "daylight_updated_at": 1767892003672,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -1626,8 +2620,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Val Provagna",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881500977
+      "temperature": -4,
+      "temperature_updated_at": 1767892984812,
+      "snow": false,
+      "snow_updated_at": 1767892984812,
+      "slope_deg": 31,
+      "aspect_deg": 97,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890232218,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003672,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -1658,7 +2666,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -8,
-      "temperature_updated_at": 1767881501477
+      "temperature_updated_at": 1767892985373,
+      "snow": true,
+      "snow_updated_at": 1767892985373,
+      "slope_deg": 15,
+      "aspect_deg": 108,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890232707,
+      "sunrise": "08:37",
+      "sunset": "17:03",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003673,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -1685,8 +2707,22 @@
       "shelter_type": "basic_hut",
       "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg",
       "ele": 1972,
-      "temperature": -9,
-      "temperature_updated_at": 1767881501976
+      "temperature": -8,
+      "temperature_updated_at": 1767892985912,
+      "snow": true,
+      "snow_updated_at": 1767892985912,
+      "slope_deg": 7,
+      "aspect_deg": 2,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890233168,
+      "sunrise": "08:41",
+      "sunset": "17:07",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003673,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1715,8 +2751,22 @@
       "ref": "613",
       "shelter_type": "basic_hut",
       "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg",
-      "temperature": -9,
-      "temperature_updated_at": 1767881502476
+      "temperature": -8,
+      "temperature_updated_at": 1767892986464,
+      "snow": true,
+      "snow_updated_at": 1767892986464,
+      "slope_deg": 28,
+      "aspect_deg": 78,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890233664,
+      "sunrise": "08:52",
+      "sunset": "16:56",
+      "daylight_hours": 8.06,
+      "daylight_updated_at": 1767892003673,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1746,7 +2796,21 @@
       "shelter_type": "basic_hut",
       "winter_room": "yes",
       "temperature": -6,
-      "temperature_updated_at": 1767881502976
+      "temperature_updated_at": 1767892987012,
+      "snow": false,
+      "snow_updated_at": 1767892987012,
+      "slope_deg": 16,
+      "aspect_deg": 170,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890234135,
+      "sunrise": "08:42",
+      "sunset": "17:08",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003674,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -1774,8 +2838,22 @@
       "official_name": "Bivacco Sandro Pittioni e Mauro Stafuzza",
       "ref": "624",
       "shelter_type": "basic_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881503488
+      "temperature": -7,
+      "temperature_updated_at": 1767892987551,
+      "snow": false,
+      "snow_updated_at": 1767892987551,
+      "slope_deg": 34,
+      "aspect_deg": 298,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890234618,
+      "sunrise": "08:53",
+      "sunset": "16:54",
+      "daylight_hours": 8.01,
+      "daylight_updated_at": 1767892003674,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -1803,8 +2881,22 @@
       "name": "Bivacco Sandro del Torso",
       "ref": "623",
       "shelter_type": "basic_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767881503976
+      "temperature": -9,
+      "temperature_updated_at": 1767892988102,
+      "snow": true,
+      "snow_updated_at": 1767892988102,
+      "slope_deg": 6,
+      "aspect_deg": 168,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890235090,
+      "sunrise": "08:41",
+      "sunset": "17:06",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003674,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1831,8 +2923,22 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Dionisio Feruglio",
       "shelter_type": "basic_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767881504499
+      "temperature": -11,
+      "temperature_updated_at": 1767892988641,
+      "snow": true,
+      "snow_updated_at": 1767892988641,
+      "slope_deg": 40,
+      "aspect_deg": 7,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890235565,
+      "sunrise": "08:56",
+      "sunset": "16:50",
+      "daylight_hours": 7.9,
+      "daylight_updated_at": 1767892003674,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -1863,7 +2969,21 @@
       "short_name": "Bivacco Bianchi",
       "tourism": "wilderness_hut",
       "temperature": -8,
-      "temperature_updated_at": 1767881504988
+      "temperature_updated_at": 1767892989203,
+      "snow": true,
+      "snow_updated_at": 1767892989203,
+      "slope_deg": 33,
+      "aspect_deg": 110,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890236045,
+      "sunrise": "08:40",
+      "sunset": "17:06",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003675,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -1893,8 +3013,22 @@
       "operator": "Club Alpino Italiano",
       "ref": "411",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881505487
+      "temperature": -7,
+      "temperature_updated_at": 1767892989753,
+      "snow": false,
+      "snow_updated_at": 1767892989753,
+      "slope_deg": 7,
+      "aspect_deg": 311,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890236515,
+      "sunrise": "08:38",
+      "sunset": "17:07",
+      "daylight_hours": 8.47,
+      "daylight_updated_at": 1767892003675,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -1925,8 +3059,22 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q879147",
       "wikipedia": "it:Bivacco Ernesto Lomasti",
-      "temperature": -9,
-      "temperature_updated_at": 1767881506028
+      "temperature": -8,
+      "temperature_updated_at": 1767892990343,
+      "snow": true,
+      "snow_updated_at": 1767892990343,
+      "slope_deg": 27,
+      "aspect_deg": 152,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890236991,
+      "sunrise": "08:40",
+      "sunset": "17:05",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003675,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1960,8 +3108,22 @@
       "wikidata": "Q3640556",
       "wikimedia_commons": "File:Bivacco Marchi-Granzotto (Id 2368).jpg",
       "wikipedia": "it:Bivacco Marchi-Granzotto",
-      "temperature": -8,
-      "temperature_updated_at": 1767881506494
+      "temperature": -7,
+      "temperature_updated_at": 1767892990881,
+      "snow": true,
+      "snow_updated_at": 1767892990881,
+      "slope_deg": 24,
+      "aspect_deg": 50,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890237471,
+      "sunrise": "08:47",
+      "sunset": "16:53",
+      "daylight_hours": 8.1,
+      "daylight_updated_at": 1767892003676,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -1992,7 +3154,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881506986
+      "temperature_updated_at": 1767892991422,
+      "snow": true,
+      "snow_updated_at": 1767892991422,
+      "slope_deg": 13,
+      "aspect_deg": 268,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890237948,
+      "sunrise": "08:37",
+      "sunset": "17:03",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003676,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -2022,8 +3198,22 @@
       "ref": "302",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881507509
+      "temperature": -8,
+      "temperature_updated_at": 1767892991972,
+      "snow": false,
+      "snow_updated_at": 1767892991972,
+      "slope_deg": 14,
+      "aspect_deg": 214,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890238446,
+      "sunrise": "08:37",
+      "sunset": "17:04",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003676,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2053,8 +3243,22 @@
       "shelter_type": "basic_hut",
       "short_name": "Bivacco Mazzeni",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/616-bivacco-d-mazzeni/",
-      "temperature": -7,
-      "temperature_updated_at": 1767881507986
+      "temperature": -6,
+      "temperature_updated_at": 1767892992523,
+      "snow": false,
+      "snow_updated_at": 1767892992523,
+      "slope_deg": 38,
+      "aspect_deg": 255,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890239117,
+      "sunrise": "08:40",
+      "sunset": "17:07",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003676,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -2081,8 +3285,22 @@
       "name:it": "Bivacco Senza Confini",
       "name:sl": "Bivak brez meja",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881508499
+      "temperature": -9,
+      "temperature_updated_at": 1767892993073,
+      "snow": false,
+      "snow_updated_at": 1767892993073,
+      "slope_deg": 3,
+      "aspect_deg": 189,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890239595,
+      "sunrise": "08:41",
+      "sunset": "17:08",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003677,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -2107,8 +3325,22 @@
       "shelter_type": "basic_hut",
       "source": "Comune di Schio",
       "ele": 927,
-      "temperature": 1,
-      "temperature_updated_at": 1767881508996
+      "temperature": -1,
+      "temperature_updated_at": 1767892993622,
+      "snow": false,
+      "snow_updated_at": 1767892993622,
+      "slope_deg": 16,
+      "aspect_deg": 147,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890240065,
+      "sunrise": "08:28",
+      "sunset": "17:02",
+      "daylight_hours": 8.58,
+      "daylight_updated_at": 1767892003677,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -5
     }
   },
   {
@@ -2136,7 +3368,21 @@
       "name": "Malga Bivacco Monsampiano",
       "tourism": "wilderness_hut",
       "temperature": -5,
-      "temperature_updated_at": 1767881509496
+      "temperature_updated_at": 1767892994165,
+      "snow": true,
+      "snow_updated_at": 1767892994166,
+      "slope_deg": 20,
+      "aspect_deg": 19,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890240534,
+      "sunrise": "08:41",
+      "sunset": "16:53",
+      "daylight_hours": 8.21,
+      "daylight_updated_at": 1767892003677,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -2168,7 +3414,21 @@
       "tourism": "wilderness_hut",
       "ele": 1207,
       "temperature": -4,
-      "temperature_updated_at": 1767881509997
+      "temperature_updated_at": 1767892994721,
+      "snow": false,
+      "snow_updated_at": 1767892994721,
+      "slope_deg": 25,
+      "aspect_deg": 320,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890241010,
+      "sunrise": "08:44",
+      "sunset": "16:54",
+      "daylight_hours": 8.16,
+      "daylight_updated_at": 1767892003678,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2194,7 +3454,21 @@
       "tourism": "wilderness_hut",
       "ele": 1668,
       "temperature": -6,
-      "temperature_updated_at": 1767881510548
+      "temperature_updated_at": 1767892995263,
+      "snow": false,
+      "snow_updated_at": 1767892995263,
+      "slope_deg": 23,
+      "aspect_deg": 65,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890241476,
+      "sunrise": "08:44",
+      "sunset": "16:53",
+      "daylight_hours": 8.16,
+      "daylight_updated_at": 1767892003678,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -2217,8 +3491,22 @@
       "ele": "1340",
       "name": "Bivacco Medassa",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881511008
+      "temperature": -5,
+      "temperature_updated_at": 1767892995822,
+      "snow": false,
+      "snow_updated_at": 1767892995822,
+      "slope_deg": 15,
+      "aspect_deg": 65,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890241945,
+      "sunrise": "08:40",
+      "sunset": "16:57",
+      "daylight_hours": 8.29,
+      "daylight_updated_at": 1767892003678,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2245,7 +3533,21 @@
       "shelter_type": "basic_hut",
       "start_date": "1963-09-08",
       "temperature": -7,
-      "temperature_updated_at": 1767881511517
+      "temperature_updated_at": 1767892996373,
+      "snow": true,
+      "snow_updated_at": 1767892996373,
+      "slope_deg": 30,
+      "aspect_deg": 57,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890242414,
+      "sunrise": "08:47",
+      "sunset": "16:50",
+      "daylight_hours": 8.05,
+      "daylight_updated_at": 1767892003678,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -2275,7 +3577,21 @@
       "water_source": "yes",
       "website": "https://www.caiveneto.it/bivacco/dalla-bernardina",
       "temperature": -9,
-      "temperature_updated_at": 1767881512017
+      "temperature_updated_at": 1767892996931,
+      "snow": true,
+      "snow_updated_at": 1767892996931,
+      "slope_deg": 31,
+      "aspect_deg": 162,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890242884,
+      "sunrise": "08:36",
+      "sunset": "17:02",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003679,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -2307,7 +3623,21 @@
       "source": "CAI Veneto;survey:CAI",
       "source:ref": "9216111",
       "temperature": -8,
-      "temperature_updated_at": 1767881512507
+      "temperature_updated_at": 1767892997472,
+      "snow": true,
+      "snow_updated_at": 1767892997472,
+      "slope_deg": 71,
+      "aspect_deg": 359,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890243373,
+      "sunrise": "09:04",
+      "sunset": "16:34",
+      "daylight_hours": 7.49,
+      "daylight_updated_at": 1767892003679,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -2330,8 +3660,22 @@
       "name": "Bivacco Pian dei Grassi",
       "shelter_type": "weather_shelter",
       "ele": 1164,
-      "temperature": -2,
-      "temperature_updated_at": 1767881513017
+      "temperature": -5,
+      "temperature_updated_at": 1767892998033,
+      "snow": false,
+      "snow_updated_at": 1767892998033,
+      "slope_deg": 15,
+      "aspect_deg": 66,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890243845,
+      "sunrise": "08:39",
+      "sunset": "16:59",
+      "daylight_hours": 8.32,
+      "daylight_updated_at": 1767892003679,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -2356,8 +3700,22 @@
       "ele": "1442",
       "name": "Le Prese Malga Bivacco",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881513522
+      "temperature": -4,
+      "temperature_updated_at": 1767892998571,
+      "snow": false,
+      "snow_updated_at": 1767892998571,
+      "slope_deg": 28,
+      "aspect_deg": 105,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890244305,
+      "sunrise": "08:32",
+      "sunset": "17:02",
+      "daylight_hours": 8.5,
+      "daylight_updated_at": 1767892003680,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -2381,8 +3739,22 @@
       "name": "Bivacco Caltrano",
       "shelter_type": "weather_shelter",
       "ele": 1344,
-      "temperature": -1,
-      "temperature_updated_at": 1767881514016
+      "temperature": -2,
+      "temperature_updated_at": 1767892999122,
+      "snow": false,
+      "snow_updated_at": 1767892999122,
+      "slope_deg": 12,
+      "aspect_deg": 326,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890244775,
+      "sunrise": "08:35",
+      "sunset": "16:57",
+      "daylight_hours": 8.38,
+      "daylight_updated_at": 1767892003680,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -2404,8 +3776,22 @@
       "building": "yes",
       "name": "Bivacco \"Buso\"",
       "ele": 1200,
-      "temperature": -2,
-      "temperature_updated_at": 1767881514527
+      "temperature": -5,
+      "temperature_updated_at": 1767892999673,
+      "snow": false,
+      "snow_updated_at": 1767892999673,
+      "slope_deg": 15,
+      "aspect_deg": 169,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890245243,
+      "sunrise": "08:33",
+      "sunset": "17:05",
+      "daylight_hours": 8.52,
+      "daylight_updated_at": 1767892003680,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -2439,7 +3825,21 @@
       "wikidata": "Q20008165",
       "wikipedia": "it:Bivacco Franco Costantini",
       "temperature": -7,
-      "temperature_updated_at": 1767881515038
+      "temperature_updated_at": 1767893000222,
+      "snow": false,
+      "snow_updated_at": 1767893000222,
+      "slope_deg": 39,
+      "aspect_deg": 171,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890245714,
+      "sunrise": "08:40",
+      "sunset": "17:07",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003681,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -2465,8 +3865,22 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q20009646",
       "wikipedia": "it:Bivacco Comici",
-      "temperature": -7,
-      "temperature_updated_at": 1767881515516
+      "temperature": -5,
+      "temperature_updated_at": 1767893000763,
+      "snow": true,
+      "snow_updated_at": 1767893000763,
+      "slope_deg": 32,
+      "aspect_deg": 18,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890246191,
+      "sunrise": "08:49",
+      "sunset": "16:49",
+      "daylight_hours": 7.99,
+      "daylight_updated_at": 1767892003681,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -2489,8 +3903,22 @@
       "ele": "1471",
       "name": "Cason dei Lebi",
       "shelter_type": "basic_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881516032
+      "temperature": -4,
+      "temperature_updated_at": 1767893001311,
+      "snow": false,
+      "snow_updated_at": 1767893001311,
+      "slope_deg": 16,
+      "aspect_deg": 280,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890246655,
+      "sunrise": "08:38",
+      "sunset": "16:56",
+      "daylight_hours": 8.31,
+      "daylight_updated_at": 1767892003681,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -2515,8 +3943,22 @@
       "name": "Bivacco Marsini",
       "tourism": "wilderness_hut",
       "ele": 333,
-      "temperature": 1,
-      "temperature_updated_at": 1767881516533
+      "temperature": -2,
+      "temperature_updated_at": 1767893001852,
+      "snow": false,
+      "snow_updated_at": 1767893001852,
+      "slope_deg": 12,
+      "aspect_deg": 181,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890247134,
+      "sunrise": "08:31",
+      "sunset": "17:07",
+      "daylight_hours": 8.6,
+      "daylight_updated_at": 1767892003681,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -4
     }
   },
   {
@@ -2543,8 +3985,22 @@
       "name": "Bivacco Casara Trentin",
       "tourism": "wilderness_hut",
       "ele": 1962,
-      "temperature": -5,
-      "temperature_updated_at": 1767881517026
+      "temperature": -4,
+      "temperature_updated_at": 1767893002412,
+      "snow": true,
+      "snow_updated_at": 1767893002412,
+      "slope_deg": 6,
+      "aspect_deg": 317,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890247605,
+      "sunrise": "08:31",
+      "sunset": "17:00",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003682,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2566,8 +4022,22 @@
       "name": "Bivacco Invernale Matteo Fiori",
       "tourism": "wilderness_hut",
       "ele": 1698,
-      "temperature": -4,
-      "temperature_updated_at": 1767881517532
+      "temperature": -5,
+      "temperature_updated_at": 1767893002963,
+      "snow": false,
+      "snow_updated_at": 1767893002963,
+      "slope_deg": 21,
+      "aspect_deg": 190,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890248077,
+      "sunrise": "08:33",
+      "sunset": "17:02",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003682,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -2596,8 +4066,22 @@
       "tourism": "wilderness_hut",
       "website": "https://www.dolomitipark.it/visitare-il-parco/rifugi-e-bivacchi/bivacco-malga-alvis-quota-1573/",
       "ele": 1570,
-      "temperature": -3,
-      "temperature_updated_at": 1767881518037
+      "temperature": -4,
+      "temperature_updated_at": 1767893003956,
+      "snow": false,
+      "snow_updated_at": 1767893003957,
+      "slope_deg": 20,
+      "aspect_deg": 357,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890248583,
+      "sunrise": "08:41",
+      "sunset": "16:54",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003683,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2620,8 +4104,22 @@
       "name": "Bivacco Casera Bosc dei Boi",
       "operator": "Gruppo Escursionisti Cesio",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881518537
+      "temperature": -5,
+      "temperature_updated_at": 1767893004985,
+      "snow": false,
+      "snow_updated_at": 1767893004985,
+      "slope_deg": 37,
+      "aspect_deg": 35,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890249103,
+      "sunrise": "08:48",
+      "sunset": "16:48",
+      "daylight_hours": 8,
+      "daylight_updated_at": 1767892003683,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2646,7 +4144,21 @@
       "name": "Bivacco Feltre",
       "shelter_type": "basic_hut",
       "temperature": -5,
-      "temperature_updated_at": 1767881519036
+      "temperature_updated_at": 1767893005841,
+      "snow": true,
+      "snow_updated_at": 1767893005841,
+      "slope_deg": 18,
+      "aspect_deg": 70,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890249584,
+      "sunrise": "08:41",
+      "sunset": "16:54",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003683,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2671,7 +4183,21 @@
       "name": "Bivacco Walter Bodo",
       "shelter_type": "basic_hut",
       "temperature": -5,
-      "temperature_updated_at": 1767881519540
+      "temperature_updated_at": 1767893006395,
+      "snow": true,
+      "snow_updated_at": 1767893006395,
+      "slope_deg": 18,
+      "aspect_deg": 70,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890250074,
+      "sunrise": "08:41",
+      "sunset": "16:54",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003683,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2697,8 +4223,22 @@
       "fireplace": "yes",
       "name": "Casera Vallon",
       "shelter_type": "basic_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881520056
+      "temperature": -4,
+      "temperature_updated_at": 1767893006942,
+      "snow": false,
+      "snow_updated_at": 1767893006942,
+      "slope_deg": 14,
+      "aspect_deg": 171,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890250546,
+      "sunrise": "08:33",
+      "sunset": "17:03",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003684,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2726,8 +4266,22 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "ele": 1652,
-      "temperature": -4,
-      "temperature_updated_at": 1767881520618
+      "temperature": -5,
+      "temperature_updated_at": 1767893007953,
+      "snow": false,
+      "snow_updated_at": 1767893007953,
+      "slope_deg": 44,
+      "aspect_deg": 61,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890251009,
+      "sunrise": "08:52",
+      "sunset": "16:45",
+      "daylight_hours": 7.89,
+      "daylight_updated_at": 1767892003684,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -2755,8 +4309,22 @@
       "fireplace": "yes",
       "name": "Bivacco Le Mandre",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881521058
+      "temperature": -6,
+      "temperature_updated_at": 1767893008957,
+      "snow": false,
+      "snow_updated_at": 1767893008957,
+      "slope_deg": 27,
+      "aspect_deg": 222,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890251473,
+      "sunrise": "08:34",
+      "sunset": "17:03",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003684,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -2784,8 +4352,22 @@
       "name": "Bivacco Tomè",
       "operator": "CAI Agordo",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767881521567
+      "temperature": -10,
+      "temperature_updated_at": 1767893009954,
+      "snow": true,
+      "snow_updated_at": 1767893009954,
+      "slope_deg": 40,
+      "aspect_deg": 261,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890251934,
+      "sunrise": "08:36",
+      "sunset": "17:00",
+      "daylight_hours": 8.4,
+      "daylight_updated_at": 1767892003685,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -18
     }
   },
   {
@@ -2811,8 +4393,22 @@
       "ele": "1844",
       "name": "Bivacco Col Mandro",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881522056
+      "temperature": -4,
+      "temperature_updated_at": 1767893010944,
+      "snow": true,
+      "snow_updated_at": 1767893010944,
+      "slope_deg": 32,
+      "aspect_deg": 260,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890252395,
+      "sunrise": "08:35",
+      "sunset": "17:01",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003685,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -2835,8 +4431,22 @@
       "ele": "1651",
       "name": "Bivacco Casamatta",
       "shelter_type": "basic_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881522556
+      "temperature": -3,
+      "temperature_updated_at": 1767893011945,
+      "snow": false,
+      "snow_updated_at": 1767893011945,
+      "slope_deg": 29,
+      "aspect_deg": 208,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890252858,
+      "sunrise": "08:35",
+      "sunset": "17:02",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003685,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -2859,8 +4469,22 @@
       "ele": "2007",
       "name": "Bivacco Grisetti",
       "shelter_type": "basic_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767881523066
+      "temperature": -5,
+      "temperature_updated_at": 1767893012943,
+      "snow": true,
+      "snow_updated_at": 1767893012943,
+      "slope_deg": 16,
+      "aspect_deg": 11,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890253326,
+      "sunrise": "08:42",
+      "sunset": "16:55",
+      "daylight_hours": 8.22,
+      "daylight_updated_at": 1767892003685,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2885,7 +4509,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881523582
+      "temperature_updated_at": 1767893013954,
+      "snow": true,
+      "snow_updated_at": 1767893013954,
+      "slope_deg": 21,
+      "aspect_deg": 187,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890253786,
+      "sunrise": "08:38",
+      "sunset": "17:03",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003686,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -2908,7 +4546,21 @@
       "tourism": "wilderness_hut",
       "ele": 1875,
       "temperature": -7,
-      "temperature_updated_at": 1767881524066
+      "temperature_updated_at": 1767893014944,
+      "snow": true,
+      "snow_updated_at": 1767893014944,
+      "slope_deg": 23,
+      "aspect_deg": 40,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890254237,
+      "sunrise": "08:47",
+      "sunset": "16:53",
+      "daylight_hours": 8.1,
+      "daylight_updated_at": 1767892003686,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -2934,8 +4586,22 @@
       "operator": "Club Alpino Italiano, sez. Val Comelico",
       "shelter_type": "basic_hut",
       "website": "https://www.caiveneto.it/bivacco/piva",
-      "temperature": -9,
-      "temperature_updated_at": 1767881524580
+      "temperature": -7,
+      "temperature_updated_at": 1767893015952,
+      "snow": true,
+      "snow_updated_at": 1767893015952,
+      "slope_deg": 27,
+      "aspect_deg": 45,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890254694,
+      "sunrise": "08:49",
+      "sunset": "16:51",
+      "daylight_hours": 8.03,
+      "daylight_updated_at": 1767892003686,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -2962,8 +4628,22 @@
       "name": "Bivacco Salvedella Vecia",
       "shelter_type": "basic",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881525076
+      "temperature": -6,
+      "temperature_updated_at": 1767893016943,
+      "snow": false,
+      "snow_updated_at": 1767893016943,
+      "slope_deg": 6,
+      "aspect_deg": 277,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890255154,
+      "sunrise": "08:32",
+      "sunset": "17:04",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003687,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -2986,8 +4666,22 @@
       "name": "Bivacco Salvedella Nuova",
       "tourism": "wilderness_hut",
       "ele": 1238,
-      "temperature": -3,
-      "temperature_updated_at": 1767881525582
+      "temperature": -6,
+      "temperature_updated_at": 1767893017954,
+      "snow": false,
+      "snow_updated_at": 1767893017955,
+      "slope_deg": 16,
+      "aspect_deg": 307,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890255617,
+      "sunrise": "08:39",
+      "sunset": "16:58",
+      "daylight_hours": 8.31,
+      "daylight_updated_at": 1767892003687,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -3011,8 +4705,22 @@
       "fireplace": "yes",
       "name": "Bivacco Momi",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881526089
+      "temperature": -5,
+      "temperature_updated_at": 1767893018942,
+      "snow": false,
+      "snow_updated_at": 1767893018942,
+      "slope_deg": 4,
+      "aspect_deg": 205,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890256077,
+      "sunrise": "08:32",
+      "sunset": "17:04",
+      "daylight_hours": 8.54,
+      "daylight_updated_at": 1767892003688,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -3040,8 +4748,22 @@
       "operator": "C.A.I. Veneto",
       "tourism": "wilderness_hut",
       "website": "https://www.caiveneto.it/bivacco/palia",
-      "temperature": -4,
-      "temperature_updated_at": 1767881526586
+      "temperature": -5,
+      "temperature_updated_at": 1767893019954,
+      "snow": false,
+      "snow_updated_at": 1767893019955,
+      "slope_deg": 24,
+      "aspect_deg": 2,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890256534,
+      "sunrise": "08:43",
+      "sunset": "16:53",
+      "daylight_hours": 8.17,
+      "daylight_updated_at": 1767892003688,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -3070,8 +4792,22 @@
       "name": "Bivacco Menegazzi al Pianlonch",
       "operator": "Gruppo ANA Gosaldo",
       "tourism": "wilderness_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767881527077
+      "temperature": -5,
+      "temperature_updated_at": 1767893020952,
+      "snow": true,
+      "snow_updated_at": 1767893020952,
+      "slope_deg": 10,
+      "aspect_deg": 37,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890432068,
+      "sunrise": "08:34",
+      "sunset": "17:02",
+      "daylight_hours": 8.47,
+      "daylight_updated_at": 1767892003688,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -3099,8 +4835,22 @@
       "operator": "Gruppo Alpinistico Vicentino",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881527586
+      "temperature": -8,
+      "temperature_updated_at": 1767893021514,
+      "snow": true,
+      "snow_updated_at": 1767893021514,
+      "slope_deg": 18,
+      "aspect_deg": 72,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890433079,
+      "sunrise": "08:42",
+      "sunset": "16:54",
+      "daylight_hours": 8.19,
+      "daylight_updated_at": 1767892003689,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3128,8 +4878,22 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q26258021",
       "wikipedia": "it:Bivacco Cozzolino",
-      "temperature": -5,
-      "temperature_updated_at": 1767881528089
+      "temperature": -6,
+      "temperature_updated_at": 1767893022062,
+      "snow": false,
+      "snow_updated_at": 1767893022062,
+      "slope_deg": 52,
+      "aspect_deg": 279,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890434139,
+      "sunrise": "08:55",
+      "sunset": "16:41",
+      "daylight_hours": 7.78,
+      "daylight_updated_at": 1767892003689,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -3158,8 +4922,22 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q106449186",
       "wikipedia": "it:Bivacco Giancarlo Biasin",
-      "temperature": -10,
-      "temperature_updated_at": 1767881528599
+      "temperature": -9,
+      "temperature_updated_at": 1767893022604,
+      "snow": true,
+      "snow_updated_at": 1767893022604,
+      "slope_deg": 32,
+      "aspect_deg": 119,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890435236,
+      "sunrise": "08:35",
+      "sunset": "17:00",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003689,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -18
     }
   },
   {
@@ -3187,8 +4965,22 @@
       "shelter_type": "basic_hut",
       "wheelchair": "no",
       "ele": 2437,
-      "temperature": -10,
-      "temperature_updated_at": 1767881529086
+      "temperature": -8,
+      "temperature_updated_at": 1767893023163,
+      "snow": true,
+      "snow_updated_at": 1767893023163,
+      "slope_deg": 3,
+      "aspect_deg": 237,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890436292,
+      "sunrise": "08:36",
+      "sunset": "17:00",
+      "daylight_hours": 8.4,
+      "daylight_updated_at": 1767892003689,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -18
     }
   },
   {
@@ -3212,8 +5004,22 @@
       "name": "Bivacco Pian delle Stelle",
       "tourism": "wilderness_hut",
       "ele": 1512,
-      "temperature": -2,
-      "temperature_updated_at": 1767881529599
+      "temperature": -8,
+      "temperature_updated_at": 1767893023712,
+      "snow": false,
+      "snow_updated_at": 1767893023712,
+      "slope_deg": 29,
+      "aspect_deg": 306,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890437426,
+      "sunrise": "08:46",
+      "sunset": "16:50",
+      "daylight_hours": 8.06,
+      "daylight_updated_at": 1767892003690,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -3241,8 +5047,22 @@
       "shelter_type": "basic_hut",
       "water_source": "no",
       "website": "https://www.caiveneto.it/bivacco/baracca-degli-alpini",
-      "temperature": -13,
-      "temperature_updated_at": 1767881530088
+      "temperature": -9,
+      "temperature_updated_at": 1767893024252,
+      "snow": true,
+      "snow_updated_at": 1767893024252,
+      "slope_deg": 21,
+      "aspect_deg": 201,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890438471,
+      "sunrise": "08:37",
+      "sunset": "16:59",
+      "daylight_hours": 8.37,
+      "daylight_updated_at": 1767892003690,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -21
     }
   },
   {
@@ -3267,8 +5087,22 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "wikipedia": "it:Bivacco Slataper",
-      "temperature": -11,
-      "temperature_updated_at": 1767881530715
+      "temperature": -9,
+      "temperature_updated_at": 1767893024802,
+      "snow": true,
+      "snow_updated_at": 1767893024802,
+      "slope_deg": 26,
+      "aspect_deg": 6,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890439566,
+      "sunrise": "08:48",
+      "sunset": "16:50",
+      "daylight_hours": 8.04,
+      "daylight_updated_at": 1767892003690,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -3290,8 +5124,22 @@
       "ele": "2246",
       "name": "Bivacco Dino e Plinio Toso",
       "shelter_type": "basic_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767881531097
+      "temperature": -7,
+      "temperature_updated_at": 1767893025341,
+      "snow": true,
+      "snow_updated_at": 1767893025341,
+      "slope_deg": 14,
+      "aspect_deg": 263,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890440585,
+      "sunrise": "08:37",
+      "sunset": "17:01",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003691,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -3314,8 +5162,22 @@
       "ele": "2111",
       "name": "Bivacco Musatti",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881531610
+      "temperature": -6,
+      "temperature_updated_at": 1767893025892,
+      "snow": true,
+      "snow_updated_at": 1767893025892,
+      "slope_deg": 22,
+      "aspect_deg": 324,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890441679,
+      "sunrise": "08:46",
+      "sunset": "16:53",
+      "daylight_hours": 8.12,
+      "daylight_updated_at": 1767892003691,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -3338,8 +5200,22 @@
       "ele": "2246",
       "name": "Bivacco Rifugio Tiziano",
       "shelter_type": "basic_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767881532097
+      "temperature": -7,
+      "temperature_updated_at": 1767893026434,
+      "snow": true,
+      "snow_updated_at": 1767893026434,
+      "slope_deg": 14,
+      "aspect_deg": 263,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890442208,
+      "sunrise": "08:37",
+      "sunset": "17:01",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003691,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -3369,8 +5245,22 @@
       "shelter_type": "basic_hut",
       "source": "local knowledge",
       "wikipedia": "it:Luca Vuerich",
-      "temperature": -12,
-      "temperature_updated_at": 1767881532611
+      "temperature": -10,
+      "temperature_updated_at": 1767893026982,
+      "snow": true,
+      "snow_updated_at": 1767893026982,
+      "slope_deg": 24,
+      "aspect_deg": 316,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890443304,
+      "sunrise": "08:51",
+      "sunset": "16:56",
+      "daylight_hours": 8.08,
+      "daylight_updated_at": 1767892003691,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -19
     }
   },
   {
@@ -3395,7 +5285,21 @@
       "operator": "Club Alpino Italiano sez. di Conegliano",
       "shelter_type": "basic_hut",
       "temperature": -6,
-      "temperature_updated_at": 1767881533098
+      "temperature_updated_at": 1767893027531,
+      "snow": true,
+      "snow_updated_at": 1767893027532,
+      "slope_deg": 46,
+      "aspect_deg": 171,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890444394,
+      "sunrise": "08:35",
+      "sunset": "17:02",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003692,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3418,8 +5322,22 @@
       "ele": "1709",
       "name": "Canazzè di Sopra",
       "shelter_type": "basic_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881533610
+      "temperature": -6,
+      "temperature_updated_at": 1767893028072,
+      "snow": true,
+      "snow_updated_at": 1767893028072,
+      "slope_deg": 18,
+      "aspect_deg": 11,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890445439,
+      "sunrise": "08:42",
+      "sunset": "16:55",
+      "daylight_hours": 8.21,
+      "daylight_updated_at": 1767892003692,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -3445,8 +5363,22 @@
       "name": "Bivacco Monte Col",
       "tourism": "wilderness_hut",
       "ele": 1850,
-      "temperature": -6,
-      "temperature_updated_at": 1767881534117
+      "temperature": -7,
+      "temperature_updated_at": 1767893028633,
+      "snow": true,
+      "snow_updated_at": 1767893028633,
+      "slope_deg": 17,
+      "aspect_deg": 94,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890446486,
+      "sunrise": "08:38",
+      "sunset": "17:03",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003692,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3475,7 +5407,21 @@
       "operator": "Club Alpino Italiano sezione Val Comelico, sottosezione di Buja",
       "shelter_type": "basic_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881534621
+      "temperature_updated_at": 1767893029944,
+      "snow": true,
+      "snow_updated_at": 1767893029944,
+      "slope_deg": 35,
+      "aspect_deg": 345,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890447602,
+      "sunrise": "08:52",
+      "sunset": "16:49",
+      "daylight_hours": 7.95,
+      "daylight_updated_at": 1767892003692,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -3502,7 +5448,21 @@
       "operator": "Club Alpino Italiano sezione Val Comelico",
       "tourism": "wilderness_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881535110
+      "temperature_updated_at": 1767893030955,
+      "snow": true,
+      "snow_updated_at": 1767893030955,
+      "slope_deg": 42,
+      "aspect_deg": 132,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890448646,
+      "sunrise": "08:38",
+      "sunset": "17:03",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003693,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -15
     }
   },
   {
@@ -3528,8 +5488,22 @@
       "name": "Bivacco Cornon",
       "operator": "Club Alpino Italiano Sez. Valcomelico",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881535631
+      "temperature": -8,
+      "temperature_updated_at": 1767893031944,
+      "snow": true,
+      "snow_updated_at": 1767893031944,
+      "slope_deg": 29,
+      "aspect_deg": 206,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890449697,
+      "sunrise": "08:38",
+      "sunset": "17:03",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003693,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3553,8 +5527,22 @@
       "name": "Bivacco Giusto Gervasutti",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881536121
+      "temperature": -5,
+      "temperature_updated_at": 1767893032956,
+      "snow": true,
+      "snow_updated_at": 1767893032956,
+      "slope_deg": 21,
+      "aspect_deg": 32,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890450797,
+      "sunrise": "08:45",
+      "sunset": "16:54",
+      "daylight_hours": 8.16,
+      "daylight_updated_at": 1767892003693,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3576,8 +5564,22 @@
       "name": "Bivacco Valentino Ciotti",
       "tourism": "wilderness_hut",
       "ele": 1570,
-      "temperature": -4,
-      "temperature_updated_at": 1767881536629
+      "temperature": -6,
+      "temperature_updated_at": 1767893033954,
+      "snow": false,
+      "snow_updated_at": 1767893033954,
+      "slope_deg": 6,
+      "aspect_deg": 233,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890451847,
+      "sunrise": "08:36",
+      "sunset": "17:03",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003693,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3602,7 +5604,21 @@
       "operator": "Club Alpino Italiano",
       "shelter_type": "basic_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881537120
+      "temperature_updated_at": 1767893034953,
+      "snow": true,
+      "snow_updated_at": 1767893034953,
+      "slope_deg": 8,
+      "aspect_deg": 191,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890452964,
+      "sunrise": "08:37",
+      "sunset": "17:03",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003694,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -3628,8 +5644,22 @@
       "name": "Casel de Col",
       "operator": "Rifugio Padova",
       "shelter_type": "basic_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881537642
+      "temperature": -6,
+      "temperature_updated_at": 1767893035945,
+      "snow": false,
+      "snow_updated_at": 1767893035945,
+      "slope_deg": 5,
+      "aspect_deg": 261,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890454036,
+      "sunrise": "08:36",
+      "sunset": "17:04",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003694,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -3656,7 +5686,21 @@
       "operator": "Club Alpino Italiano - Sez. di Longarone",
       "tourism": "wilderness_hut",
       "temperature": -5,
-      "temperature_updated_at": 1767881538128
+      "temperature_updated_at": 1767893036955,
+      "snow": false,
+      "snow_updated_at": 1767893036955,
+      "slope_deg": 31,
+      "aspect_deg": 105,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890455084,
+      "sunrise": "08:35",
+      "sunset": "17:03",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003694,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -3681,7 +5725,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -4,
-      "temperature_updated_at": 1767881538640
+      "temperature_updated_at": 1767893037944,
+      "snow": false,
+      "snow_updated_at": 1767893037944,
+      "slope_deg": 26,
+      "aspect_deg": 61,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890456134,
+      "sunrise": "08:45",
+      "sunset": "16:53",
+      "daylight_hours": 8.14,
+      "daylight_updated_at": 1767892003694,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -3705,8 +5763,22 @@
       "name": "Bivacco Costa Curta",
       "tourism": "wilderness_hut",
       "ele": 1049,
-      "temperature": -2,
-      "temperature_updated_at": 1767881539131
+      "temperature": -5,
+      "temperature_updated_at": 1767893038943,
+      "snow": false,
+      "snow_updated_at": 1767893038943,
+      "slope_deg": 6,
+      "aspect_deg": 217,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890457187,
+      "sunrise": "08:33",
+      "sunset": "17:05",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003695,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -3731,7 +5803,21 @@
       "tourism": "wilderness_hut",
       "ele": 1419,
       "temperature": -5,
-      "temperature_updated_at": 1767881539641
+      "temperature_updated_at": 1767893039955,
+      "snow": false,
+      "snow_updated_at": 1767893039955,
+      "slope_deg": 1,
+      "aspect_deg": 215,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890458256,
+      "sunrise": "08:35",
+      "sunset": "17:05",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003695,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -10
     }
   },
   {
@@ -3754,8 +5840,22 @@
       "name": "Bivacco Lastè",
       "shelter_type": "basic",
       "ele": 1997,
-      "temperature": -8,
-      "temperature_updated_at": 1767881540139
+      "temperature": -6,
+      "temperature_updated_at": 1767893040945,
+      "snow": true,
+      "snow_updated_at": 1767893040945,
+      "slope_deg": 22,
+      "aspect_deg": 278,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890459274,
+      "sunrise": "08:45",
+      "sunset": "16:55",
+      "daylight_hours": 8.17,
+      "daylight_updated_at": 1767892003695,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -3787,8 +5887,22 @@
       "short_name": "Bivacco Greselin",
       "wikidata": "Q94577374",
       "wikipedia": "it:Bivacco Paolo Greselin",
-      "temperature": -7,
-      "temperature_updated_at": 1767881540637
+      "temperature": -6,
+      "temperature_updated_at": 1767893041991,
+      "snow": true,
+      "snow_updated_at": 1767893041991,
+      "slope_deg": 17,
+      "aspect_deg": 57,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890460335,
+      "sunrise": "08:43",
+      "sunset": "16:56",
+      "daylight_hours": 8.21,
+      "daylight_updated_at": 1767892003695,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -3810,8 +5924,22 @@
       "name": "Bivacco Val Vecia",
       "tourism": "wilderness_hut",
       "ele": 1516,
-      "temperature": -3,
-      "temperature_updated_at": 1767881541139
+      "temperature": -4,
+      "temperature_updated_at": 1767893042952,
+      "snow": false,
+      "snow_updated_at": 1767893042952,
+      "slope_deg": 15,
+      "aspect_deg": 336,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890461426,
+      "sunrise": "08:38",
+      "sunset": "16:57",
+      "daylight_hours": 8.32,
+      "daylight_updated_at": 1767892003696,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -3834,8 +5962,22 @@
       "name": "Casera Col de Lorso",
       "shelter_type": "basic_hut",
       "ele": 1279,
-      "temperature": 0,
-      "temperature_updated_at": 1767881541649
+      "temperature": -3,
+      "temperature_updated_at": 1767893043955,
+      "snow": false,
+      "snow_updated_at": 1767893043956,
+      "slope_deg": 22,
+      "aspect_deg": 55,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890462491,
+      "sunrise": "08:40",
+      "sunset": "16:54",
+      "daylight_hours": 8.24,
+      "daylight_updated_at": 1767892003696,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -3861,8 +6003,22 @@
       "ref": "409",
       "tourism": "wilderness_hut",
       "website": "http://caitolmezzo.it/bivacchi/bivacco-cimenti-floreanini/",
-      "temperature": -4,
-      "temperature_updated_at": 1767881542144
+      "temperature": -6,
+      "temperature_updated_at": 1767893044954,
+      "snow": false,
+      "snow_updated_at": 1767893044954,
+      "slope_deg": 22,
+      "aspect_deg": 177,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890463535,
+      "sunrise": "08:38",
+      "sunset": "17:07",
+      "daylight_hours": 8.48,
+      "daylight_updated_at": 1767892003696,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -3890,8 +6046,22 @@
       "name": "Bivacco Guglielmo Varnerin",
       "operator": "Club Alpino Italiano sez. S.Vito al Tagliamento",
       "tourism": "wilderness_hut",
-      "temperature": -1,
-      "temperature_updated_at": 1767881542654
+      "temperature": -4,
+      "temperature_updated_at": 1767893045956,
+      "snow": false,
+      "snow_updated_at": 1767893045956,
+      "slope_deg": 8,
+      "aspect_deg": 106,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890464941,
+      "sunrise": "08:35",
+      "sunset": "17:07",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003696,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -6
     }
   },
   {
@@ -3914,8 +6084,22 @@
       "ele": "1120",
       "name": "Bivacco Vettori",
       "tourism": "wilderness_hut",
-      "temperature": -1,
-      "temperature_updated_at": 1767881543177
+      "temperature": -4,
+      "temperature_updated_at": 1767893046956,
+      "snow": false,
+      "snow_updated_at": 1767893046956,
+      "slope_deg": 23,
+      "aspect_deg": 153,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890466947,
+      "sunrise": "08:29",
+      "sunset": "17:02",
+      "daylight_hours": 8.55,
+      "daylight_updated_at": 1767892003697,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -3942,8 +6126,22 @@
       "operator": "Comune di Lusiana Conco",
       "tourism": "wilderness_hut",
       "ele": 1319,
-      "temperature": -1,
-      "temperature_updated_at": 1767881543648
+      "temperature": -2,
+      "temperature_updated_at": 1767893047946,
+      "snow": false,
+      "snow_updated_at": 1767893047946,
+      "slope_deg": 9,
+      "aspect_deg": 51,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890468935,
+      "sunrise": "08:30",
+      "sunset": "17:02",
+      "daylight_hours": 8.54,
+      "daylight_updated_at": 1767892003697,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   },
   {
@@ -3971,7 +6169,21 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "temperature": -7,
-      "temperature_updated_at": 1767881544156
+      "temperature_updated_at": 1767893048955,
+      "snow": true,
+      "snow_updated_at": 1767893048955,
+      "slope_deg": 32,
+      "aspect_deg": 279,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890470917,
+      "sunrise": "08:54",
+      "sunset": "16:55",
+      "daylight_hours": 8.02,
+      "daylight_updated_at": 1767892003697,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -3998,8 +6210,22 @@
       "fireplace": "yes",
       "name": "Bivacco Lander",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881544670
+      "temperature": -7,
+      "temperature_updated_at": 1767893049955,
+      "snow": false,
+      "snow_updated_at": 1767893049955,
+      "slope_deg": 17,
+      "aspect_deg": 105,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890472901,
+      "sunrise": "08:38",
+      "sunset": "17:06",
+      "daylight_hours": 8.46,
+      "daylight_updated_at": 1767892003697,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -4023,8 +6249,22 @@
       "name": "Bivacco Carcadè",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767881545157
+      "temperature": -7,
+      "temperature_updated_at": 1767893050957,
+      "snow": false,
+      "snow_updated_at": 1767893050957,
+      "slope_deg": 26,
+      "aspect_deg": 332,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890474910,
+      "sunrise": "08:48",
+      "sunset": "16:56",
+      "daylight_hours": 8.13,
+      "daylight_updated_at": 1767892003698,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -4048,8 +6288,22 @@
       "name": "Ricovero Casera Frugna",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881545671
+      "temperature": -6,
+      "temperature_updated_at": 1767893051958,
+      "snow": false,
+      "snow_updated_at": 1767893051958,
+      "slope_deg": 12,
+      "aspect_deg": 294,
+      "aspect_card": "NW",
+      "aspect_updated_at": 1767890476949,
+      "sunrise": "08:40",
+      "sunset": "16:59",
+      "daylight_hours": 8.32,
+      "daylight_updated_at": 1767892003698,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -4072,8 +6326,22 @@
       "name": "Bivacco Battaglione Cadore",
       "shelter_type": "basic_hut",
       "ele": 2220,
-      "temperature": -9,
-      "temperature_updated_at": 1767881546167
+      "temperature": -6,
+      "temperature_updated_at": 1767893052956,
+      "snow": true,
+      "snow_updated_at": 1767893052956,
+      "slope_deg": 22,
+      "aspect_deg": 121,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890478937,
+      "sunrise": "08:38",
+      "sunset": "17:01",
+      "daylight_hours": 8.39,
+      "daylight_updated_at": 1767892003698,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -15
     }
   },
   {
@@ -4097,8 +6365,22 @@
       "ele": "2601",
       "name": "Bivacco Ghedini",
       "shelter_type": "basic",
-      "temperature": -10,
-      "temperature_updated_at": 1767881546671
+      "temperature": -9,
+      "temperature_updated_at": 1767893053964,
+      "snow": true,
+      "snow_updated_at": 1767893053964,
+      "slope_deg": 9,
+      "aspect_deg": 244,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890480907,
+      "sunrise": "08:36",
+      "sunset": "17:01",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003698,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -16
     }
   },
   {
@@ -4121,8 +6403,22 @@
       "name": "Ricovero Casera Chiarpin",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881547158
+      "temperature": -7,
+      "temperature_updated_at": 1767893054967,
+      "snow": false,
+      "snow_updated_at": 1767893054967,
+      "slope_deg": 31,
+      "aspect_deg": 12,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890482948,
+      "sunrise": "08:48",
+      "sunset": "16:54",
+      "daylight_hours": 8.1,
+      "daylight_updated_at": 1767892003699,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -4148,8 +6444,22 @@
       "name": "Bivacco dell'Asta",
       "stove": "yes",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767881547671
+      "temperature": -6,
+      "temperature_updated_at": 1767893055966,
+      "snow": false,
+      "snow_updated_at": 1767893055966,
+      "slope_deg": 43,
+      "aspect_deg": 181,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890484919,
+      "sunrise": "08:36",
+      "sunset": "17:05",
+      "daylight_hours": 8.49,
+      "daylight_updated_at": 1767892003699,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -4172,8 +6482,22 @@
       "ele": "1010",
       "name": "Bivacco Nino Lot",
       "shelter_type": "basic_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881548171
+      "temperature": -3,
+      "temperature_updated_at": 1767893056965,
+      "snow": false,
+      "snow_updated_at": 1767893056965,
+      "slope_deg": 37,
+      "aspect_deg": 107,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890486947,
+      "sunrise": "08:33",
+      "sunset": "17:05",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003699,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -6
     }
   },
   {
@@ -4197,8 +6521,22 @@
       "name": "Bivacco col Maior",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -2,
-      "temperature_updated_at": 1767881548681
+      "temperature": -6,
+      "temperature_updated_at": 1767893057962,
+      "snow": false,
+      "snow_updated_at": 1767893057962,
+      "slope_deg": 9,
+      "aspect_deg": 141,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890488910,
+      "sunrise": "08:35",
+      "sunset": "17:07",
+      "daylight_hours": 8.54,
+      "daylight_updated_at": 1767892003699,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -9
     }
   },
   {
@@ -4231,7 +6569,21 @@
       "water_source": "stream",
       "website": "http://www.caisandona.it/2k15/bivacco-casera-campestrin/",
       "temperature": -5,
-      "temperature_updated_at": 1767881549169
+      "temperature_updated_at": 1767893058965,
+      "snow": false,
+      "snow_updated_at": 1767893058966,
+      "slope_deg": 14,
+      "aspect_deg": 71,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890490907,
+      "sunrise": "08:41",
+      "sunset": "16:57",
+      "daylight_hours": 8.27,
+      "daylight_updated_at": 1767892003700,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -11
     }
   },
   {
@@ -4260,7 +6612,21 @@
       "shelter_type": "basic_hut",
       "ele": 1732,
       "temperature": -6,
-      "temperature_updated_at": 1767881549691
+      "temperature_updated_at": 1767893059966,
+      "snow": true,
+      "snow_updated_at": 1767893059966,
+      "slope_deg": 17,
+      "aspect_deg": 208,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890492906,
+      "sunrise": "08:36",
+      "sunset": "17:03",
+      "daylight_hours": 8.45,
+      "daylight_updated_at": 1767892003700,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -4287,8 +6653,22 @@
       "ref": "340",
       "shelter_type": "basic_hut",
       "short_name": "Bivacco Vaccari",
-      "temperature": -7,
-      "temperature_updated_at": 1767881550182
+      "temperature": -6,
+      "temperature_updated_at": 1767893060975,
+      "snow": true,
+      "snow_updated_at": 1767893060976,
+      "slope_deg": 10,
+      "aspect_deg": 266,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890494910,
+      "sunrise": "08:37",
+      "sunset": "17:03",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003700,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -4315,7 +6695,21 @@
       "operator": "Club Alpino Italiano, sezione di Vigo di Cadore",
       "tourism": "wilderness_hut",
       "temperature": -8,
-      "temperature_updated_at": 1767881550691
+      "temperature_updated_at": 1767893061955,
+      "snow": true,
+      "snow_updated_at": 1767893061955,
+      "slope_deg": 28,
+      "aspect_deg": 121,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890496902,
+      "sunrise": "08:38",
+      "sunset": "17:03",
+      "daylight_hours": 8.42,
+      "daylight_updated_at": 1767892003701,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -4345,7 +6739,21 @@
       "tourism": "wilderness_hut",
       "website": "https://www.caivigodicadore.it/bivacco-l-da-rin-chiaurei-monte-tudaio/",
       "temperature": -8,
-      "temperature_updated_at": 1767881551181
+      "temperature_updated_at": 1767893062954,
+      "snow": true,
+      "snow_updated_at": 1767893062954,
+      "slope_deg": 21,
+      "aspect_deg": 138,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890498949,
+      "sunrise": "08:38",
+      "sunset": "17:02",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003701,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -4370,8 +6778,22 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q130307934",
       "ele": 2579,
-      "temperature": -11,
-      "temperature_updated_at": 1767881551700
+      "temperature": -8,
+      "temperature_updated_at": 1767893063964,
+      "snow": true,
+      "snow_updated_at": 1767893063964,
+      "slope_deg": 33,
+      "aspect_deg": 54,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890281624,
+      "sunrise": "08:49",
+      "sunset": "16:46",
+      "daylight_hours": 7.96,
+      "daylight_updated_at": 1767892003701,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -4399,8 +6821,22 @@
       "name": "Casera Britol",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881552193
+      "temperature": -4,
+      "temperature_updated_at": 1767893065056,
+      "snow": false,
+      "snow_updated_at": 1767893065056,
+      "slope_deg": 20,
+      "aspect_deg": 354,
+      "aspect_card": "N",
+      "aspect_updated_at": 1767890282078,
+      "sunrise": "08:42",
+      "sunset": "16:58",
+      "daylight_hours": 8.27,
+      "daylight_updated_at": 1767892003701,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -5
     }
   },
   {
@@ -4426,8 +6862,22 @@
       "operator": "Club Alpino Italiano Sezione XXX Ottobre",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767881552696
+      "temperature": -8,
+      "temperature_updated_at": 1767893065966,
+      "snow": true,
+      "snow_updated_at": 1767893065966,
+      "slope_deg": 23,
+      "aspect_deg": 50,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890282538,
+      "sunrise": "08:44",
+      "sunset": "16:51",
+      "daylight_hours": 8.11,
+      "daylight_updated_at": 1767892003702,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -4452,8 +6902,22 @@
       "name": "Bivacco Frassaneit di Sotto",
       "note": "Ex scuola di Frassaneit",
       "tourism": "wilderness_hut",
-      "temperature": 0,
-      "temperature_updated_at": 1767881553190
+      "temperature": -4,
+      "temperature_updated_at": 1767893066966,
+      "snow": false,
+      "snow_updated_at": 1767893066966,
+      "slope_deg": 26,
+      "aspect_deg": 46,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890282996,
+      "sunrise": "08:45",
+      "sunset": "16:57",
+      "daylight_hours": 8.19,
+      "daylight_updated_at": 1767892003702,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -5
     }
   },
   {
@@ -4476,8 +6940,22 @@
       "ele": "3005",
       "name": "Bivacco Fiamme Gialle",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767881553699
+      "temperature": -10,
+      "temperature_updated_at": 1767893067976,
+      "snow": true,
+      "snow_updated_at": 1767893067976,
+      "slope_deg": 50,
+      "aspect_deg": 199,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890283449,
+      "sunrise": "08:35",
+      "sunset": "16:59",
+      "daylight_hours": 8.4,
+      "daylight_updated_at": 1767892003702,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -19
     }
   },
   {
@@ -4501,8 +6979,22 @@
       "fireplace": "yes",
       "name": "Bivacco Palcoda",
       "tourism": "wilderness_hut",
-      "temperature": -1,
-      "temperature_updated_at": 1767881554191
+      "temperature": -5,
+      "temperature_updated_at": 1767893068965,
+      "snow": false,
+      "snow_updated_at": 1767893068965,
+      "slope_deg": 18,
+      "aspect_deg": 144,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890283904,
+      "sunrise": "08:36",
+      "sunset": "17:07",
+      "daylight_hours": 8.53,
+      "daylight_updated_at": 1767892003703,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -7
     }
   },
   {
@@ -4526,8 +7018,22 @@
       "name": "Casera Ramaz Bassa",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881554711
+      "temperature": -10,
+      "temperature_updated_at": 1767893069974,
+      "snow": false,
+      "snow_updated_at": 1767893069974,
+      "slope_deg": 34,
+      "aspect_deg": 133,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890284360,
+      "sunrise": "08:39",
+      "sunset": "17:05",
+      "daylight_hours": 8.43,
+      "daylight_updated_at": 1767892003703,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -12
     }
   },
   {
@@ -4553,8 +7059,22 @@
       "name": "Bivacco Adriano Suringar",
       "ref": "621",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767881555199
+      "temperature": -11,
+      "temperature_updated_at": 1767893070980,
+      "snow": true,
+      "snow_updated_at": 1767893070980,
+      "slope_deg": 45,
+      "aspect_deg": 206,
+      "aspect_card": "SW",
+      "aspect_updated_at": 1767890284814,
+      "sunrise": "08:42",
+      "sunset": "17:06",
+      "daylight_hours": 8.41,
+      "daylight_updated_at": 1767892003703,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -17
     }
   },
   {
@@ -4579,8 +7099,22 @@
       "note": "supply water 400 m South West following the path to Forcella Anna",
       "official_name": "Bivacco Franco Piovan",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881555713
+      "temperature": -5,
+      "temperature_updated_at": 1767893071966,
+      "snow": true,
+      "snow_updated_at": 1767893071966,
+      "slope_deg": 17,
+      "aspect_deg": 282,
+      "aspect_card": "W",
+      "aspect_updated_at": 1767890285269,
+      "sunrise": "08:44",
+      "sunset": "16:55",
+      "daylight_hours": 8.17,
+      "daylight_updated_at": 1767892003703,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -14
     }
   },
   {
@@ -4603,8 +7137,22 @@
       "name": "Bivacco Gera",
       "note": "water supply 200 m South",
       "shelter_type": "basic_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767881556199
+      "temperature": -7,
+      "temperature_updated_at": 1767893072956,
+      "snow": true,
+      "snow_updated_at": 1767893072956,
+      "slope_deg": 24,
+      "aspect_deg": 174,
+      "aspect_card": "S",
+      "aspect_updated_at": 1767890285716,
+      "sunrise": "08:38",
+      "sunset": "17:02",
+      "daylight_hours": 8.39,
+      "daylight_updated_at": 1767892003704,
+      "snow_confidence": "alto",
+      "snow_depth_cm": 1,
+      "snowfall_48h_mm": 1,
+      "temp_min_48h": -15
     }
   },
   {
@@ -4627,8 +7175,22 @@
       "ele": "1638",
       "name": "Bivacco Claupa",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767881556710
+      "temperature": -9,
+      "temperature_updated_at": 1767893073984,
+      "snow": false,
+      "snow_updated_at": 1767893073984,
+      "slope_deg": 24,
+      "aspect_deg": 119,
+      "aspect_card": "SE",
+      "aspect_updated_at": 1767890286176,
+      "sunrise": "08:38",
+      "sunset": "17:05",
+      "daylight_hours": 8.44,
+      "daylight_updated_at": 1767892003704,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -13
     }
   },
   {
@@ -4650,8 +7212,22 @@
       "ele": "785",
       "name": "Bivacco Tamars",
       "tourism": "wilderness_hut",
-      "temperature": -3,
-      "temperature_updated_at": 1767881557207
+      "temperature": -6,
+      "temperature_updated_at": 1767893074956,
+      "snow": false,
+      "snow_updated_at": 1767893074956,
+      "slope_deg": 13,
+      "aspect_deg": 98,
+      "aspect_card": "E",
+      "aspect_updated_at": 1767890286636,
+      "sunrise": "08:36",
+      "sunset": "17:08",
+      "daylight_hours": 8.52,
+      "daylight_updated_at": 1767892003704,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -7
     }
   },
   {
@@ -4676,8 +7252,22 @@
       "operator": "Comune di Lusiana Conco",
       "tourism": "wilderness_hut",
       "ele": 1319,
-      "temperature": -1,
-      "temperature_updated_at": 1767881557721
+      "temperature": -2,
+      "temperature_updated_at": 1767893075964,
+      "snow": false,
+      "snow_updated_at": 1767893075964,
+      "slope_deg": 9,
+      "aspect_deg": 51,
+      "aspect_card": "NE",
+      "aspect_updated_at": 1767890287091,
+      "sunrise": "08:30",
+      "sunset": "17:02",
+      "daylight_hours": 8.54,
+      "daylight_updated_at": 1767892003704,
+      "snow_confidence": "basso",
+      "snow_depth_cm": 0,
+      "snowfall_48h_mm": 0,
+      "temp_min_48h": -8
     }
   }
 ]
