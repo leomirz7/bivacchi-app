@@ -59,26 +59,44 @@ async function calculateElevationsWithRetry(toCalculate, retries = 5) {
     }
 }
 
-// Funzione per ottenere temperature per i bivacchi
+// Funzione per ottenere temperatura per un singolo bivacco
+async function fetchTemperature(el) {
+    const lat = el.center?.lat ?? el.lat;
+    const lon = el.center?.lon ?? el.lon;
+    if (!lat || !lon) return false;
+    
+    try {
+        const resMeteo = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const dataMeteo = await resMeteo.json();
+        if (dataMeteo.current_weather && dataMeteo.current_weather.temperature !== undefined) {
+            el.tags.temperature = Math.round(dataMeteo.current_weather.temperature);
+            el.tags.temperature_updated_at = Date.now();
+            return true;
+        }
+    } catch(e) {
+        console.error(`Errore temperatura per ${lat},${lon}:`, e);
+    }
+    return false;
+}
+
+// Funzione per ottenere temperature per i bivacchi (in background, non blocca)
+async function fetchTemperaturesInBackground(data) {
+    for (const el of data) {
+        // Fetch temperature in modo asincrono senza aspettare
+        fetchTemperature(el).then(() => {
+            // Aggiorna UI solo se la temperatura è cambiata
+            aggiornaInterfaccia();
+        });
+        
+        // Delay più lungo tra richieste per non sovraccaricare l'API
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+}
+
+// Funzione per ottenere temperature per i bivacchi (blocca fino a completamento)
 async function fetchTemperaturesForAll(data) {
     for (const el of data) {
-        const lat = el.center?.lat ?? el.lat;
-        const lon = el.center?.lon ?? el.lon;
-        if (!lat || !lon) continue;
-        
-        try {
-            const resMeteo = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-            const dataMeteo = await resMeteo.json();
-            if (dataMeteo.current_weather && dataMeteo.current_weather.temperature !== undefined) {
-                el.tags.temperature = Math.round(dataMeteo.current_weather.temperature);
-            } else {
-                el.tags.temperature = undefined;
-            }
-        } catch(e) {
-            console.error(`Errore temperatura per ${lat},${lon}:`, e);
-            el.tags.temperature = undefined;
-        }
-        
+        await fetchTemperature(el);
         // Delay tra richieste per non sovraccaricare l'API
         await new Promise(resolve => setTimeout(resolve, 300));
     }
@@ -98,16 +116,27 @@ async function caricaDatiNordEst() {
                 const hasTrentino = data.some(el => (el.center?.lat ?? el.lat) > 46.5);
                 const hasFriuli = data.some(el => (el.center?.lon ?? el.lon) > 13);
                 if (hasTrentino && hasFriuli) {
-                    listContainer.innerHTML = '<p class="placeholder-text">Caricamento temperature dai dati in cache...</p>';
-                    // Anche con i dati in cache, assicurati di avere le temperature aggiornate
-                    await fetchTemperaturesForAll(rawData);
-                    // Salva i dati con le temperature aggiornate
-                    await fetch('/api/bivacchi', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(rawData)
-                    });
+                    // Mostra subito i dati dalla cache
                     aggiornaInterfaccia();
+                    
+                    // Aggiorna le temperature in background (ogni ora se non sono aggiornate)
+                    const needsUpdate = data.some(el => {
+                        const lastUpdate = el.tags?.temperature_updated_at || 0;
+                        const oneHourAgo = Date.now() - (60 * 60 * 1000);
+                        return lastUpdate < oneHourAgo;
+                    });
+                    
+                    if (needsUpdate) {
+                        console.log("Aggiornamento temperature in background...");
+                        fetchTemperaturesInBackground(rawData).then(() => {
+                            // Salva i dati aggiornati
+                            fetch('/api/bivacchi', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(rawData)
+                            }).catch(e => console.error("Errore salvataggio dati:", e));
+                        });
+                    }
                     return;
                 } else {
                     console.log("Dati incompleti, scarico aggiornamenti...");
@@ -162,18 +191,28 @@ async function caricaDatiNordEst() {
             await calculateElevationsWithRetry(toCalculate);
         }
 
-        // Ottieni temperature per TUTTI i bivacchi
-        listContainer.innerHTML = '<p class="placeholder-text">Caricamento temperature...</p>';
-        await fetchTemperaturesForAll(rawData);
+        // Mostra i dati immediatamente senza aspettare le temperature
+        aggiornaInterfaccia();
 
-        // Salva sul server
+        // Salva sul server i dati di base
         await fetch('/api/bivacchi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rawData)
         });
 
-        aggiornaInterfaccia();
+        // Ottieni temperature in background per non bloccare l'UI
+        listContainer.innerHTML = '<div><p class="placeholder-text">Caricamento temperature...</p></div>';
+        fetchTemperaturesForAll(rawData).then(() => {
+            // Salva i dati con le temperature
+            fetch('/api/bivacchi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(rawData)
+            }).catch(e => console.error("Errore salvataggio dati:", e));
+            // Aggiorna l'UI finale
+            aggiornaInterfaccia();
+        });
     } catch (e) {
         console.error("Errore Overpass API:", e);
         listContainer.innerHTML = `<p class="placeholder-text error">${e.message}</p><button id="retry-btn" onclick="caricaDatiVeneto()">Riprova</button>`;
@@ -381,6 +420,42 @@ async function mostraDettagli(el) {
         }
     }
 
+    // Costruisci la sezione dei dati aggiuntivi
+    let additionalInfo = '';
+    
+    // Altezza (height)
+    if (el.tags.height) {
+        additionalInfo += `<p><strong>📏 Altezza:</strong> ${el.tags.height} m</p>`;
+    }
+    
+    // Descrizione (description)
+    if (el.tags.description) {
+        additionalInfo += `<p><strong>📝 Descrizione:</strong> ${el.tags.description}</p>`;
+    }
+    
+    // Materassi (mattress)
+    if (el.tags.mattress) {
+        const mattressDisplay = el.tags.mattress === 'yes' ? 'Sì' : el.tags.mattress;
+        additionalInfo += `<p><strong>🛏️ Materassi:</strong> ${mattressDisplay}</p>`;
+    }
+    
+    // Capacità (capacity)
+    if (el.tags.capacity) {
+        additionalInfo += `<p><strong>👥 Capacità:</strong> ${el.tags.capacity} persone</p>`;
+    }
+    
+    // Fireplace
+    if (el.tags.fireplace) {
+        const fireplaceDisplay = el.tags.fireplace === 'yes' ? 'Sì' : el.tags.fireplace;
+        additionalInfo += `<p><strong>🔥 Camino:</strong> ${fireplaceDisplay}</p>`;
+    }
+    
+    // Toilets (bagno)
+    if (el.tags.toilets) {
+        const toiletsDisplay = el.tags.toilets === 'yes' ? 'Sì' : el.tags.toilets;
+        additionalInfo += `<p><strong>🚽 Bagno:</strong> ${toiletsDisplay}</p>`;
+    }
+
     container.innerHTML = `
         <h2>${el.tags.name || "Bivacco"}</h2>
         <hr>
@@ -388,6 +463,7 @@ async function mostraDettagli(el) {
         <p><strong>🌡️ Meteo attuale:</strong> ${meteoInfo}</p>
         ${lat && lon ? `<p><strong>📍 Coordinate:</strong> ${lat.toFixed(5)}, ${lon.toFixed(5)}</p>` : ''}
         <p><strong>🏠 Tipo:</strong> ${el.tags.shelter_type || el.tags.tourism || el.tags.building || 'Non specificato'}</p>
+        ${additionalInfo ? `<hr>${additionalInfo}` : ''}
         <br>
         ${lat && lon ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" class="nav-btn">Portami qui</a>` : ''}
         <a href="https://www.openstreetmap.org/${el.type}/${el.id}" target="_blank" class="osm-btn">Vedi su OpenStreetMap</a>
