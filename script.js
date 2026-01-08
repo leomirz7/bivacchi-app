@@ -7,15 +7,11 @@ function debounce(func, wait) {
     };
 }
 
-// URL base dell'API - dinamico in base a dove è servita la pagina
-const API_BASE_URL = (() => {
-    // Se localhost, usa localhost:3000
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3000';
-    }
-    // Altrimenti usa lo stesso host ma sempre con port 3000
-    return `http://${window.location.hostname}:3000`;
-})();
+// URL base dell'API - usa percorsi relativi
+// Questo funziona automaticamente sia in locale che tramite reverse proxy Caddy
+// - localhost:3000 → /api/... → localhost:3000/api/...
+// - dominio.com (Caddy) → /api/... → Caddy intercetta e proxya a port 3000
+const API_BASE_URL = '';
 
 let rawData = [];
 const listContainer = document.getElementById('bivacchi-list');
