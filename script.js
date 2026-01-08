@@ -7,6 +7,9 @@ function debounce(func, wait) {
     };
 }
 
+// URL base dell'API - sempre localhost:3000 indipendentemente da dove è servita la pagina
+const API_BASE_URL = 'http://localhost:3000';
+
 let rawData = [];
 const listContainer = document.getElementById('bivacchi-list');
 let map;
@@ -129,7 +132,7 @@ async function caricaDatiNordEst() {
                     // Salva nel localStorage
                     localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
                     // Salva sul server
-                    fetch('/api/bivacchi', {
+                    fetch(API_BASE_URL + '/api/bivacchi', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(rawData)
@@ -147,7 +150,7 @@ async function caricaDatiNordEst() {
     listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal server...</p>';
 
     try {
-        const res = await fetch('/api/bivacchi');
+        const res = await fetch(API_BASE_URL + '/api/bivacchi');
         if (res.ok) {
             const data = await res.json();
             if (data.length > 0) {
@@ -175,7 +178,7 @@ async function caricaDatiNordEst() {
                         fetchTemperaturesInBackground(rawData).then(() => {
                             // Salva i dati aggiornati
                             localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                            fetch('/api/bivacchi', {
+                            fetch(API_BASE_URL + '/api/bivacchi', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(rawData)
@@ -241,7 +244,7 @@ async function caricaDatiNordEst() {
         aggiornaInterfaccia();
 
         // Salva sul server i dati di base
-        await fetch('/api/bivacchi', {
+        await fetch(API_BASE_URL + '/api/bivacchi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rawData)
@@ -251,7 +254,7 @@ async function caricaDatiNordEst() {
         listContainer.innerHTML = '<div><p class="placeholder-text">Caricamento temperature...</p></div>';
         fetchTemperaturesForAll(rawData).then(() => {
             // Salva i dati con le temperature
-            fetch('/api/bivacchi', {
+            fetch(API_BASE_URL + '/api/bivacchi', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(rawData)
@@ -551,7 +554,7 @@ initApp();
 // Funzione per controllare autenticazione
 async function checkAuth() {
     try {
-        const res = await fetch('/api/me');
+        const res = await fetch(API_BASE_URL + '/api/me');
         if (res.ok) {
             const user = await res.json();
             if (user) {
@@ -650,7 +653,7 @@ async function handleLogin() {
     }
 
     try {
-        const res = await fetch('/api/login', {
+        const res = await fetch(API_BASE_URL + '/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -685,7 +688,7 @@ async function handleRegister() {
     }
 
     try {
-        const res = await fetch('/api/register', {
+        const res = await fetch(API_BASE_URL + '/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
@@ -711,7 +714,7 @@ async function handleRegister() {
 
 async function handleLogout() {
     try {
-        const res = await fetch('/api/logout', { method: 'POST' });
+        const res = await fetch(API_BASE_URL + '/api/logout', { method: 'POST' });
         if (res.ok) {
             currentUser = null;
             closeProfileModal();
@@ -799,7 +802,7 @@ async function handleSaveAddress() {
     }
 
     try {
-        const res = await fetch('/api/home-address', {
+        const res = await fetch(API_BASE_URL + '/api/home-address', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
