@@ -7,8 +7,15 @@ function debounce(func, wait) {
     };
 }
 
-// URL base dell'API - sempre localhost:3000 indipendentemente da dove è servita la pagina
-const API_BASE_URL = 'http://localhost:3000';
+// URL base dell'API - dinamico in base a dove è servita la pagina
+const API_BASE_URL = (() => {
+    // Se localhost, usa localhost:3000
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3000';
+    }
+    // Altrimenti usa lo stesso host ma sempre con port 3000
+    return `http://${window.location.hostname}:3000`;
+})();
 
 let rawData = [];
 const listContainer = document.getElementById('bivacchi-list');
