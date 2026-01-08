@@ -538,7 +538,11 @@ document.getElementById('detail-view').addEventListener('click', function(e) {
 
 // Funzione per inizializzare la mappa
 function initMap() {
-    map = L.map('map').setView([46.2, 11.5], 7); // Centro Nord-Est Italia
+    map = L.map('map', {
+        touchZoom: true,  // Abilita pinch-zoom su touch
+        doubleClickZoom: true,
+        scrollWheelZoom: true
+    }).setView([46.2, 11.5], 7); // Centro Nord-Est Italia
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -618,7 +622,11 @@ function openAddressModal() {
     document.getElementById('address-modal').style.display = 'flex';
     setTimeout(() => {
         if (!addressMap) {
-            addressMap = L.map('address-map').setView([46.2, 11.5], 7);
+            addressMap = L.map('address-map', {
+                touchZoom: true,
+                doubleClickZoom: true,
+                scrollWheelZoom: true
+            }).setView([46.2, 11.5], 7);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(addressMap);
