@@ -9,8 +9,8 @@
       "ele": "1150",
       "name": "Bivacco Scalon",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833752114
+      "temperature": -3,
+      "temperature_updated_at": 1767875408624
     }
   },
   {
@@ -24,8 +24,8 @@
       "mattress": "no",
       "name": "Bivacco Tre Fontane",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833752482
+      "temperature": -4,
+      "temperature_updated_at": 1767875409394
     }
   },
   {
@@ -37,8 +37,8 @@
       "ele": "1890",
       "name": "Bivacco Aia dell'Orsara",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833752983
+      "temperature": -5,
+      "temperature_updated_at": 1767873817542
     }
   },
   {
@@ -53,8 +53,8 @@
       "name": "Bivacco Campoluzzo",
       "operator": "C.A.I. Sezione di Asiago",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833753481
+      "temperature": -5,
+      "temperature_updated_at": 1767873818054
     }
   },
   {
@@ -67,8 +67,8 @@
       "name": "Bivacco Dell'Angelo",
       "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833753981
+      "temperature": -3,
+      "temperature_updated_at": 1767873818562
     }
   },
   {
@@ -81,8 +81,8 @@
       "name": "Bivacco Mont",
       "tourism": "wilderness_hut",
       "ele": 1324,
-      "temperature": -8,
-      "temperature_updated_at": 1767833754582
+      "temperature": -3,
+      "temperature_updated_at": 1767875409173
     }
   },
   {
@@ -96,8 +96,8 @@
       "mattress": "no",
       "name": "Baita Darè Copada",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833754981
+      "temperature": -7,
+      "temperature_updated_at": 1767873819565
     }
   },
   {
@@ -111,8 +111,8 @@
       "name": "Bivacco Stalder",
       "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833755481
+      "temperature": -4,
+      "temperature_updated_at": 1767873820062
     }
   },
   {
@@ -125,8 +125,8 @@
       "name": "Bivacco Cima Marana",
       "tourism": "wilderness_hut",
       "ele": 1533,
-      "temperature": -8,
-      "temperature_updated_at": 1767833755981
+      "temperature": -2,
+      "temperature_updated_at": 1767875409513
     }
   },
   {
@@ -139,8 +139,8 @@
       "name": "Bivacco Col dei Gai",
       "operator": "Cacciatori di Trichiana",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833756491
+      "temperature": -3,
+      "temperature_updated_at": 1767873821072
     }
   },
   {
@@ -155,8 +155,8 @@
       "name": "Casera Busnich",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833756991
+      "temperature": -4,
+      "temperature_updated_at": 1767873821572
     }
   },
   {
@@ -170,8 +170,8 @@
       "fireplace": "yes",
       "name": "Ricovero Köpfach",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833757491
+      "temperature": -8,
+      "temperature_updated_at": 1767875409814
     }
   },
   {
@@ -184,8 +184,8 @@
       "ele": "950",
       "name": "Cason Brusà",
       "shelter_type": "basic_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767833758002
+      "temperature": 0,
+      "temperature_updated_at": 1767873822573
     }
   },
   {
@@ -200,8 +200,8 @@
       "name": "Ricovero del Piano degli Ontani",
       "old_name": "Casel del Pian dei Auniz",
       "shelter_type": "basic_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833758492
+      "temperature": -3,
+      "temperature_updated_at": 1767873823121
     }
   },
   {
@@ -219,8 +219,8 @@
       "shelter_type": "basic_hut",
       "toilets": "yes",
       "ele": 1709,
-      "temperature": -11,
-      "temperature_updated_at": 1767833759002
+      "temperature": -5,
+      "temperature_updated_at": 1767873823622
     }
   },
   {
@@ -236,8 +236,8 @@
       "tourism": "wilderness_hut",
       "visible_name": "Baito Covolini",
       "ele": 1990,
-      "temperature": -12,
-      "temperature_updated_at": 1767833759624
+      "temperature": -6,
+      "temperature_updated_at": 1767875410415
     }
   },
   {
@@ -251,8 +251,8 @@
       "ele": "2165",
       "name": "Bivacco Voltolina",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833760004
+      "temperature": -8,
+      "temperature_updated_at": 1767875410945
     }
   },
   {
@@ -267,8 +267,8 @@
       "name": "Bivacco Ricovero Buffa di Perrero",
       "operator": "ANA Associazione Nazionale Alpini",
       "shelter_type": "basic_hut",
-      "temperature": -18,
-      "temperature_updated_at": 1767833760574
+      "temperature": -13,
+      "temperature_updated_at": 1767875411377
     }
   },
   {
@@ -285,8 +285,8 @@
       "name": "Bivacco Silvio e Rudi",
       "operator": "Club Alpino Italiano sezione di Sacile",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833761033
+      "temperature": -4,
+      "temperature_updated_at": 1767875411775
     }
   },
   {
@@ -300,8 +300,8 @@
       "fireplace": "yes",
       "name": "Bivacco Murelon \"A. Scopel\"",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833761514
+      "temperature": -2,
+      "temperature_updated_at": 1767875412134
     }
   },
   {
@@ -318,8 +318,8 @@
       "wikidata": "Q18288572",
       "wikipedia": "it:Rifugio dei Loff",
       "ele": 1185,
-      "temperature": -9,
-      "temperature_updated_at": 1767833762012
+      "temperature": -3,
+      "temperature_updated_at": 1767875412479
     }
   },
   {
@@ -334,8 +334,8 @@
       "name": "Bivacco De Toni",
       "operator": "Club Alpino Italiano Sezione di Padova",
       "shelter_type": "basic_hut",
-      "temperature": -17,
-      "temperature_updated_at": 1767833762513
+      "temperature": -12,
+      "temperature_updated_at": 1767875412823
     }
   },
   {
@@ -350,8 +350,8 @@
       "name": "Bivacco Malga Ardosetta",
       "operator": "Club Alpino Italiano sez. Castelfranco V.to",
       "shelter_type": "basic",
-      "temperature": -8,
-      "temperature_updated_at": 1767833763024
+      "temperature": -2,
+      "temperature_updated_at": 1767875413274
     }
   },
   {
@@ -365,8 +365,8 @@
       "fixme": "Check exact position and delete note",
       "name": "Caverna dell'Amicizia - Bivacco Celso Craighero",
       "shelter_type": "basic_hut",
-      "temperature": -17,
-      "temperature_updated_at": 1767833763525
+      "temperature": -13,
+      "temperature_updated_at": 1767875413403
     }
   },
   {
@@ -379,8 +379,8 @@
       "name": "Bivacco Edvige Muschi Zuani",
       "shelter_type": "rock_shelter",
       "ele": 1909,
-      "temperature": -13,
-      "temperature_updated_at": 1767833764022
+      "temperature": -9,
+      "temperature_updated_at": 1767875413724
     }
   },
   {
@@ -396,8 +396,8 @@
       "mattress": "yes",
       "name": "Bivacco Chiansaveit",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833764625
+      "temperature": -6,
+      "temperature_updated_at": 1767875414070
     }
   },
   {
@@ -418,8 +418,8 @@
       "shelter_type": "basic_hut",
       "table": "yes",
       "wikidata": "Q65235960",
-      "temperature": -18,
-      "temperature_updated_at": 1767833765023
+      "temperature": -13,
+      "temperature_updated_at": 1767875414494
     }
   },
   {
@@ -432,8 +432,8 @@
       "description": "bivacco in caverna",
       "name": "Bivacco Stecho",
       "ele": 1904,
-      "temperature": -12,
-      "temperature_updated_at": 1767833765524
+      "temperature": -5,
+      "temperature_updated_at": 1767875415008
     }
   },
   {
@@ -446,8 +446,8 @@
       "name": "Bivacco Fratelli Fanton",
       "operator": "C.A.I. Auronzo di Cadore",
       "tourism": "wilderness_hut",
-      "temperature": -16,
-      "temperature_updated_at": 1767833766024
+      "temperature": -12,
+      "temperature_updated_at": 1767875415424
     }
   },
   {
@@ -459,8 +459,8 @@
       "ele": "1460",
       "name": "Bivacco Oscar Piusi",
       "tourism": "wilderness_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833766531
+      "temperature": -5,
+      "temperature_updated_at": 1767875415923
     }
   },
   {
@@ -472,8 +472,8 @@
       "name": "Bivacco dei pastori",
       "tourism": "wilderness_hut",
       "ele": 2154,
-      "temperature": -14,
-      "temperature_updated_at": 1767833767034
+      "temperature": -9,
+      "temperature_updated_at": 1767875416413
     }
   },
   {
@@ -485,8 +485,8 @@
       "name": "Bivacco Walter Bodo",
       "tourism": "wilderness_hut",
       "ele": 1905,
-      "temperature": -12,
-      "temperature_updated_at": 1767833767535
+      "temperature": -6,
+      "temperature_updated_at": 1767875416924
     }
   },
   {
@@ -505,8 +505,8 @@
       "shelter_type": "basic_hut",
       "source": "survey:CAI",
       "website": "https://www.escursionismo.it/rifugi-bivacchi/val-zea-16192",
-      "temperature": -9,
-      "temperature_updated_at": 1767833768033
+      "temperature": -2,
+      "temperature_updated_at": 1767875417424
     }
   },
   {
@@ -519,8 +519,8 @@
       "name": "Bivacco Bonafede Giustina",
       "shelter_type": "basic_hut",
       "ele": 2843,
-      "temperature": -18,
-      "temperature_updated_at": 1767833768544
+      "temperature": -14,
+      "temperature_updated_at": 1767875417925
     }
   },
   {
@@ -533,8 +533,8 @@
       "ele": "2620",
       "name": "Bivacco Baccon-Barborka",
       "tourism": "wilderness_hut",
-      "temperature": -17,
-      "temperature_updated_at": 1767833769044
+      "temperature": -12,
+      "temperature_updated_at": 1767875418427
     }
   },
   {
@@ -560,8 +560,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Casera Mimoias",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833769653
+      "temperature": -4,
+      "temperature_updated_at": 1767875418924
     }
   },
   {
@@ -588,8 +588,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Casera For",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833770054
+      "temperature": -7,
+      "temperature_updated_at": 1767875419423
     }
   },
   {
@@ -615,8 +615,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Rifugio Forestale Clinach",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833770573
+      "temperature": -6,
+      "temperature_updated_at": 1767875419933
     }
   },
   {
@@ -645,8 +645,8 @@
       "ref": "620",
       "source": "PCN",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833771054
+      "temperature": -7,
+      "temperature_updated_at": 1767875420433
     }
   },
   {
@@ -676,8 +676,8 @@
       "ref": "504",
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
-      "temperature": -14,
-      "temperature_updated_at": 1767833771552
+      "temperature": -9,
+      "temperature_updated_at": 1767875421025
     }
   },
   {
@@ -709,8 +709,8 @@
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/503-bivacco-busettini/",
-      "temperature": -15,
-      "temperature_updated_at": 1767833772054
+      "temperature": -10,
+      "temperature_updated_at": 1767875421534
     }
   },
   {
@@ -737,8 +737,8 @@
       "name": "Casera Meluzzo",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833772564
+      "temperature": -2,
+      "temperature_updated_at": 1767875422034
     }
   },
   {
@@ -771,8 +771,8 @@
       "source": "CAI Veneto;survey:CAI",
       "survey:date": "2025-09-19",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833773064
+      "temperature": -6,
+      "temperature_updated_at": 1767875422534
     }
   },
   {
@@ -800,8 +800,8 @@
       "name": "Bivacco Cason di Brica",
       "ref": "314",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833773562
+      "temperature": -6,
+      "temperature_updated_at": 1767875423036
     }
   },
   {
@@ -830,8 +830,8 @@
       "ref": "316",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833774064
+      "temperature": -7,
+      "temperature_updated_at": 1767875423533
     }
   },
   {
@@ -860,8 +860,8 @@
       "operator": "CAI Trieste",
       "shelter_type": "basic_hut",
       "source": "CAI Friuli Venezia Giulia;survey:CAI",
-      "temperature": -13,
-      "temperature_updated_at": 1767833774654
+      "temperature": -6,
+      "temperature_updated_at": 1767875424035
     }
   },
   {
@@ -892,8 +892,8 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q3661690",
       "wikipedia": "it:Casera Galvana",
-      "temperature": -10,
-      "temperature_updated_at": 1767833775064
+      "temperature": -5,
+      "temperature_updated_at": 1767875424544
     }
   },
   {
@@ -918,8 +918,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Zanette",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833775563
+      "temperature": -6,
+      "temperature_updated_at": 1767875425054
     }
   },
   {
@@ -945,8 +945,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Ricovero Casera Vasei",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833776074
+      "temperature": -6,
+      "temperature_updated_at": 1767875425546
     }
   },
   {
@@ -972,8 +972,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Molassa",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833776572
+      "temperature": -1,
+      "temperature_updated_at": 1767875426043
     }
   },
   {
@@ -1001,8 +1001,8 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "winter_shelter": "yes",
-      "temperature": -11,
-      "temperature_updated_at": 1767833777073
+      "temperature": -3,
+      "temperature_updated_at": 1767875426543
     }
   },
   {
@@ -1035,8 +1035,8 @@
       "name": "Casera dei Conti",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833777573
+      "temperature": -3,
+      "temperature_updated_at": 1767875427055
     }
   },
   {
@@ -1070,8 +1070,8 @@
       "ref:refuges.info": "7151",
       "shelter_type": "basic_hut",
       "wheelchair": "no",
-      "temperature": -13,
-      "temperature_updated_at": 1767833778082
+      "temperature": -10,
+      "temperature_updated_at": 1767875427557
     }
   },
   {
@@ -1098,8 +1098,8 @@
       "name": "Bivacco speleologico Stefano Procopio",
       "ref": "608",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833778572
+      "temperature": -10,
+      "temperature_updated_at": 1767875428053
     }
   },
   {
@@ -1127,8 +1127,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Groppa Pastour",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833779074
+      "temperature": -5,
+      "temperature_updated_at": 1767875428556
     }
   },
   {
@@ -1156,8 +1156,8 @@
       "shelter_type": "basic_hut",
       "short_name": "Bivacco Toffolon",
       "ele": 1970,
-      "temperature": -13,
-      "temperature_updated_at": 1767833779674
+      "temperature": -8,
+      "temperature_updated_at": 1767875429066
     }
   },
   {
@@ -1185,8 +1185,8 @@
       "ref:refuges.info": "6449",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833780082
+      "temperature": -3,
+      "temperature_updated_at": 1767875429564
     }
   },
   {
@@ -1214,8 +1214,8 @@
       "name": "Ricovero Casera Montelonga",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833780582
+      "temperature": -3,
+      "temperature_updated_at": 1767875430063
     }
   },
   {
@@ -1244,8 +1244,8 @@
       "name": "Ricovero Casera Bitter",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767833781083
+      "temperature": -1,
+      "temperature_updated_at": 1767875430563
     }
   },
   {
@@ -1271,8 +1271,8 @@
       "name": "Casera Rupeit",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833781586
+      "temperature": -3,
+      "temperature_updated_at": 1767875431064
     }
   },
   {
@@ -1298,8 +1298,8 @@
       "name": "Casera Caseratte",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833782083
+      "temperature": -2,
+      "temperature_updated_at": 1767875431563
     }
   },
   {
@@ -1326,8 +1326,8 @@
       "name": "Casera di Giais",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833782582
+      "temperature": -2,
+      "temperature_updated_at": 1767875432063
     }
   },
   {
@@ -1355,8 +1355,8 @@
       "name": "Casera Palussa",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767833783094
+      "temperature": -3,
+      "temperature_updated_at": 1767875432564
     }
   },
   {
@@ -1383,8 +1383,8 @@
       "it:fvg:ctrn:revision": "1A0",
       "name": "Casera Valle Friz",
       "shelter_type": "basic_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833783583
+      "temperature": -4,
+      "temperature_updated_at": 1767875433073
     }
   },
   {
@@ -1414,8 +1414,8 @@
       "name": "Malga Jouf",
       "note": "locali sporchi e trasandati non merita un tourism=wilderness_hut",
       "shelter_type": "basic_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833784092
+      "temperature": -4,
+      "temperature_updated_at": 1767875433573
     }
   },
   {
@@ -1447,8 +1447,8 @@
       "note": "Baita del \"Club Alpino Italiano\" sezione \"Val Natisone\"",
       "shelter_type": "basic_hut",
       "url": "https://organizzazione.cai.it/sez-val-natisone/baita-cai-val-natisone/",
-      "temperature": -7,
-      "temperature_updated_at": 1767833784704
+      "temperature": -2,
+      "temperature_updated_at": 1767875434083
     }
   },
   {
@@ -1480,8 +1480,8 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q16532757",
       "wikipedia": "it:Bivacco Giuseppe Zanuso",
-      "temperature": -10,
-      "temperature_updated_at": 1767833785092
+      "temperature": -5,
+      "temperature_updated_at": 1767875434574
     }
   },
   {
@@ -1507,8 +1507,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco speleologico \"Davanzo - Vianello - Picciola\"",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833785604
+      "temperature": -9,
+      "temperature_updated_at": 1767875435083
     }
   },
   {
@@ -1539,8 +1539,8 @@
       "operator": "Club Alpino Italiano",
       "ref": "601",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833786102
+      "temperature": -9,
+      "temperature_updated_at": 1767875435645
     }
   },
   {
@@ -1571,8 +1571,8 @@
       "operator": "Società Alpina Friulana",
       "shelter_type": "basic_hut",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/712-bivacco-d-brollo/",
-      "temperature": -11,
-      "temperature_updated_at": 1767833786602
+      "temperature": -7,
+      "temperature_updated_at": 1767875436143
     }
   },
   {
@@ -1599,8 +1599,8 @@
       "it:fvg:ctrn:revision": "1A0",
       "name": "Ricovero Coi",
       "shelter_type": "basic_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833787104
+      "temperature": -4,
+      "temperature_updated_at": 1767875436643
     }
   },
   {
@@ -1626,8 +1626,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Val Provagna",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833787614
+      "temperature": -1,
+      "temperature_updated_at": 1767875437145
     }
   },
   {
@@ -1657,8 +1657,8 @@
       "ref": "327",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833788115
+      "temperature": -8,
+      "temperature_updated_at": 1767875437695
     }
   },
   {
@@ -1685,8 +1685,8 @@
       "shelter_type": "basic_hut",
       "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg",
       "ele": 1972,
-      "temperature": -15,
-      "temperature_updated_at": 1767833788606
+      "temperature": -9,
+      "temperature_updated_at": 1767875438154
     }
   },
   {
@@ -1715,8 +1715,8 @@
       "ref": "613",
       "shelter_type": "basic_hut",
       "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg",
-      "temperature": -15,
-      "temperature_updated_at": 1767833789112
+      "temperature": -9,
+      "temperature_updated_at": 1767875438656
     }
   },
   {
@@ -1745,8 +1745,8 @@
       "name:sl": "Zavetišče pod Ponco",
       "shelter_type": "basic_hut",
       "winter_room": "yes",
-      "temperature": -14,
-      "temperature_updated_at": 1767833789749
+      "temperature": -6,
+      "temperature_updated_at": 1767875439154
     }
   },
   {
@@ -1774,8 +1774,8 @@
       "official_name": "Bivacco Sandro Pittioni e Mauro Stafuzza",
       "ref": "624",
       "shelter_type": "basic_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833790124
+      "temperature": -5,
+      "temperature_updated_at": 1767875439663
     }
   },
   {
@@ -1803,8 +1803,8 @@
       "name": "Bivacco Sandro del Torso",
       "ref": "623",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833790623
+      "temperature": -10,
+      "temperature_updated_at": 1767875440163
     }
   },
   {
@@ -1831,8 +1831,8 @@
       "it:fvg:ctrn:revision": "000",
       "name": "Bivacco Dionisio Feruglio",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833791124
+      "temperature": -7,
+      "temperature_updated_at": 1767875440664
     }
   },
   {
@@ -1862,8 +1862,8 @@
       "ref": "401",
       "short_name": "Bivacco Bianchi",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833791625
+      "temperature": -7,
+      "temperature_updated_at": 1767875441166
     }
   },
   {
@@ -1893,8 +1893,8 @@
       "operator": "Club Alpino Italiano",
       "ref": "411",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833792134
+      "temperature": -2,
+      "temperature_updated_at": 1767875441664
     }
   },
   {
@@ -1925,8 +1925,8 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q879147",
       "wikipedia": "it:Bivacco Ernesto Lomasti",
-      "temperature": -14,
-      "temperature_updated_at": 1767833792632
+      "temperature": -9,
+      "temperature_updated_at": 1767875442174
     }
   },
   {
@@ -1960,8 +1960,8 @@
       "wikidata": "Q3640556",
       "wikimedia_commons": "File:Bivacco Marchi-Granzotto (Id 2368).jpg",
       "wikipedia": "it:Bivacco Marchi-Granzotto",
-      "temperature": -14,
-      "temperature_updated_at": 1767833793144
+      "temperature": -8,
+      "temperature_updated_at": 1767875442665
     }
   },
   {
@@ -1991,8 +1991,8 @@
       "ref": "317",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833793643
+      "temperature": -6,
+      "temperature_updated_at": 1767875443185
     }
   },
   {
@@ -2022,8 +2022,8 @@
       "ref": "302",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833794133
+      "temperature": -5,
+      "temperature_updated_at": 1767875443674
     }
   },
   {
@@ -2053,8 +2053,8 @@
       "shelter_type": "basic_hut",
       "short_name": "Bivacco Mazzeni",
       "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/616-bivacco-d-mazzeni/",
-      "temperature": -13,
-      "temperature_updated_at": 1767833794755
+      "temperature": -7,
+      "temperature_updated_at": 1767875444188
     }
   },
   {
@@ -2081,8 +2081,8 @@
       "name:it": "Bivacco Senza Confini",
       "name:sl": "Bivak brez meja",
       "tourism": "wilderness_hut",
-      "temperature": -16,
-      "temperature_updated_at": 1767833795146
+      "temperature": -4,
+      "temperature_updated_at": 1767875444684
     }
   },
   {
@@ -2107,8 +2107,8 @@
       "shelter_type": "basic_hut",
       "source": "Comune di Schio",
       "ele": 927,
-      "temperature": -4,
-      "temperature_updated_at": 1767833795644
+      "temperature": 1,
+      "temperature_updated_at": 1767875445185
     }
   },
   {
@@ -2135,8 +2135,8 @@
       "fireplace": "yes",
       "name": "Malga Bivacco Monsampiano",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833796154
+      "temperature": -6,
+      "temperature_updated_at": 1767875445686
     }
   },
   {
@@ -2167,8 +2167,8 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "ele": 1207,
-      "temperature": -9,
-      "temperature_updated_at": 1767833796644
+      "temperature": -4,
+      "temperature_updated_at": 1767875446195
     }
   },
   {
@@ -2193,8 +2193,8 @@
       "operator": "Club Alpino Italiano - sezione di Longarone",
       "tourism": "wilderness_hut",
       "ele": 1668,
-      "temperature": -12,
-      "temperature_updated_at": 1767833797155
+      "temperature": -6,
+      "temperature_updated_at": 1767875446696
     }
   },
   {
@@ -2217,8 +2217,8 @@
       "ele": "1340",
       "name": "Bivacco Medassa",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833797655
+      "temperature": -4,
+      "temperature_updated_at": 1767875447195
     }
   },
   {
@@ -2244,8 +2244,8 @@
       "name": "Bivacco Sperti",
       "shelter_type": "basic_hut",
       "start_date": "1963-09-08",
-      "temperature": -13,
-      "temperature_updated_at": 1767833798154
+      "temperature": -8,
+      "temperature_updated_at": 1767875447696
     }
   },
   {
@@ -2274,8 +2274,8 @@
       "shelter_type": "basic_hut",
       "water_source": "yes",
       "website": "https://www.caiveneto.it/bivacco/dalla-bernardina",
-      "temperature": -15,
-      "temperature_updated_at": 1767833798655
+      "temperature": -9,
+      "temperature_updated_at": 1767875448196
     }
   },
   {
@@ -2306,8 +2306,8 @@
       "shelter_type": "basic_hut",
       "source": "CAI Veneto;survey:CAI",
       "source:ref": "9216111",
-      "temperature": -15,
-      "temperature_updated_at": 1767833799165
+      "temperature": -9,
+      "temperature_updated_at": 1767875448705
     }
   },
   {
@@ -2330,8 +2330,8 @@
       "name": "Bivacco Pian dei Grassi",
       "shelter_type": "weather_shelter",
       "ele": 1164,
-      "temperature": -7,
-      "temperature_updated_at": 1767833799663
+      "temperature": -2,
+      "temperature_updated_at": 1767875449206
     }
   },
   {
@@ -2356,8 +2356,8 @@
       "ele": "1442",
       "name": "Le Prese Malga Bivacco",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833800164
+      "temperature": -3,
+      "temperature_updated_at": 1767875449703
     }
   },
   {
@@ -2381,8 +2381,8 @@
       "name": "Bivacco Caltrano",
       "shelter_type": "weather_shelter",
       "ele": 1344,
-      "temperature": -7,
-      "temperature_updated_at": 1767833800664
+      "temperature": -1,
+      "temperature_updated_at": 1767875450204
     }
   },
   {
@@ -2404,8 +2404,8 @@
       "building": "yes",
       "name": "Bivacco \"Buso\"",
       "ele": 1200,
-      "temperature": -8,
-      "temperature_updated_at": 1767833801174
+      "temperature": -2,
+      "temperature_updated_at": 1767875450705
     }
   },
   {
@@ -2438,8 +2438,8 @@
       "wheelchair": "no",
       "wikidata": "Q20008165",
       "wikipedia": "it:Bivacco Franco Costantini",
-      "temperature": -11,
-      "temperature_updated_at": 1767833801665
+      "temperature": -7,
+      "temperature_updated_at": 1767875451216
     }
   },
   {
@@ -2465,8 +2465,8 @@
       "tourism": "wilderness_hut",
       "wikidata": "Q20009646",
       "wikipedia": "it:Bivacco Comici",
-      "temperature": -13,
-      "temperature_updated_at": 1767833802174
+      "temperature": -7,
+      "temperature_updated_at": 1767875451715
     }
   },
   {
@@ -2489,8 +2489,8 @@
       "ele": "1471",
       "name": "Cason dei Lebi",
       "shelter_type": "basic_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833802675
+      "temperature": -2,
+      "temperature_updated_at": 1767875452215
     }
   },
   {
@@ -2515,8 +2515,8 @@
       "name": "Bivacco Marsini",
       "tourism": "wilderness_hut",
       "ele": 333,
-      "temperature": -3,
-      "temperature_updated_at": 1767833803174
+      "temperature": 1,
+      "temperature_updated_at": 1767875452714
     }
   },
   {
@@ -2543,8 +2543,8 @@
       "name": "Bivacco Casara Trentin",
       "tourism": "wilderness_hut",
       "ele": 1962,
-      "temperature": -12,
-      "temperature_updated_at": 1767833803675
+      "temperature": -6,
+      "temperature_updated_at": 1767875453214
     }
   },
   {
@@ -2566,8 +2566,8 @@
       "name": "Bivacco Invernale Matteo Fiori",
       "tourism": "wilderness_hut",
       "ele": 1698,
-      "temperature": -10,
-      "temperature_updated_at": 1767833804186
+      "temperature": -4,
+      "temperature_updated_at": 1767875453725
     }
   },
   {
@@ -2596,8 +2596,8 @@
       "tourism": "wilderness_hut",
       "website": "https://www.dolomitipark.it/visitare-il-parco/rifugi-e-bivacchi/bivacco-malga-alvis-quota-1573/",
       "ele": 1570,
-      "temperature": -9,
-      "temperature_updated_at": 1767833804685
+      "temperature": -4,
+      "temperature_updated_at": 1767875454214
     }
   },
   {
@@ -2620,8 +2620,8 @@
       "name": "Bivacco Casera Bosc dei Boi",
       "operator": "Gruppo Escursionisti Cesio",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833805185
+      "temperature": -4,
+      "temperature_updated_at": 1767875454724
     }
   },
   {
@@ -2645,8 +2645,8 @@
       "ele": "1930",
       "name": "Bivacco Feltre",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833805696
+      "temperature": -6,
+      "temperature_updated_at": 1767875455224
     }
   },
   {
@@ -2670,8 +2670,8 @@
       "ele": "1930",
       "name": "Bivacco Walter Bodo",
       "shelter_type": "basic_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833806194
+      "temperature": -6,
+      "temperature_updated_at": 1767875455725
     }
   },
   {
@@ -2697,8 +2697,8 @@
       "fireplace": "yes",
       "name": "Casera Vallon",
       "shelter_type": "basic_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833806696
+      "temperature": -3,
+      "temperature_updated_at": 1767875456227
     }
   },
   {
@@ -2726,8 +2726,8 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "ele": 1652,
-      "temperature": -10,
-      "temperature_updated_at": 1767833807195
+      "temperature": -5,
+      "temperature_updated_at": 1767875456724
     }
   },
   {
@@ -2755,8 +2755,8 @@
       "fireplace": "yes",
       "name": "Bivacco Le Mandre",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833807695
+      "temperature": -4,
+      "temperature_updated_at": 1767875457234
     }
   },
   {
@@ -2784,8 +2784,8 @@
       "name": "Bivacco Tomè",
       "operator": "CAI Agordo",
       "tourism": "wilderness_hut",
-      "temperature": -17,
-      "temperature_updated_at": 1767833808204
+      "temperature": -12,
+      "temperature_updated_at": 1767875457735
     }
   },
   {
@@ -2811,8 +2811,8 @@
       "ele": "1844",
       "name": "Bivacco Col Mandro",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833808704
+      "temperature": -6,
+      "temperature_updated_at": 1767875458236
     }
   },
   {
@@ -2835,8 +2835,8 @@
       "ele": "1651",
       "name": "Bivacco Casamatta",
       "shelter_type": "basic_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833809294
+      "temperature": -4,
+      "temperature_updated_at": 1767875458734
     }
   },
   {
@@ -2859,8 +2859,8 @@
       "ele": "2007",
       "name": "Bivacco Grisetti",
       "shelter_type": "basic_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833809694
+      "temperature": -6,
+      "temperature_updated_at": 1767875459244
     }
   },
   {
@@ -2884,8 +2884,8 @@
       "operator": "Club Alpino Italiano",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833810204
+      "temperature": -7,
+      "temperature_updated_at": 1767875459735
     }
   },
   {
@@ -2907,8 +2907,8 @@
       "name": "Bivacco Casera Vissada",
       "tourism": "wilderness_hut",
       "ele": 1875,
-      "temperature": -13,
-      "temperature_updated_at": 1767833810704
+      "temperature": -8,
+      "temperature_updated_at": 1767875460267
     }
   },
   {
@@ -2934,8 +2934,8 @@
       "operator": "Club Alpino Italiano, sez. Val Comelico",
       "shelter_type": "basic_hut",
       "website": "https://www.caiveneto.it/bivacco/piva",
-      "temperature": -15,
-      "temperature_updated_at": 1767833811204
+      "temperature": -9,
+      "temperature_updated_at": 1767875460744
     }
   },
   {
@@ -2962,8 +2962,8 @@
       "name": "Bivacco Salvedella Vecia",
       "shelter_type": "basic",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833811704
+      "temperature": -3,
+      "temperature_updated_at": 1767875461246
     }
   },
   {
@@ -2986,8 +2986,8 @@
       "name": "Bivacco Salvedella Nuova",
       "tourism": "wilderness_hut",
       "ele": 1238,
-      "temperature": -9,
-      "temperature_updated_at": 1767833812214
+      "temperature": -3,
+      "temperature_updated_at": 1767875461754
     }
   },
   {
@@ -3011,8 +3011,8 @@
       "fireplace": "yes",
       "name": "Bivacco Momi",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833812714
+      "temperature": -2,
+      "temperature_updated_at": 1767875462255
     }
   },
   {
@@ -3040,8 +3040,8 @@
       "operator": "C.A.I. Veneto",
       "tourism": "wilderness_hut",
       "website": "https://www.caiveneto.it/bivacco/palia",
-      "temperature": -10,
-      "temperature_updated_at": 1767833813216
+      "temperature": -4,
+      "temperature_updated_at": 1767875462755
     }
   },
   {
@@ -3070,8 +3070,8 @@
       "name": "Bivacco Menegazzi al Pianlonch",
       "operator": "Gruppo ANA Gosaldo",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833813715
+      "temperature": -6,
+      "temperature_updated_at": 1767875463256
     }
   },
   {
@@ -3099,8 +3099,8 @@
       "operator": "Gruppo Alpinistico Vicentino",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833814334
+      "temperature": -8,
+      "temperature_updated_at": 1767875463756
     }
   },
   {
@@ -3128,8 +3128,8 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q26258021",
       "wikipedia": "it:Bivacco Cozzolino",
-      "temperature": -10,
-      "temperature_updated_at": 1767833814724
+      "temperature": -5,
+      "temperature_updated_at": 1767875464263
     }
   },
   {
@@ -3158,8 +3158,8 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q106449186",
       "wikipedia": "it:Bivacco Giancarlo Biasin",
-      "temperature": -17,
-      "temperature_updated_at": 1767833815235
+      "temperature": -11,
+      "temperature_updated_at": 1767875464765
     }
   },
   {
@@ -3187,8 +3187,8 @@
       "shelter_type": "basic_hut",
       "wheelchair": "no",
       "ele": 2437,
-      "temperature": -16,
-      "temperature_updated_at": 1767833815724
+      "temperature": -10,
+      "temperature_updated_at": 1767875465263
     }
   },
   {
@@ -3212,8 +3212,8 @@
       "name": "Bivacco Pian delle Stelle",
       "tourism": "wilderness_hut",
       "ele": 1512,
-      "temperature": -14,
-      "temperature_updated_at": 1767833816224
+      "temperature": -2,
+      "temperature_updated_at": 1767875465764
     }
   },
   {
@@ -3241,8 +3241,8 @@
       "shelter_type": "basic_hut",
       "water_source": "no",
       "website": "https://www.caiveneto.it/bivacco/baracca-degli-alpini",
-      "temperature": -19,
-      "temperature_updated_at": 1767833816734
+      "temperature": -12,
+      "temperature_updated_at": 1767875466264
     }
   },
   {
@@ -3267,8 +3267,8 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "wikipedia": "it:Bivacco Slataper",
-      "temperature": -16,
-      "temperature_updated_at": 1767833817245
+      "temperature": -11,
+      "temperature_updated_at": 1767875466765
     }
   },
   {
@@ -3290,8 +3290,8 @@
       "ele": "2246",
       "name": "Bivacco Dino e Plinio Toso",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833817734
+      "temperature": -9,
+      "temperature_updated_at": 1767875467274
     }
   },
   {
@@ -3314,8 +3314,8 @@
       "ele": "2111",
       "name": "Bivacco Musatti",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833818234
+      "temperature": -7,
+      "temperature_updated_at": 1767875467764
     }
   },
   {
@@ -3338,8 +3338,8 @@
       "ele": "2246",
       "name": "Bivacco Rifugio Tiziano",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833818745
+      "temperature": -9,
+      "temperature_updated_at": 1767875468274
     }
   },
   {
@@ -3369,8 +3369,8 @@
       "shelter_type": "basic_hut",
       "source": "local knowledge",
       "wikipedia": "it:Luca Vuerich",
-      "temperature": -18,
-      "temperature_updated_at": 1767833819345
+      "temperature": -12,
+      "temperature_updated_at": 1767875468774
     }
   },
   {
@@ -3394,8 +3394,8 @@
       "name": "Bivacco Carnielli-DeMarchi",
       "operator": "Club Alpino Italiano sez. di Conegliano",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833819746
+      "temperature": -7,
+      "temperature_updated_at": 1767875469275
     }
   },
   {
@@ -3418,8 +3418,8 @@
       "ele": "1709",
       "name": "Canazzè di Sopra",
       "shelter_type": "basic_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833820314
+      "temperature": -4,
+      "temperature_updated_at": 1767875469776
     }
   },
   {
@@ -3445,8 +3445,8 @@
       "name": "Bivacco Monte Col",
       "tourism": "wilderness_hut",
       "ele": 1850,
-      "temperature": -14,
-      "temperature_updated_at": 1767833820765
+      "temperature": -7,
+      "temperature_updated_at": 1767875470284
     }
   },
   {
@@ -3474,8 +3474,8 @@
       "note": "acqua scendendo 20 minuti lungo il sentiero 330",
       "operator": "Club Alpino Italiano sezione Val Comelico, sottosezione di Buja",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833821254
+      "temperature": -8,
+      "temperature_updated_at": 1767875470784
     }
   },
   {
@@ -3501,8 +3501,8 @@
       "official_name": "Bivacco alle Terze \"Franco Marta\"",
       "operator": "Club Alpino Italiano sezione Val Comelico",
       "tourism": "wilderness_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833821756
+      "temperature": -8,
+      "temperature_updated_at": 1767875471285
     }
   },
   {
@@ -3528,8 +3528,8 @@
       "name": "Bivacco Cornon",
       "operator": "Club Alpino Italiano Sez. Valcomelico",
       "tourism": "wilderness_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833822254
+      "temperature": -8,
+      "temperature_updated_at": 1767875471783
     }
   },
   {
@@ -3553,8 +3553,8 @@
       "name": "Bivacco Giusto Gervasutti",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833822754
+      "temperature": -8,
+      "temperature_updated_at": 1767875472283
     }
   },
   {
@@ -3576,8 +3576,8 @@
       "name": "Bivacco Valentino Ciotti",
       "tourism": "wilderness_hut",
       "ele": 1570,
-      "temperature": -11,
-      "temperature_updated_at": 1767833823254
+      "temperature": -4,
+      "temperature_updated_at": 1767875472796
     }
   },
   {
@@ -3601,8 +3601,8 @@
       "name": "Bivacco Da Deppo Montanel",
       "operator": "Club Alpino Italiano",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833823756
+      "temperature": -7,
+      "temperature_updated_at": 1767875473288
     }
   },
   {
@@ -3628,8 +3628,8 @@
       "name": "Casel de Col",
       "operator": "Rifugio Padova",
       "shelter_type": "basic_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833824525
+      "temperature": -4,
+      "temperature_updated_at": 1767875473795
     }
   },
   {
@@ -3655,8 +3655,8 @@
       "name": "Bivacco Tovanella",
       "operator": "Club Alpino Italiano - Sez. di Longarone",
       "tourism": "wilderness_hut",
-      "temperature": -11,
-      "temperature_updated_at": 1767833824766
+      "temperature": -5,
+      "temperature_updated_at": 1767875474295
     }
   },
   {
@@ -3680,8 +3680,8 @@
       "name": "Bivacco Pian dei Boi",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833825275
+      "temperature": -3,
+      "temperature_updated_at": 1767875474805
     }
   },
   {
@@ -3705,8 +3705,8 @@
       "name": "Bivacco Costa Curta",
       "tourism": "wilderness_hut",
       "ele": 1049,
-      "temperature": -8,
-      "temperature_updated_at": 1767833825766
+      "temperature": -2,
+      "temperature_updated_at": 1767875475306
     }
   },
   {
@@ -3730,8 +3730,8 @@
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
       "ele": 1419,
-      "temperature": -10,
-      "temperature_updated_at": 1767833826275
+      "temperature": -5,
+      "temperature_updated_at": 1767875475799
     }
   },
   {
@@ -3754,8 +3754,8 @@
       "name": "Bivacco Lastè",
       "shelter_type": "basic",
       "ele": 1997,
-      "temperature": -12,
-      "temperature_updated_at": 1767833826779
+      "temperature": -9,
+      "temperature_updated_at": 1767875476308
     }
   },
   {
@@ -3787,8 +3787,8 @@
       "short_name": "Bivacco Greselin",
       "wikidata": "Q94577374",
       "wikipedia": "it:Bivacco Paolo Greselin",
-      "temperature": -13,
-      "temperature_updated_at": 1767833827281
+      "temperature": -8,
+      "temperature_updated_at": 1767875476803
     }
   },
   {
@@ -3810,8 +3810,8 @@
       "name": "Bivacco Val Vecia",
       "tourism": "wilderness_hut",
       "ele": 1516,
-      "temperature": -9,
-      "temperature_updated_at": 1767833827775
+      "temperature": -3,
+      "temperature_updated_at": 1767875477304
     }
   },
   {
@@ -3834,8 +3834,8 @@
       "name": "Casera Col de Lorso",
       "shelter_type": "basic_hut",
       "ele": 1279,
-      "temperature": -7,
-      "temperature_updated_at": 1767833828285
+      "temperature": 0,
+      "temperature_updated_at": 1767875477804
     }
   },
   {
@@ -3861,8 +3861,8 @@
       "ref": "409",
       "tourism": "wilderness_hut",
       "website": "http://caitolmezzo.it/bivacchi/bivacco-cimenti-floreanini/",
-      "temperature": -8,
-      "temperature_updated_at": 1767833828785
+      "temperature": -3,
+      "temperature_updated_at": 1767875478317
     }
   },
   {
@@ -3890,8 +3890,8 @@
       "name": "Bivacco Guglielmo Varnerin",
       "operator": "Club Alpino Italiano sez. S.Vito al Tagliamento",
       "tourism": "wilderness_hut",
-      "temperature": -6,
-      "temperature_updated_at": 1767833829385
+      "temperature": 0,
+      "temperature_updated_at": 1767875478804
     }
   },
   {
@@ -3914,8 +3914,8 @@
       "ele": "1120",
       "name": "Bivacco Vettori",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833829784
+      "temperature": 0,
+      "temperature_updated_at": 1767875479303
     }
   },
   {
@@ -3942,8 +3942,8 @@
       "operator": "Comune di Lusiana Conco",
       "tourism": "wilderness_hut",
       "ele": 1319,
-      "temperature": -7,
-      "temperature_updated_at": 1767833830335
+      "temperature": -1,
+      "temperature_updated_at": 1767875479816
     }
   },
   {
@@ -3970,8 +3970,8 @@
       "operator": "Circolo speleologico idrologico friulano - Società alpina friulana",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833830816
+      "temperature": -8,
+      "temperature_updated_at": 1767875480313
     }
   },
   {
@@ -3998,8 +3998,8 @@
       "fireplace": "yes",
       "name": "Bivacco Lander",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833831295
+      "temperature": -4,
+      "temperature_updated_at": 1767875480824
     }
   },
   {
@@ -4023,8 +4023,8 @@
       "name": "Bivacco Carcadè",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -9,
-      "temperature_updated_at": 1767833831795
+      "temperature": -4,
+      "temperature_updated_at": 1767875481323
     }
   },
   {
@@ -4048,8 +4048,8 @@
       "name": "Ricovero Casera Frugna",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -10,
-      "temperature_updated_at": 1767833832296
+      "temperature": -4,
+      "temperature_updated_at": 1767875481823
     }
   },
   {
@@ -4072,8 +4072,8 @@
       "name": "Bivacco Battaglione Cadore",
       "shelter_type": "basic_hut",
       "ele": 2220,
-      "temperature": -15,
-      "temperature_updated_at": 1767833832795
+      "temperature": -9,
+      "temperature_updated_at": 1767875482325
     }
   },
   {
@@ -4097,8 +4097,8 @@
       "ele": "2601",
       "name": "Bivacco Ghedini",
       "shelter_type": "basic",
-      "temperature": -15,
-      "temperature_updated_at": 1767833833295
+      "temperature": -10,
+      "temperature_updated_at": 1767875482823
     }
   },
   {
@@ -4121,8 +4121,8 @@
       "name": "Ricovero Casera Chiarpin",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833833805
+      "temperature": -2,
+      "temperature_updated_at": 1767875483325
     }
   },
   {
@@ -4148,8 +4148,8 @@
       "name": "Bivacco dell'Asta",
       "stove": "yes",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833834424
+      "temperature": -4,
+      "temperature_updated_at": 1767875483837
     }
   },
   {
@@ -4172,8 +4172,8 @@
       "ele": "1010",
       "name": "Bivacco Nino Lot",
       "shelter_type": "basic_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767833834804
+      "temperature": -2,
+      "temperature_updated_at": 1767875484337
     }
   },
   {
@@ -4197,8 +4197,8 @@
       "name": "Bivacco col Maior",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -8,
-      "temperature_updated_at": 1767833835304
+      "temperature": -1,
+      "temperature_updated_at": 1767875484836
     }
   },
   {
@@ -4230,8 +4230,8 @@
       "tourism": "wilderness_hut",
       "water_source": "stream",
       "website": "http://www.caisandona.it/2k15/bivacco-casera-campestrin/",
-      "temperature": -10,
-      "temperature_updated_at": 1767833835814
+      "temperature": -5,
+      "temperature_updated_at": 1767875485337
     }
   },
   {
@@ -4259,8 +4259,8 @@
       "operator": "CAI venezia",
       "shelter_type": "basic_hut",
       "ele": 1732,
-      "temperature": -13,
-      "temperature_updated_at": 1767833836315
+      "temperature": -6,
+      "temperature_updated_at": 1767875485837
     }
   },
   {
@@ -4287,8 +4287,8 @@
       "ref": "340",
       "shelter_type": "basic_hut",
       "short_name": "Bivacco Vaccari",
-      "temperature": -14,
-      "temperature_updated_at": 1767833836815
+      "temperature": -8,
+      "temperature_updated_at": 1767875486346
     }
   },
   {
@@ -4314,8 +4314,8 @@
       "name": "Bivacco Giovanni Spagnolli",
       "operator": "Club Alpino Italiano, sezione di Vigo di Cadore",
       "tourism": "wilderness_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833837315
+      "temperature": -8,
+      "temperature_updated_at": 1767875486845
     }
   },
   {
@@ -4344,8 +4344,8 @@
       "toilets": "no",
       "tourism": "wilderness_hut",
       "website": "https://www.caivigodicadore.it/bivacco-l-da-rin-chiaurei-monte-tudaio/",
-      "temperature": -14,
-      "temperature_updated_at": 1767833837815
+      "temperature": -9,
+      "temperature_updated_at": 1767875487345
     }
   },
   {
@@ -4370,8 +4370,8 @@
       "shelter_type": "basic_hut",
       "wikidata": "Q130307934",
       "ele": 2579,
-      "temperature": -16,
-      "temperature_updated_at": 1767833838326
+      "temperature": -12,
+      "temperature_updated_at": 1767875487844
     }
   },
   {
@@ -4399,8 +4399,8 @@
       "name": "Casera Britol",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767833838825
+      "temperature": -3,
+      "temperature_updated_at": 1767875488343
     }
   },
   {
@@ -4426,8 +4426,8 @@
       "operator": "Club Alpino Italiano Sezione XXX Ottobre",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -16,
-      "temperature_updated_at": 1767833839445
+      "temperature": -12,
+      "temperature_updated_at": 1767875488844
     }
   },
   {
@@ -4452,8 +4452,8 @@
       "name": "Bivacco Frassaneit di Sotto",
       "note": "Ex scuola di Frassaneit",
       "tourism": "wilderness_hut",
-      "temperature": -4,
-      "temperature_updated_at": 1767833839836
+      "temperature": 1,
+      "temperature_updated_at": 1767875489344
     }
   },
   {
@@ -4476,8 +4476,8 @@
       "ele": "3005",
       "name": "Bivacco Fiamme Gialle",
       "shelter_type": "basic_hut",
-      "temperature": -18,
-      "temperature_updated_at": 1767833840335
+      "temperature": -13,
+      "temperature_updated_at": 1767875489844
     }
   },
   {
@@ -4501,8 +4501,8 @@
       "fireplace": "yes",
       "name": "Bivacco Palcoda",
       "tourism": "wilderness_hut",
-      "temperature": -7,
-      "temperature_updated_at": 1767833840835
+      "temperature": 0,
+      "temperature_updated_at": 1767875490363
     }
   },
   {
@@ -4526,8 +4526,8 @@
       "name": "Casera Ramaz Bassa",
       "shelter_type": "basic_hut",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833841334
+      "temperature": -6,
+      "temperature_updated_at": 1767875490855
     }
   },
   {
@@ -4553,8 +4553,8 @@
       "name": "Bivacco Adriano Suringar",
       "ref": "621",
       "shelter_type": "basic_hut",
-      "temperature": -16,
-      "temperature_updated_at": 1767833841846
+      "temperature": -12,
+      "temperature_updated_at": 1767875491345
     }
   },
   {
@@ -4579,8 +4579,8 @@
       "note": "supply water 400 m South West following the path to Forcella Anna",
       "official_name": "Bivacco Franco Piovan",
       "shelter_type": "basic_hut",
-      "temperature": -13,
-      "temperature_updated_at": 1767833842344
+      "temperature": -7,
+      "temperature_updated_at": 1767875491853
     }
   },
   {
@@ -4603,8 +4603,8 @@
       "name": "Bivacco Gera",
       "note": "water supply 200 m South",
       "shelter_type": "basic_hut",
-      "temperature": -14,
-      "temperature_updated_at": 1767833842845
+      "temperature": -9,
+      "temperature_updated_at": 1767875492355
     }
   },
   {
@@ -4627,8 +4627,8 @@
       "ele": "1638",
       "name": "Bivacco Claupa",
       "tourism": "wilderness_hut",
-      "temperature": -12,
-      "temperature_updated_at": 1767833843346
+      "temperature": -7,
+      "temperature_updated_at": 1767875492854
     }
   },
   {
@@ -4650,8 +4650,8 @@
       "ele": "785",
       "name": "Bivacco Tamars",
       "tourism": "wilderness_hut",
-      "temperature": -5,
-      "temperature_updated_at": 1767833843845
+      "temperature": -3,
+      "temperature_updated_at": 1767875493354
     }
   },
   {
@@ -4676,8 +4676,8 @@
       "operator": "Comune di Lusiana Conco",
       "tourism": "wilderness_hut",
       "ele": 1319,
-      "temperature": -7,
-      "temperature_updated_at": 1767833844495
+      "temperature": -1,
+      "temperature_updated_at": 1767875493863
     }
   }
 ]

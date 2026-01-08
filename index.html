@@ -2,10 +2,11 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=10, minimum-scale=0.5">
     <title>Bivacchi Nord-Est Italia</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.css" />
 </head>
 <body>
 
@@ -28,20 +29,12 @@
                     <button id="view-map">🗺️ Mappa</button>
                 </div>
                 <div class="filter-group">
-                    <label>Altitudine Min: <span id="alt-min-val">0</span>m</label>
-                    <input type="range" id="filter-alt-min" min="0" max="4000" step="100" value="0">
+                    <label>Altitudine: <span id="alt-min-val">0</span>m – <span id="alt-max-val">4000</span>m</label>
+                    <div id="altitude-slider"></div>
                 </div>
                 <div class="filter-group">
-                    <label>Altitudine Max: <span id="alt-max-val">4000</span>m</label>
-                    <input type="range" id="filter-alt-max" min="0" max="4000" step="100" value="4000">
-                </div>
-                <div class="filter-group">
-                    <label>Temperatura Min: <span id="temp-min-val">-20</span>°C</label>
-                    <input type="range" id="filter-temp-min" min="-20" max="40" step="1" value="-20">
-                </div>
-                <div class="filter-group">
-                    <label>Temperatura Max: <span id="temp-max-val">40</span>°C</label>
-                    <input type="range" id="filter-temp-max" min="-20" max="40" step="1" value="40">
+                    <label>Temperatura: <span id="temp-min-val">-20</span>°C – <span id="temp-max-val">40</span>°C</label>
+                    <div id="temperature-slider"></div>
                 </div>
                 <div id="distance-filter-group" class="filter-group" style="display:none;">
                     <label>Distanza Max da casa: <span id="dist-max-val">50</span>km</label>
@@ -136,6 +129,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

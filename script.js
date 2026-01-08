@@ -21,6 +21,19 @@ let currentUser = null;
 let addressMap = null;
 let selectedCoords = null;
 let dataLoaded = false; // Flag per tracciare se i dati sono caricati
+let mapInitialized = false; // Flag per il primo caricamento della mappa
+let mapFitPending = false; // Fit in sospeso quando la mappa era nascosta
+let homeMarker = null; // Marker dell'indirizzo di casa
+let altSlider = null; // noUiSlider per altitudine
+let tempSlider = null; // noUiSlider per temperatura
+
+function isMapVisible() {
+    const el = document.getElementById('map');
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    const visible = style.display !== 'none' && el.offsetWidth > 0 && el.offsetHeight > 0;
+    return visible;
+}
 
 // Funzione per calcolare altitudini con retry
 async function calculateElevationsWithRetry(toCalculate, retries = 5) {
@@ -111,94 +124,55 @@ async function fetchTemperaturesForAll(data) {
 
 // Funzione per caricare i dati dei bivacchi nel Nord-Est Italia
 async function caricaDatiNordEst() {
-    // Prima controlla se abbiamo i dati in localStorage
+    // 1. Prova a caricare da localStorage e mostra subito
     const cachedData = localStorage.getItem('bivacchi-data');
     if (cachedData) {
         try {
             rawData = JSON.parse(cachedData);
-            dataLoaded = true; // Segna che i dati sono caricati
-            // Mostra subito i dati dal localStorage (assicurandosi che currentUser sia caricato)
-            // Attendi un tick per assicurarti che checkAuth sia completato
+            dataLoaded = true;
             await new Promise(resolve => setTimeout(resolve, 0));
             aggiornaInterfaccia();
-            
-            // Controlla se le temperature vanno aggiornate in background
-            const needsUpdate = rawData.some(el => {
-                const lastUpdate = el.tags?.temperature_updated_at || 0;
-                const oneHourAgo = Date.now() - (60 * 60 * 1000);
-                return lastUpdate < oneHourAgo;
+            // Aggiorna temperature in background
+            fetchTemperaturesInBackground(rawData).then(() => {
+                localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                fetch(API_BASE_URL + '/api/bivacchi', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(rawData)
+                }).catch(e => console.error("Errore salvataggio dati:", e));
             });
-            
-            if (needsUpdate) {
-                console.log("Aggiornamento temperature in background...");
-                fetchTemperaturesInBackground(rawData).then(() => {
-                    // Salva nel localStorage
-                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                    // Salva sul server
-                    fetch(API_BASE_URL + '/api/bivacchi', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(rawData)
-                    }).catch(e => console.error("Errore salvataggio dati:", e));
-                });
-            }
-            return;
         } catch (e) {
             console.error("Errore lettura localStorage:", e);
-            // Continua con il caricamento dal server
         }
     }
 
-    // Se non ci sono dati in localStorage, carica dal server
-    listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal server...</p>';
-
+    // 2. Carica sempre dal server e mostra appena disponibili
     try {
         const res = await fetch(API_BASE_URL + '/api/bivacchi');
         if (res.ok) {
             const data = await res.json();
             if (data.length > 0) {
                 rawData = data;
-                // Verifica se i dati includono Trentino e Friuli
-                const hasTrentino = data.some(el => (el.center?.lat ?? el.lat) > 46.5);
-                const hasFriuli = data.some(el => (el.center?.lon ?? el.lon) > 13);
-                if (hasTrentino && hasFriuli) {
-                    // Salva in localStorage
+                localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                dataLoaded = true;
+                aggiornaInterfaccia();
+                // Aggiorna temperature in background
+                fetchTemperaturesInBackground(rawData).then(() => {
                     localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                    
-                    // Mostra subito i dati dalla cache
-                    dataLoaded = true;
-                    aggiornaInterfaccia();
-                    
-                    // Aggiorna le temperature in background (ogni ora se non sono aggiornate)
-                    const needsUpdate = data.some(el => {
-                        const lastUpdate = el.tags?.temperature_updated_at || 0;
-                        const oneHourAgo = Date.now() - (60 * 60 * 1000);
-                        return lastUpdate < oneHourAgo;
-                    });
-                    
-                    if (needsUpdate) {
-                        console.log("Aggiornamento temperature in background...");
-                        fetchTemperaturesInBackground(rawData).then(() => {
-                            // Salva i dati aggiornati
-                            localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                            fetch(API_BASE_URL + '/api/bivacchi', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(rawData)
-                            }).catch(e => console.error("Errore salvataggio dati:", e));
-                        });
-                    }
-                    return;
-                } else {
-                    console.log("Dati incompleti, scarico aggiornamenti...");
-                }
+                    fetch(API_BASE_URL + '/api/bivacchi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(rawData)
+                    }).catch(e => console.error("Errore salvataggio dati:", e));
+                });
+                return;
             }
         }
     } catch (e) {
         console.error("Errore caricamento da server:", e);
     }
 
-    // Se non ci sono dati sul server, carica da API
+    // 3. Se non ci sono dati sul server, carica da API Overpass
     listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal Nord-Est Italia...</p>';
 
     // Query Overpass per i bivacchi in Veneto, Trentino e Friuli
@@ -274,10 +248,16 @@ async function caricaDatiNordEst() {
 // Funzione per aggiornare la lista
 function aggiornaInterfaccia() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const minAlt = parseInt(document.getElementById('filter-alt-min').value, 10);
-    const maxAlt = parseInt(document.getElementById('filter-alt-max').value, 10);
-    const minTemp = parseInt(document.getElementById('filter-temp-min').value, 10);
-    const maxTemp = parseInt(document.getElementById('filter-temp-max').value, 10);
+    let minAlt = 0, maxAlt = 4000;
+    if (altSlider) {
+        const [aMin, aMax] = altSlider.get().map(v => Math.round(parseFloat(v)));
+        minAlt = aMin; maxAlt = aMax;
+    }
+    let minTemp = -20, maxTemp = 40;
+    if (tempSlider) {
+        const [tMin, tMax] = tempSlider.get().map(v => Math.round(parseFloat(v)));
+        minTemp = tMin; maxTemp = tMax;
+    }
     const maxDist = parseInt(document.getElementById('filter-dist-max').value, 10);
     const sortBy = document.getElementById('sort-by').value;
     
@@ -420,7 +400,12 @@ function updateMap(filtrati) {
 
     // Aggiungi marker della casa se impostato
     if (currentUser && currentUser.home_address) {
-        L.marker([currentUser.home_address.lat, currentUser.home_address.lon], {
+        // Rimuovi eventuale marker casa precedente
+        if (homeMarker) {
+            map.removeLayer(homeMarker);
+            homeMarker = null;
+        }
+        homeMarker = L.marker([currentUser.home_address.lat, currentUser.home_address.lon], {
             icon: L.icon({
                 iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2YzOWMxMiIgZD0iTTEwIDIwdjYuOTM2bTAtNi45MzZWMGwxMiAxMHYxMEgxMHpNMTAgMjBIMHYtMTBsMTAtOHYxOHptOCAwdjZtLTQtNmgtNHYtNmg0djZ6Ii8+PC9zdmc+',
                 iconSize: [32, 32],
@@ -441,10 +426,18 @@ function updateMap(filtrati) {
         }
     });
 
-    // Adatta la vista se ci sono marker
-    if (markers.length > 0) {
+    // Adatta la vista SOLO al primo caricamento, non ad ogni filtro
+    // E fallo solo quando la mappa è visibile (mobile può essere nascosta)
+    if (!mapInitialized && markers.length > 0) {
         const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.1));
+        if (isMapVisible()) {
+            map.fitBounds(group.getBounds().pad(0.1));
+            mapInitialized = true;
+            mapFitPending = false;
+        } else {
+            // Rimanda il fit quando la mappa verrà mostrata
+            mapFitPending = true;
+        }
     }
 }
 
@@ -523,7 +516,7 @@ async function mostraDettagli(el) {
 }
 
 // Event Listeners
-['search-input', 'filter-alt-min', 'filter-alt-max', 'filter-temp-min', 'filter-temp-max', 'filter-dist-max', 'sort-by'].forEach(id => {
+['search-input', 'filter-dist-max', 'sort-by'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
         el.addEventListener('input', debounce(aggiornaInterfaccia, 300));
@@ -538,7 +531,22 @@ document.getElementById('detail-view').addEventListener('click', function(e) {
 
 // Funzione per inizializzare la mappa
 function initMap() {
-    map = L.map('map').setView([46.2, 11.5], 7); // Centro Nord-Est Italia
+    // Forza sempre il livello di zoom iniziale corretto
+    map = L.map('map', {
+        zoomControl: true,
+        zoomSnap: 1,
+        zoomDelta: 1,
+        minZoom: 5,
+        maxZoom: 18,
+        // Impedisce a Leaflet di gestire lo zoom touch in modo "aggressivo"
+        touchZoom: true,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
+        boxZoom: true,
+        keyboard: true,
+        // mobile: non bloccare lo zoom
+        tap: false
+    }).setView([46.2, 11.5], 7); // Centro Nord-Est Italia
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -548,8 +556,47 @@ function initMap() {
 // Avvio iniziale
 async function initApp() {
     await checkAuth();
+    initSliders();
     initMap();
     caricaDatiNordEst();
+}
+function initSliders() {
+    const altEl = document.getElementById('altitude-slider');
+    const tempEl = document.getElementById('temperature-slider');
+    if (altEl && window.noUiSlider) {
+        altSlider = noUiSlider.create(altEl, {
+            start: [0, 4000],
+            connect: true,
+            step: 100,
+            range: { min: 0, max: 4000 },
+            behaviour: 'drag'
+        });
+        const altMinSpan = document.getElementById('alt-min-val');
+        const altMaxSpan = document.getElementById('alt-max-val');
+        altSlider.on('update', (values) => {
+            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
+            if (altMinSpan) altMinSpan.innerText = minV;
+            if (altMaxSpan) altMaxSpan.innerText = maxV;
+        });
+        altSlider.on('set', debounce(aggiornaInterfaccia, 200));
+    }
+    if (tempEl && window.noUiSlider) {
+        tempSlider = noUiSlider.create(tempEl, {
+            start: [-20, 40],
+            connect: true,
+            step: 1,
+            range: { min: -20, max: 40 },
+            behaviour: 'drag'
+        });
+        const tMinSpan = document.getElementById('temp-min-val');
+        const tMaxSpan = document.getElementById('temp-max-val');
+        tempSlider.on('update', (values) => {
+            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
+            if (tMinSpan) tMinSpan.innerText = minV;
+            if (tMaxSpan) tMaxSpan.innerText = maxV;
+        });
+        tempSlider.on('set', debounce(aggiornaInterfaccia, 200));
+    }
 }
 
 initApp();
@@ -748,7 +795,16 @@ document.getElementById('view-map').addEventListener('click', () => {
     document.getElementById('view-map').classList.add('active');
     document.getElementById('view-list').classList.remove('active');
     // Riadatta la mappa
-    setTimeout(() => map.invalidateSize(), 100);
+    setTimeout(() => {
+        map.invalidateSize();
+        // Se il fit era in sospeso (mappa nascosta), effettualo ora una volta
+        if (mapFitPending && markers.length > 0) {
+            const group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
+            mapInitialized = true;
+            mapFitPending = false;
+        }
+    }, 100);
 });
 
 // Funzioni per preferiti e indirizzo casa
