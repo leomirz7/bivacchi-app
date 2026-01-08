@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1767830513551",
+    "email": "test@gmail.com",
+    "password": "$2a$10$sdH/lIvFd1JnZ1ihgLFdZee6SiOqVj5NqecgKipk0t2lD3eyg1rdu",
+    "name": "Leonardo",
+    "created_at": "2026-01-08T00:01:53.551Z",
+    "home_address": {
+      "address": "Conegliano",
+      "lat": 45.88533319562494,
+      "lon": 12.294731140136719
+    },
+    "favorites": [
+      "1261925334",
+      "36159706",
+      "597632935",
+      "174468518"
+    ]
+  }
+]

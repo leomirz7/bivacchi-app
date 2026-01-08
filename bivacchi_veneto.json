@@ -1,0 +1,4313 @@
+[
+  {
+    "type": "node",
+    "id": 461888445,
+    "lat": 46.1889396,
+    "lon": 12.3244668,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1150",
+      "name": "Bivacco Scalon",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 560460014,
+    "lat": 45.9663852,
+    "lon": 11.4944023,
+    "tags": {
+      "ele": "1874",
+      "fireplace": "yes",
+      "mattress": "no",
+      "name": "Bivacco Tre Fontane",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 597632935,
+    "lat": 45.9417224,
+    "lon": 11.4609798,
+    "tags": {
+      "ele": "1890",
+      "name": "Bivacco Aia dell'Orsara",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 597642273,
+    "lat": 45.9906699,
+    "lon": 11.5178405,
+    "tags": {
+      "alt_name": "Bivacco Campilussi",
+      "beds": "5",
+      "ele": "1780",
+      "name": "Bivacco Campoluzzo",
+      "operator": "C.A.I. Sezione di Asiago",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 769954934,
+    "lat": 45.926564,
+    "lon": 11.5150189,
+    "tags": {
+      "ele": "1662",
+      "name": "Bivacco Dell'Angelo",
+      "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 989975101,
+    "lat": 45.9738333,
+    "lon": 12.0811711,
+    "tags": {
+      "building": "yes",
+      "name": "Bivacco Mont",
+      "tourism": "wilderness_hut",
+      "ele": 1324
+    }
+  },
+  {
+    "type": "node",
+    "id": 1261925334,
+    "lat": 46.3507062,
+    "lon": 12.2380234,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1856",
+      "mattress": "no",
+      "name": "Baita Darè Copada",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1338107069,
+    "lat": 45.9204622,
+    "lon": 11.5090919,
+    "tags": {
+      "access": "private",
+      "ele": "1605",
+      "name": "Bivacco Stalder",
+      "source": "Regione_del_Veneto_LR28_16.7.1976_Formazione_CTR_auth_39164-5700-1100_23.01.2009",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 1460874341,
+    "lat": 45.6574299,
+    "lon": 11.2192623,
+    "tags": {
+      "int_name": "Cima Marana",
+      "name": "Bivacco Cima Marana",
+      "tourism": "wilderness_hut",
+      "ele": 1533
+    }
+  },
+  {
+    "type": "node",
+    "id": 1764223763,
+    "lat": 46.0139283,
+    "lon": 12.188819,
+    "tags": {
+      "ele": "1187",
+      "name": "Bivacco Col dei Gai",
+      "operator": "Cacciatori di Trichiana",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2340346641,
+    "lat": 46.3000349,
+    "lon": 12.2889938,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1563",
+      "fireplace": "yes",
+      "name": "Casera Busnich",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2366129990,
+    "lat": 46.4530941,
+    "lon": 13.4401964,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1855",
+      "fireplace": "yes",
+      "name": "Ricovero Köpfach",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 2597599726,
+    "lat": 45.8218506,
+    "lon": 11.3415195,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "950",
+      "name": "Cason Brusà",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3078954065,
+    "lat": 46.3149721,
+    "lon": 12.1624356,
+    "tags": {
+      "amenity": "shelter",
+      "capacity": "2",
+      "ele": "1322",
+      "name": "Ricovero del Piano degli Ontani",
+      "old_name": "Casel del Pian dei Auniz",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3091205817,
+    "lat": 46.1623122,
+    "lon": 11.9823277,
+    "tags": {
+      "amenity": "shelter",
+      "capacity": "8",
+      "description": "Shelter located under the roof, accessible from downstairs by a staircase; 8 matresses; not insulated; toilet available nearby",
+      "fireplace": "yes",
+      "level": "1",
+      "name": "Malga Erera",
+      "shelter_type": "basic_hut",
+      "toilets": "yes",
+      "ele": 1709
+    }
+  },
+  {
+    "type": "node",
+    "id": 3141977446,
+    "lat": 45.9902353,
+    "lon": 11.4885524,
+    "tags": {
+      "capacity": "4",
+      "fireplace": "yes",
+      "mattress": "yes",
+      "name": "Bivacco Bordignon",
+      "tourism": "wilderness_hut",
+      "visible_name": "Baito Covolini",
+      "ele": 1990
+    }
+  },
+  {
+    "type": "node",
+    "id": 3286404720,
+    "lat": 46.4919624,
+    "lon": 12.2560403,
+    "tags": {
+      "amenity": "shelter",
+      "description:it": "la posizione riportata su Tabacco e la relativa quota di 2082 m (desunta da IGM) non sono corrette",
+      "ele": "2165",
+      "name": "Bivacco Voltolina",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3647862037,
+    "lat": 46.5847167,
+    "lon": 12.1826667,
+    "tags": {
+      "alt_name": "Bivacco Ricovero Buffa di Perrero;Bivacco Carlo Buffa di Perrero",
+      "amenity": "shelter",
+      "ele": "2760",
+      "name": "Bivacco Ricovero Buffa di Perrero",
+      "operator": "ANA Associazione Nazionale Alpini",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 3717356634,
+    "lat": 46.0633403,
+    "lon": 12.4538329,
+    "tags": {
+      "capacity": "6",
+      "description": "Il bivacco presso la Casera Ceresera è sempre aperto, ci sono 6 brandine e una stufa. Non sono presenti generi alimentari, la legna per la stufa si può prendere nella vicina legnaia.",
+      "ele": "1347",
+      "fireplace": "yes",
+      "mattress": "no",
+      "name": "Bivacco Silvio e Rudi",
+      "operator": "Club Alpino Italiano sezione di Sacile",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4002274220,
+    "lat": 45.913371,
+    "lon": 11.8230836,
+    "tags": {
+      "ele": "1483",
+      "fee": "no",
+      "fireplace": "yes",
+      "name": "Bivacco Murelon \"A. Scopel\"",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 4099883847,
+    "lat": 46.0012286,
+    "lon": 12.1484881,
+    "tags": {
+      "bin": "no",
+      "fee": "no",
+      "fireplace": "yes",
+      "name": "Bivacco dei Loff",
+      "tourism": "wilderness_hut",
+      "wikidata": "Q18288572",
+      "wikipedia": "it:Rifugio dei Loff",
+      "ele": 1185
+    }
+  },
+  {
+    "type": "node",
+    "id": 4498112739,
+    "lat": 46.6068989,
+    "lon": 12.3617938,
+    "tags": {
+      "amenity": "shelter",
+      "capacity": "9",
+      "ele": "2560",
+      "name": "Bivacco De Toni",
+      "operator": "Club Alpino Italiano Sezione di Padova",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6286484073,
+    "lat": 45.8662622,
+    "lon": 11.8096231,
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1451",
+      "name": "Bivacco Malga Ardosetta",
+      "operator": "Club Alpino Italiano sez. Castelfranco V.to",
+      "shelter_type": "basic"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6708161566,
+    "lat": 46.6075791,
+    "lon": 12.9081723,
+    "tags": {
+      "amenity": "shelter",
+      "ele": "2609",
+      "fixme": "Check exact position and delete note",
+      "name": "Caverna dell'Amicizia - Bivacco Celso Craighero",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 6815071988,
+    "lat": 46.4371943,
+    "lon": 13.4240697,
+    "tags": {
+      "amenity": "shelter",
+      "name": "Bivacco Edvige Muschi Zuani",
+      "shelter_type": "rock_shelter",
+      "ele": 1909
+    }
+  },
+  {
+    "type": "node",
+    "id": 7728648278,
+    "lat": 46.4521193,
+    "lon": 12.6278079,
+    "tags": {
+      "capacity": "9",
+      "ele": "1698",
+      "fee": "no",
+      "fireplace": "yes",
+      "mattress": "yes",
+      "name": "Bivacco Chiansaveit",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7823748585,
+    "lat": 46.5683028,
+    "lon": 12.028823,
+    "tags": {
+      "amenity": "shelter",
+      "bench": "yes",
+      "building": "yes",
+      "capacity": "8",
+      "ele": "2758",
+      "name": "Bivacco della Pace",
+      "name:de": "Friedensbiwak",
+      "name:nl": "bivakplaats della pace",
+      "operator": "Alpenverein Südtirol",
+      "shelter_type": "basic_hut",
+      "table": "yes",
+      "wikidata": "Q65235960"
+    }
+  },
+  {
+    "type": "node",
+    "id": 7927361435,
+    "lat": 46.2992117,
+    "lon": 11.8667065,
+    "tags": {
+      "amenity": "shelter",
+      "description": "bivacco in caverna",
+      "name": "Bivacco Stecho",
+      "ele": 1904
+    }
+  },
+  {
+    "type": "node",
+    "id": 9486198662,
+    "lat": 46.5057276,
+    "lon": 12.3428557,
+    "tags": {
+      "ele": "2667",
+      "name": "Bivacco Fratelli Fanton",
+      "operator": "C.A.I. Auronzo di Cadore",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9696086000,
+    "lat": 46.4524778,
+    "lon": 13.5847109,
+    "tags": {
+      "ele": "1460",
+      "name": "Bivacco Oscar Piusi",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "node",
+    "id": 9914481084,
+    "lat": 46.3267359,
+    "lon": 11.8412205,
+    "tags": {
+      "name": "Bivacco dei pastori",
+      "tourism": "wilderness_hut",
+      "ele": 2154
+    }
+  },
+  {
+    "type": "node",
+    "id": 9980013270,
+    "lat": 46.1682649,
+    "lon": 11.9396353,
+    "tags": {
+      "name": "Bivacco Walter Bodo",
+      "tourism": "wilderness_hut",
+      "ele": 1905
+    }
+  },
+  {
+    "type": "node",
+    "id": 10688278371,
+    "lat": 46.1995431,
+    "lon": 12.4545083,
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "description": "Bivacco rosso modello Berti,posto nel bosco della val di Zea",
+      "ele": "1245",
+      "name": "Bivacco Val Zea",
+      "operator": "Azienda foreste Regione Friuli Venezia Giulia",
+      "shelter_type": "basic_hut",
+      "source": "survey:CAI",
+      "website": "https://www.escursionismo.it/rifugi-bivacchi/val-zea-16192"
+    }
+  },
+  {
+    "type": "node",
+    "id": 12192880691,
+    "lat": 46.4180649,
+    "lon": 12.1407792,
+    "tags": {
+      "amenity": "shelter",
+      "name": "Bivacco Bonafede Giustina",
+      "shelter_type": "basic_hut",
+      "ele": 2843
+    }
+  },
+  {
+    "type": "node",
+    "id": 12229506690,
+    "lat": 46.5818042,
+    "lon": 12.0441887,
+    "tags": {
+      "capacity:beds": "4",
+      "ele": "2620",
+      "name": "Bivacco Baccon-Barborka",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 35941934,
+    "center": {
+      "lat": 46.5119693,
+      "lon": 12.6505449
+    },
+    "nodes": [
+      420183399,
+      420183400,
+      420183402,
+      420183403,
+      420183399
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1623",
+      "height": "4 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Mimoias",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36012735,
+    "center": {
+      "lat": 46.5489847,
+      "lon": 13.3158729
+    },
+    "nodes": [
+      420933596,
+      420933597,
+      420933598,
+      420933599,
+      420933596
+    ],
+    "tags": {
+      "alt_name:de": "Kronalm",
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1614",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera For",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36018696,
+    "center": {
+      "lat": 46.5349119,
+      "lon": 13.3977961
+    },
+    "nodes": [
+      420980315,
+      420980316,
+      420980317,
+      420980318,
+      420980315
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1443",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Rifugio Forestale Clinach",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021381,
+    "center": {
+      "lat": 46.4448785,
+      "lon": 13.4478896
+    },
+    "nodes": [
+      421007756,
+      421007757,
+      421007758,
+      421007759,
+      421007756
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "12",
+      "ele": "1578",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Carlo e Giani Stuparich",
+      "note": "Giani è corretto",
+      "ref": "620",
+      "source": "PCN",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021487,
+    "center": {
+      "lat": 46.4471257,
+      "lon": 13.6541591
+    },
+    "nodes": [
+      421008432,
+      421008433,
+      421008434,
+      421008435,
+      421008432
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "9",
+      "ele": "1920",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Fratelli Nogara",
+      "operator": "CAI Tarvisio",
+      "ref": "504",
+      "shelter_type": "basic_hut",
+      "source": "CAI Friuli Venezia Giulia;survey:CAI"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021563,
+    "center": {
+      "lat": 46.4391991,
+      "lon": 13.6787541
+    },
+    "nodes": [
+      421008934,
+      421008935,
+      421008936,
+      421008937,
+      421008934
+    ],
+    "tags": {
+      "alt_name": "Bivacco CAI Tarvisio",
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "ele": "2149",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Alberto Busettini",
+      "operator": "CAI Tarvisio",
+      "ref": "503",
+      "shelter_type": "basic_hut",
+      "source": "CAI Friuli Venezia Giulia;survey:CAI",
+      "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/503-bivacco-busettini/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021603,
+    "center": {
+      "lat": 46.3833467,
+      "lon": 12.4947702
+    },
+    "nodes": [
+      421009349,
+      421009350,
+      421009351,
+      421009352,
+      421009349
+    ],
+    "tags": {
+      "building": "yes",
+      "description": "Bivacco invernale del Rifugio Pordenone",
+      "ele": "1181",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Meluzzo",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021608,
+    "center": {
+      "lat": 46.3599514,
+      "lon": 12.5669432
+    },
+    "nodes": [
+      421009375,
+      421009376,
+      421009377,
+      421009378,
+      421009375
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "capacity": "8",
+      "ele": "1812",
+      "fee": "no",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Casera Pramaggiore",
+      "operator": "CAI San Vito al Tagliamento",
+      "ref": "313",
+      "shelter_type": "basic_hut",
+      "source": "CAI Veneto;survey:CAI",
+      "survey:date": "2025-09-19",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021609,
+    "center": {
+      "lat": 46.3890802,
+      "lon": 12.5315325
+    },
+    "nodes": [
+      421009379,
+      421009380,
+      421009381,
+      421009382,
+      421009379
+    ],
+    "tags": {
+      "alt_name": "Bivacco Giancarlo Milan",
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1745",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Cason di Brica",
+      "ref": "314",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021751,
+    "center": {
+      "lat": 46.346024,
+      "lon": 12.4940206
+    },
+    "nodes": [
+      421010259,
+      421010260,
+      421010261,
+      421010262,
+      421010259
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1858",
+      "fireplace": "yes",
+      "height": "5 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Bregolina Grande",
+      "operator": "Club Alpino Italiano",
+      "ref": "316",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021788,
+    "center": {
+      "lat": 46.3216586,
+      "lon": 12.5872901
+    },
+    "nodes": [
+      421010429,
+      421010430,
+      421010431,
+      421010432,
+      421010429
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "ele": "1810",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Anita Goitan",
+      "operator": "CAI Trieste",
+      "shelter_type": "basic_hut",
+      "source": "CAI Friuli Venezia Giulia;survey:CAI"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36021793,
+    "center": {
+      "lat": 46.2991453,
+      "lon": 12.3843692
+    },
+    "nodes": [
+      421010462,
+      421010463,
+      421010466,
+      421010468,
+      421010462
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1613",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Galvana",
+      "operator": "Club Alpino Italiano",
+      "ref": "321",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "wikidata": "Q3661690",
+      "wikipedia": "it:Casera Galvana"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36022612,
+    "center": {
+      "lat": 46.2769085,
+      "lon": 12.4215686
+    },
+    "nodes": [
+      421016439,
+      421016440,
+      421016441,
+      421016442,
+      421016439
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1628",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Zanette",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36023227,
+    "center": {
+      "lat": 46.2482926,
+      "lon": 12.3368223
+    },
+    "nodes": [
+      421020787,
+      421020788,
+      421020789,
+      421020790,
+      421020787
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1601",
+      "height": "2.5 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Vasei",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36023309,
+    "center": {
+      "lat": 46.2204331,
+      "lon": 12.5862809
+    },
+    "nodes": [
+      421021471,
+      421021472,
+      421021473,
+      421021474,
+      421021471
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "699",
+      "height": "6 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Molassa",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36023863,
+    "center": {
+      "lat": 46.351255,
+      "lon": 12.778764
+    },
+    "nodes": [
+      421025488,
+      421025489,
+      421025490,
+      421025491,
+      421025488
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1205",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Rifugio Forestale Casera Feletta",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "winter_shelter": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36027058,
+    "center": {
+      "lat": 46.2044091,
+      "lon": 12.6664321
+    },
+    "nodes": [
+      421048590,
+      421048591,
+      421048592,
+      421048593,
+      421048594,
+      421048595,
+      421048596,
+      421048597,
+      421048598,
+      421048599,
+      421048590
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "954",
+      "height": "6 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera dei Conti",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36051562,
+    "center": {
+      "lat": 46.3720727,
+      "lon": 13.4242592
+    },
+    "nodes": [
+      421240220,
+      421240221,
+      421240222,
+      421240223,
+      421240220
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bench": "no",
+      "bin": "no",
+      "building": "yes",
+      "capacity": "9",
+      "description": "Spartano ma magnifico bivacco situato sull'altopiano carsico del Foran dal Mus, sul massiccio del monte Canin. Stambecchi, stelle alpine e panorami mozzafiato lo contraddistinguono.\nPosti letto: 9\nAcqua: non disponibile",
+      "ele": "2040",
+      "height": "2.5 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "lit": "no",
+      "name": "Bivacco Elio Marussich",
+      "operator": "Club Alpinistico Triestino",
+      "ref:refuges.info": "7151",
+      "shelter_type": "basic_hut",
+      "wheelchair": "no"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36051567,
+    "center": {
+      "lat": 46.3789211,
+      "lon": 13.4223092
+    },
+    "nodes": [
+      421240248,
+      421240249,
+      421240250,
+      421240251,
+      421240248
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2032",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco speleologico Stefano Procopio",
+      "ref": "608",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36052408,
+    "center": {
+      "lat": 46.1706375,
+      "lon": 12.4689475
+    },
+    "nodes": [
+      421245797,
+      421245798,
+      421245799,
+      421245800,
+      421245797
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bin": "no",
+      "building": "yes",
+      "capacity": "6",
+      "ele": "1617",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Groppa Pastour",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36052409,
+    "center": {
+      "lat": 46.1764652,
+      "lon": 12.4521875
+    },
+    "nodes": [
+      421245801,
+      421245802,
+      421245803,
+      421245804,
+      421245801
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Alessio Toffolon",
+      "shelter_type": "basic_hut",
+      "short_name": "Bivacco Toffolon",
+      "ele": 1970
+    }
+  },
+  {
+    "type": "way",
+    "id": 36052610,
+    "center": {
+      "lat": 46.1711553,
+      "lon": 12.5805353
+    },
+    "nodes": [
+      421247293,
+      421247294,
+      421247295,
+      421247296,
+      421247293
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1195",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera la Pala",
+      "ref:refuges.info": "6449",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36052611,
+    "center": {
+      "lat": 46.161779,
+      "lon": 12.5657427
+    },
+    "nodes": [
+      421247297,
+      421247298,
+      421247299,
+      421247300,
+      421247297
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1327",
+      "fireplace": "yes",
+      "height": "1 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Montelonga",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36052627,
+    "center": {
+      "lat": 46.1794164,
+      "lon": 12.5003905
+    },
+    "nodes": [
+      421247370,
+      421247371,
+      421247372,
+      421247373,
+      421247370
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "drinking_water": "no",
+      "ele": "1139",
+      "fee": "no",
+      "height": "5 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Bitter",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36053739,
+    "center": {
+      "lat": 46.1508564,
+      "lon": 12.5999416
+    },
+    "nodes": [
+      421256385,
+      421256386,
+      421256387,
+      421256388,
+      421256385
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1275",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Rupeit",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36053807,
+    "center": {
+      "lat": 46.1139847,
+      "lon": 12.542896
+    },
+    "nodes": [
+      421256823,
+      421256824,
+      421256825,
+      421256826,
+      421256823
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1349",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Caseratte",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36056774,
+    "center": {
+      "lat": 46.141109,
+      "lon": 12.5848147
+    },
+    "nodes": [
+      421282602,
+      421282603,
+      421282604,
+      421282605,
+      421282602
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1289",
+      "fireplace": "yes",
+      "height": "4 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera di Giais",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36056784,
+    "center": {
+      "lat": 46.1254917,
+      "lon": 12.5860648
+    },
+    "nodes": [
+      421282678,
+      421282679,
+      421282680,
+      421282681,
+      421282678
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "791",
+      "fireplace": "yes",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Palussa",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36056800,
+    "center": {
+      "lat": 46.0917392,
+      "lon": 12.486247
+    },
+    "nodes": [
+      421282800,
+      421282801,
+      421282802,
+      421282803,
+      421282800
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1518",
+      "fireplace": "yes",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "1A0",
+      "name": "Casera Valle Friz",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36074681,
+    "center": {
+      "lat": 46.188232,
+      "lon": 12.6822244
+    },
+    "nodes": [
+      421455173,
+      421455174,
+      421455175,
+      421455176,
+      421455177,
+      421455178,
+      421455173
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1109",
+      "fireplace": "yes",
+      "height": "6 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Malga Jouf",
+      "note": "locali sporchi e trasandati non merita un tourism=wilderness_hut",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36159706,
+    "center": {
+      "lat": 46.1657674,
+      "lon": 13.5764317
+    },
+    "nodes": [
+      422186258,
+      422186259,
+      422186260,
+      422186261,
+      422186262,
+      422186263,
+      422186258
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "building:prefabricated": "yes",
+      "ele": "679",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "1A0",
+      "name": "Baita CAI Val Natisone",
+      "name:sl": "KOCA POD SVETIN MARTINAM",
+      "note": "Baita del \"Club Alpino Italiano\" sezione \"Val Natisone\"",
+      "shelter_type": "basic_hut",
+      "url": "https://organizzazione.cai.it/sez-val-natisone/baita-cai-val-natisone/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36160205,
+    "center": {
+      "lat": 46.1890121,
+      "lon": 13.6421266
+    },
+    "nodes": [
+      422190140,
+      422190141,
+      422190142,
+      422190143,
+      422190140
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1065",
+      "fireplace": "yes",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "1A0",
+      "name": "Bivacco Giuseppe Zanuso",
+      "opening_hours": "24/7",
+      "ref": "703",
+      "short_name": "Bivacco Zanuso",
+      "tourism": "wilderness_hut",
+      "wikidata": "Q16532757",
+      "wikipedia": "it:Bivacco Giuseppe Zanuso"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36627243,
+    "center": {
+      "lat": 46.3788056,
+      "lon": 13.4457376
+    },
+    "nodes": [
+      426117216,
+      426117217,
+      426117218,
+      426117219,
+      426117216
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1956",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco speleologico \"Davanzo - Vianello - Picciola\"",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36627247,
+    "center": {
+      "lat": 46.3846276,
+      "lon": 13.5154057
+    },
+    "nodes": [
+      426117233,
+      426117234,
+      426117235,
+      426117236,
+      426117233
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "9",
+      "ele": "1908",
+      "fireplace": "no",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Modonutti-Savoia",
+      "official_name": "Bivacco Stefano Modonutti - Luigi Savoia",
+      "operator": "Club Alpino Italiano",
+      "ref": "601",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36638198,
+    "center": {
+      "lat": 46.3218551,
+      "lon": 13.2922055
+    },
+    "nodes": [
+      426173649,
+      426173651,
+      426173652,
+      1654897812,
+      426173654,
+      426173649
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bin": "no",
+      "building": "hut",
+      "ele": "1675",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "1AN",
+      "lit": "no",
+      "name": "Bivacco Dino Brollo",
+      "operator": "Società Alpina Friulana",
+      "shelter_type": "basic_hut",
+      "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/712-bivacco-d-brollo/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36639199,
+    "center": {
+      "lat": 46.3471576,
+      "lon": 13.1654832
+    },
+    "nodes": [
+      426178555,
+      426178556,
+      426178557,
+      426178558,
+      426178555
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1311",
+      "fireplace": "yes",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "1A0",
+      "name": "Ricovero Coi",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36645178,
+    "center": {
+      "lat": 46.218412,
+      "lon": 12.4695871
+    },
+    "nodes": [
+      426208067,
+      426208068,
+      426208069,
+      426208070,
+      426208067
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1124",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Val Provagna",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36645820,
+    "center": {
+      "lat": 46.3973486,
+      "lon": 12.4821429
+    },
+    "nodes": [
+      426211310,
+      426211311,
+      426211312,
+      426211313,
+      426211310
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "9",
+      "ele": "2070",
+      "fee": "no",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Giuliano Perugini",
+      "operator": "Club Alpino Italiano Sezione Trieste",
+      "ref": "327",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36646023,
+    "center": {
+      "lat": 46.4256376,
+      "lon": 13.5179435
+    },
+    "nodes": [
+      426212269,
+      426212270,
+      426212271,
+      426212272,
+      426212269
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "height": "1 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Riobianco",
+      "shelter_type": "basic_hut",
+      "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg",
+      "ele": 1972
+    }
+  },
+  {
+    "type": "way",
+    "id": 36646024,
+    "center": {
+      "lat": 46.4257193,
+      "lon": 13.5180536
+    },
+    "nodes": [
+      426212273,
+      426212274,
+      426212275,
+      426212276,
+      426212273
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1950",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco C.A.I. Gorizia",
+      "operator": "Club Alpino Italliano",
+      "ref": "613",
+      "shelter_type": "basic_hut",
+      "wikimedia_commons": "File:Bivacco CAI Gorizia (Id 3223).jpg"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36646049,
+    "center": {
+      "lat": 46.4661155,
+      "lon": 13.6865094
+    },
+    "nodes": [
+      426212381,
+      426212382,
+      426212383,
+      426212384,
+      426212381
+    ],
+    "tags": {
+      "access": "yes",
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1657",
+      "height": "6 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Capanna Ponza",
+      "name:sl": "Zavetišče pod Ponco",
+      "shelter_type": "basic_hut",
+      "winter_room": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36646333,
+    "center": {
+      "lat": 46.4329873,
+      "lon": 13.380814
+    },
+    "nodes": [
+      426213765,
+      426213767,
+      426213769,
+      426213770,
+      426213765
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1387",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco C.A.I. Cividale \"Sandro e Mauro\"",
+      "official_name": "Bivacco Sandro Pittioni e Mauro Stafuzza",
+      "ref": "624",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36646335,
+    "center": {
+      "lat": 46.4229631,
+      "lon": 13.3969301
+    },
+    "nodes": [
+      426213777,
+      426213778,
+      426213779,
+      426213780,
+      426213777
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "6",
+      "ele": "2100",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Sandro del Torso",
+      "ref": "623",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36650205,
+    "center": {
+      "lat": 46.4663482,
+      "lon": 13.1667216
+    },
+    "nodes": [
+      426233050,
+      426233051,
+      426233052,
+      426233053,
+      426233050
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1708",
+      "elevation": "1700",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Dionisio Feruglio",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36650450,
+    "center": {
+      "lat": 46.4583394,
+      "lon": 13.2469867
+    },
+    "nodes": [
+      426234156,
+      426234157,
+      426234158,
+      426234159,
+      426234156
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "6",
+      "ele": "1732",
+      "electricity": "solar",
+      "height": "5 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Giuseppe Bianchi",
+      "operator": "C.A.I. sezione di Moggio Udinese",
+      "ref": "401",
+      "short_name": "Bivacco Bianchi",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36652489,
+    "center": {
+      "lat": 46.5020127,
+      "lon": 13.1343833
+    },
+    "nodes": [
+      426244087,
+      426244088,
+      426244089,
+      426244090,
+      426244087
+    ],
+    "tags": {
+      "alt_name": "Ricovero Monte Fuarmi",
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1038",
+      "fireplace": "yes",
+      "height": "1 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Monte Fuarmi",
+      "operator": "Club Alpino Italiano",
+      "ref": "411",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36653248,
+    "center": {
+      "lat": 46.558566,
+      "lon": 13.2300716
+    },
+    "nodes": [
+      426248098,
+      426248099,
+      426248100,
+      426248101,
+      426248098
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1900",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "mattress": "no",
+      "name": "Bivacco Ernesto Lomasti",
+      "operator": "Club Alpino Italiano - Sezione di Pontebba",
+      "ref": "416",
+      "shelter_type": "basic_hut",
+      "wikidata": "Q879147",
+      "wikipedia": "it:Bivacco Ernesto Lomasti"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36658041,
+    "center": {
+      "lat": 46.4127756,
+      "lon": 12.5037809
+    },
+    "nodes": [
+      426272665,
+      426272666,
+      426272667,
+      426272668,
+      426272665
+    ],
+    "tags": {
+      "beds": "12",
+      "building": "hut",
+      "ele": "2152",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4ABA",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Antonio Marchi e Renzo Granzotto",
+      "operator": "Club Alpino Italiano sezione di Pordenone",
+      "ref": "325",
+      "shelter_type": "basic_hut",
+      "short_name": "Bivacco Marchi - Granzotto",
+      "tourism": "wilderness_hut",
+      "website": "https://caipordenone.it/strutture/bivacco-marchi-granzotto/",
+      "wikidata": "Q3640556",
+      "wikimedia_commons": "File:Bivacco Marchi-Granzotto (Id 2368).jpg",
+      "wikipedia": "it:Bivacco Marchi-Granzotto"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36677614,
+    "center": {
+      "lat": 46.364232,
+      "lon": 12.4877301
+    },
+    "nodes": [
+      426418228,
+      426418229,
+      426418230,
+      426418232,
+      426418228
+    ],
+    "tags": {
+      "building": "hut",
+      "ele": "1781",
+      "fee": "no",
+      "fireplace": "yes",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AAF",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero Casera Roncada",
+      "operator": "Parco Dolomiti Friulane",
+      "ref": "317",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36677632,
+    "center": {
+      "lat": 46.371573,
+      "lon": 12.6296862
+    },
+    "nodes": [
+      426418315,
+      426418316,
+      426418317,
+      426418318,
+      426418315
+    ],
+    "tags": {
+      "alt_name": "Malga Las Masons",
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1555",
+      "fireplace": "yes",
+      "height": "4 m",
+      "it:fvg:ctrn:code": "4AAF",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Ricovero casera Masons",
+      "ref": "302",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36677839,
+    "center": {
+      "lat": 46.4265201,
+      "lon": 13.471084
+    },
+    "nodes": [
+      426419391,
+      426419394,
+      426419396,
+      426419397,
+      426419391
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "9",
+      "building": "yes",
+      "ele": "1630",
+      "height": "2 m",
+      "it:fvg:ctrn:code": "4AAF",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Dario Mazzeni",
+      "operator": "Club Alpino Italiano Società Alpina delle Giulie",
+      "shelter_type": "basic_hut",
+      "short_name": "Bivacco Mazzeni",
+      "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/616-bivacco-d-mazzeni/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 36677888,
+    "center": {
+      "lat": 46.5190834,
+      "lon": 13.7061347
+    },
+    "nodes": [
+      426419648,
+      426419649,
+      426419650,
+      426419651,
+      426419648
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1319",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AAF",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Bivacco Senza Confini",
+      "name:it": "Bivacco Senza Confini",
+      "name:sl": "Bivak brez meja",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 42305411,
+    "center": {
+      "lat": 45.7339897,
+      "lon": 11.2964925
+    },
+    "nodes": [
+      527908382,
+      527908370,
+      527908352,
+      527908348,
+      527908382
+    ],
+    "tags": {
+      "access": "private",
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Baita Remi",
+      "shelter_type": "basic_hut",
+      "source": "Comune di Schio",
+      "ele": 927
+    }
+  },
+  {
+    "type": "way",
+    "id": 59721510,
+    "center": {
+      "lat": 46.091744,
+      "lon": 11.8123821
+    },
+    "nodes": [
+      741278592,
+      741277938,
+      741278183,
+      741278316,
+      741278557,
+      741277823,
+      741278068,
+      741278049,
+      741278592
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1902",
+      "fireplace": "yes",
+      "name": "Malga Bivacco Monsampiano",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 105799110,
+    "center": {
+      "lat": 46.2290788,
+      "lon": 12.3242079
+    },
+    "nodes": [
+      1218203375,
+      1218202733,
+      1218202867,
+      1218197669,
+      1218203375
+    ],
+    "tags": {
+      "access": "yes",
+      "bench": "yes",
+      "bin": "no",
+      "building": "yes",
+      "capacity": "8",
+      "fee": "no",
+      "fireplace": "yes",
+      "kitchen": "yes",
+      "name": "Casot Spiz Galina",
+      "operator": "Riserva Alpina di Caccia di Longarone",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "ele": 1207
+    }
+  },
+  {
+    "type": "way",
+    "id": 110977951,
+    "center": {
+      "lat": 46.2619816,
+      "lon": 12.1762635
+    },
+    "nodes": [
+      1265393636,
+      1265363216,
+      1265367967,
+      1265369546,
+      1265393636
+    ],
+    "tags": {
+      "building": "farm_auxiliary",
+      "fireplace": "yes",
+      "fixme": "Import CTR Veneto. Sostituire con building=stable (stalla) o building=barn (fienile)",
+      "name": "bivacco Dal Mas",
+      "operator": "Club Alpino Italiano - sezione di Longarone",
+      "tourism": "wilderness_hut",
+      "ele": 1668
+    }
+  },
+  {
+    "type": "way",
+    "id": 111825650,
+    "center": {
+      "lat": 46.2138921,
+      "lon": 12.1982503
+    },
+    "nodes": [
+      1273156989,
+      1273158527,
+      1273162062,
+      1273153000,
+      1273156989
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1340",
+      "name": "Bivacco Medassa",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 111825754,
+    "center": {
+      "lat": 46.2235326,
+      "lon": 12.1779977
+    },
+    "nodes": [
+      1273161316,
+      1273162838,
+      1273153952,
+      1273155157,
+      1273161316
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "6",
+      "building": "yes",
+      "contact:website": "https://www.caiveneto.it/bivacco/sperti",
+      "ele": "2000",
+      "name": "Bivacco Sperti",
+      "shelter_type": "basic_hut",
+      "start_date": "1963-09-08"
+    }
+  },
+  {
+    "type": "way",
+    "id": 111825992,
+    "center": {
+      "lat": 46.2282273,
+      "lon": 12.1799986
+    },
+    "nodes": [
+      1273155065,
+      1273161241,
+      1273162726,
+      1273153883,
+      1273155065
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "6",
+      "building": "yes",
+      "description": "Inaugurato il 18.10.1959, è un prefabbricato di tipo Apollonio realizzato dalla ditta Tissi di Belluno ed eretto ad opera della Sez. di Belluno del CAI",
+      "ele": "2320",
+      "name": "Bivacco Ugo Dalla Bernardina",
+      "operator": "C.A.I. Veneto",
+      "ref:refuges.info": "5895",
+      "shelter_type": "basic_hut",
+      "water_source": "yes",
+      "website": "https://www.caiveneto.it/bivacco/dalla-bernardina"
+    }
+  },
+  {
+    "type": "way",
+    "id": 111826052,
+    "center": {
+      "lat": 46.2310344,
+      "lon": 12.1906825
+    },
+    "nodes": [
+      1273157410,
+      1273158822,
+      1273158129,
+      1273159523,
+      1273157410
+    ],
+    "tags": {
+      "addr:postcode": "32100",
+      "alt_name": "Bivacco Sandro Bocco",
+      "amenity": "shelter",
+      "building": "yes",
+      "building:levels": "1",
+      "capacity": "9",
+      "ele": "2266",
+      "name": "Bivacco del Marmol",
+      "operator": "CAI Dolo",
+      "ref:refuges.info": "5896",
+      "shelter_type": "basic_hut",
+      "source": "CAI Veneto;survey:CAI",
+      "source:ref": "9216111"
+    }
+  },
+  {
+    "type": "way",
+    "id": 142006993,
+    "center": {
+      "lat": 46.0270474,
+      "lon": 12.260348
+    },
+    "nodes": [
+      1554244421,
+      1554244408,
+      1554244407,
+      1554244410,
+      1554244421
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Bivacco Pian dei Grassi",
+      "shelter_type": "weather_shelter",
+      "ele": 1164
+    }
+  },
+  {
+    "type": "way",
+    "id": 148138360,
+    "center": {
+      "lat": 46.0800273,
+      "lon": 11.7981253
+    },
+    "nodes": [
+      1612399210,
+      1612399234,
+      1612399237,
+      1612399247,
+      1612399250,
+      1612399241,
+      1612399213,
+      1612399210
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1442",
+      "name": "Le Prese Malga Bivacco",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 148187580,
+    "center": {
+      "lat": 45.8128676,
+      "lon": 11.4866322
+    },
+    "nodes": [
+      1612934126,
+      1612934128,
+      1612934134,
+      1612934124,
+      1612934119,
+      1612934126
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "name": "Bivacco Caltrano",
+      "shelter_type": "weather_shelter",
+      "ele": 1344
+    }
+  },
+  {
+    "type": "way",
+    "id": 148422217,
+    "center": {
+      "lat": 46.0227676,
+      "lon": 12.2208594
+    },
+    "nodes": [
+      1614717021,
+      1614716839,
+      1614716893,
+      1614717067,
+      1614717021
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Bivacco \"Buso\"",
+      "ele": 1200
+    }
+  },
+  {
+    "type": "way",
+    "id": 151616302,
+    "center": {
+      "lat": 46.3335298,
+      "lon": 13.4432135
+    },
+    "nodes": [
+      1644407129,
+      1644407128,
+      1644407126,
+      1644407127,
+      1644407129
+    ],
+    "tags": {
+      "alt_name": "Bivacco C.A.I. Manzano",
+      "amenity": "shelter",
+      "bin": "no",
+      "building": "yes",
+      "description": "Situato sotto il torrione Mulaz, offre un ottimo punto di appoggio per chi affronta l'Alta Via Resiana e un magnifico panorama sulla val Resia.\nPosti letto: 10 (brande con materasso e alcune coperte);\nAcqua: non disponibile\nStufa non presente",
+      "ele": "1690",
+      "lit": "no",
+      "name": "Bivacco Franco Costantini",
+      "operator": "Club Alpino Italiano",
+      "ref": "602",
+      "shelter_type": "basic_hut",
+      "website": "https://www.cai-fvg.it/sentieri-e-rifugi/rifugi-e-opere-alpine/opere-alpine/602-bivacco-costantini/",
+      "wheelchair": "no",
+      "wikidata": "Q20008165",
+      "wikipedia": "it:Bivacco Franco Costantini"
+    }
+  },
+  {
+    "type": "way",
+    "id": 152273223,
+    "center": {
+      "lat": 46.522574,
+      "lon": 12.2462718
+    },
+    "nodes": [
+      1650925679,
+      1650925680,
+      1650925678,
+      1650925677,
+      1650925679
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2000",
+      "name": "Bivacco Comici",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "wikidata": "Q20009646",
+      "wikipedia": "it:Bivacco Comici"
+    }
+  },
+  {
+    "type": "way",
+    "id": 169138553,
+    "center": {
+      "lat": 45.8869708,
+      "lon": 11.8053947
+    },
+    "nodes": [
+      1803053791,
+      1803053800,
+      1803053795,
+      1803053782,
+      1803053791
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1471",
+      "name": "Cason dei Lebi",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 174468518,
+    "center": {
+      "lat": 45.9429866,
+      "lon": 12.1938184
+    },
+    "nodes": [
+      1851559056,
+      12703190757,
+      1851559064,
+      12694843990,
+      1851559058,
+      1851559056
+    ],
+    "tags": {
+      "building": "yes",
+      "fee": "no",
+      "fireplace": "no",
+      "name": "Bivacco Marsini",
+      "tourism": "wilderness_hut",
+      "ele": 333
+    }
+  },
+  {
+    "type": "way",
+    "id": 175901474,
+    "center": {
+      "lat": 45.9761157,
+      "lon": 11.4589606
+    },
+    "nodes": [
+      1864611562,
+      1864611563,
+      1864611561,
+      1864611559,
+      1864611562
+    ],
+    "tags": {
+      "access": "yes",
+      "beds": "yes",
+      "building": "hut",
+      "couch": "yes",
+      "fee": "no",
+      "fireplace": "yes",
+      "name": "Bivacco Casara Trentin",
+      "tourism": "wilderness_hut",
+      "ele": 1962
+    }
+  },
+  {
+    "type": "way",
+    "id": 180141479,
+    "center": {
+      "lat": 46.1468918,
+      "lon": 11.916659
+    },
+    "nodes": [
+      1905727239,
+      1905727237,
+      1905727231,
+      1905727238,
+      1905727239
+    ],
+    "tags": {
+      "building": "yes",
+      "name": "Bivacco Invernale Matteo Fiori",
+      "tourism": "wilderness_hut",
+      "ele": 1698
+    }
+  },
+  {
+    "type": "way",
+    "id": 180141536,
+    "center": {
+      "lat": 46.1433629,
+      "lon": 11.9283558
+    },
+    "nodes": [
+      1905727163,
+      1905727160,
+      1905727152,
+      1905727161,
+      1905727163
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "fee": "no",
+      "fireplace": "yes",
+      "internet_access": "no",
+      "mattress": "yes",
+      "name": "Bivacco malga Alvis",
+      "operator": "parco nazionale delle dolomiti bellunesi",
+      "tourism": "wilderness_hut",
+      "website": "https://www.dolomitipark.it/visitare-il-parco/rifugi-e-bivacchi/bivacco-malga-alvis-quota-1573/",
+      "ele": 1570
+    }
+  },
+  {
+    "type": "way",
+    "id": 180141554,
+    "center": {
+      "lat": 46.1125035,
+      "lon": 11.975248
+    },
+    "nodes": [
+      1905726702,
+      1905726703,
+      1905726701,
+      1905726700,
+      1905726702
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1501",
+      "name": "Bivacco Casera Bosc dei Boi",
+      "operator": "Gruppo Escursionisti Cesio",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 180142155,
+    "center": {
+      "lat": 46.1682345,
+      "lon": 11.9395078
+    },
+    "nodes": [
+      1905732017,
+      1905732015,
+      1905732007,
+      1905732009,
+      1905732017
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "15",
+      "ele": "1930",
+      "name": "Bivacco Feltre",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 180142164,
+    "center": {
+      "lat": 46.1682628,
+      "lon": 11.9396327
+    },
+    "nodes": [
+      1905732024,
+      1905732023,
+      1905732011,
+      1905732013,
+      1905732024
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "4",
+      "ele": "1930",
+      "name": "Bivacco Walter Bodo",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 180142168,
+    "center": {
+      "lat": 46.1932755,
+      "lon": 11.9859013
+    },
+    "nodes": [
+      1905732039,
+      1905732042,
+      1905732043,
+      1905732041,
+      1905732039
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bench": "no",
+      "bin": "no",
+      "building": "hut",
+      "ele": "1314",
+      "fireplace": "yes",
+      "name": "Casera Vallon",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 180149543,
+    "center": {
+      "lat": 46.213471,
+      "lon": 12.062786
+    },
+    "nodes": [
+      1905793664,
+      1905793659,
+      1905793654,
+      1905793656,
+      1905793664
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "capacity": "9",
+      "drinking_water": "no",
+      "fee": "no",
+      "fireplace": "no",
+      "name": "Bivacco Valdo",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "ele": 1652
+    }
+  },
+  {
+    "type": "way",
+    "id": 180149675,
+    "center": {
+      "lat": 46.244866,
+      "lon": 12.042763
+    },
+    "nodes": [
+      1905797514,
+      1905797506,
+      1905797502,
+      1905797490,
+      1905797510,
+      1905797512,
+      1905797514
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "capacity": "6",
+      "ele": "1378",
+      "fee": "no",
+      "fireplace": "yes",
+      "name": "Bivacco Le Mandre",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 183195965,
+    "center": {
+      "lat": 46.3777044,
+      "lon": 12.0443126
+    },
+    "nodes": [
+      1935619208,
+      1935619211,
+      1935619216,
+      1935619214,
+      1935619208
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "6",
+      "drinking_water": "no",
+      "ele": "2880",
+      "fee": "no",
+      "fireplace": "no",
+      "name": "Bivacco Tomè",
+      "operator": "CAI Agordo",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 183195976,
+    "center": {
+      "lat": 46.3721045,
+      "lon": 12.0014604
+    },
+    "nodes": [
+      1935619146,
+      1935619144,
+      1935619151,
+      1935619156,
+      1935619146
+    ],
+    "tags": {
+      "building": "hut",
+      "building:material": "wood",
+      "capacity": "8",
+      "description": "Inaugurato il 15.8.1995, è una capanna in legno costruita per iniziativa del Comune e della Pro Loco di San Tomaso Agordino, nei pressi della diruta Casera di Col Mandro. Acqua di sorgente a 800 metri",
+      "drinking_water": "yes",
+      "ele": "1844",
+      "name": "Bivacco Col Mandro",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 183195985,
+    "center": {
+      "lat": 46.3820462,
+      "lon": 12.0133927
+    },
+    "nodes": [
+      1935619249,
+      1935619241,
+      1935619245,
+      1935619270,
+      1935619249
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1651",
+      "name": "Bivacco Casamatta",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 183203170,
+    "center": {
+      "lat": 46.3479969,
+      "lon": 12.0761281
+    },
+    "nodes": [
+      1935694455,
+      1935694457,
+      1935694451,
+      1935694448,
+      1935694455
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2007",
+      "name": "Bivacco Grisetti",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 186928596,
+    "center": {
+      "lat": 46.533754,
+      "lon": 12.6721322
+    },
+    "nodes": [
+      1976769678,
+      1976769680,
+      1976769683,
+      1976769679,
+      1976769678
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1991",
+      "name": "Bivacco Damiana del Gobbo",
+      "operator": "Club Alpino Italiano",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 196586347,
+    "center": {
+      "lat": 46.6207673,
+      "lon": 12.5808901
+    },
+    "nodes": [
+      2069031151,
+      2069031150,
+      2069031152,
+      2069031153,
+      2069031151
+    ],
+    "tags": {
+      "building": "hut",
+      "name": "Bivacco Casera Vissada",
+      "tourism": "wilderness_hut",
+      "ele": 1875
+    }
+  },
+  {
+    "type": "way",
+    "id": 196587416,
+    "center": {
+      "lat": 46.6526392,
+      "lon": 12.552992
+    },
+    "nodes": [
+      2069041289,
+      2069041288,
+      2069041286,
+      2069041287,
+      2069041289
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "12",
+      "building": "yes",
+      "ele": "2216",
+      "name": "Bivacco Armando Piva",
+      "operator": "Club Alpino Italiano, sez. Val Comelico",
+      "shelter_type": "basic_hut",
+      "website": "https://www.caiveneto.it/bivacco/piva"
+    }
+  },
+  {
+    "type": "way",
+    "id": 198772173,
+    "center": {
+      "lat": 45.9682198,
+      "lon": 12.0607717
+    },
+    "nodes": [
+      2088681091,
+      2088681098,
+      2088681096,
+      2088681090,
+      2088681091
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "building:levels": "1",
+      "ele": "1245",
+      "fireplace": "yes",
+      "mattress": "no",
+      "name": "Bivacco Salvedella Vecia",
+      "shelter_type": "basic",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 198772221,
+    "center": {
+      "lat": 45.9666366,
+      "lon": 12.0682118
+    },
+    "nodes": [
+      2088681078,
+      2088681082,
+      2088681081,
+      2088681079,
+      2088681077,
+      2088681078
+    ],
+    "tags": {
+      "building": "yes",
+      "name": "Bivacco Salvedella Nuova",
+      "tourism": "wilderness_hut",
+      "ele": 1238
+    }
+  },
+  {
+    "type": "way",
+    "id": 198774773,
+    "center": {
+      "lat": 45.9775354,
+      "lon": 12.049749
+    },
+    "nodes": [
+      2088701618,
+      2088701616,
+      2088701617,
+      2088701620,
+      2088701618
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1071",
+      "fireplace": "yes",
+      "name": "Bivacco Momi",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 199050486,
+    "center": {
+      "lat": 46.1320869,
+      "lon": 12.0180285
+    },
+    "nodes": [
+      2091014402,
+      2091014403,
+      2091014405,
+      2091014404,
+      2091014402
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "6",
+      "drinking_water": "nearby",
+      "ele": "1577",
+      "fireplace": "external",
+      "mattress": "yes",
+      "name": "Bivacco Palia",
+      "operator": "C.A.I. Veneto",
+      "tourism": "wilderness_hut",
+      "website": "https://www.caiveneto.it/bivacco/palia"
+    }
+  },
+  {
+    "type": "way",
+    "id": 199053117,
+    "center": {
+      "lat": 46.2295357,
+      "lon": 11.9273123
+    },
+    "nodes": [
+      2091038148,
+      2091038143,
+      2091038147,
+      2091038151,
+      2091038148
+    ],
+    "tags": {
+      "beds": "6",
+      "building": "yes",
+      "capacity": "8",
+      "description": "Il bivacco è dotato di stufa (che tende a fare fumo se si lascia lo sportello aperto, quindi inserire rapidamente la legna e chiudere subito). Al piano superiore sono presenti 8 posti letto con reti e materassino e qualche coperta.",
+      "ele": "1737",
+      "fee": "no",
+      "fireplace": "yes",
+      "mattress": "yes",
+      "name": "Bivacco Menegazzi al Pianlonch",
+      "operator": "Gruppo ANA Gosaldo",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 199054410,
+    "center": {
+      "lat": 46.3133339,
+      "lon": 11.9789109
+    },
+    "nodes": [
+      2091047003,
+      2091046998,
+      2091047001,
+      2091047004,
+      2091047003
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "9",
+      "ele": "2210",
+      "mattress": "yes",
+      "name": "Margherita Bedin",
+      "note": "Emergency alpine hut. This is not a private hut/hotel/landfill. The place must be kept perfect and tidy",
+      "operator": "Gruppo Alpinistico Vicentino",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 199056006,
+    "center": {
+      "lat": 46.2821163,
+      "lon": 11.9504473
+    },
+    "nodes": [
+      2091065667,
+      2091065670,
+      2091065669,
+      2091065666,
+      2091065667
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bench": "no",
+      "bin": "no",
+      "building": "hut",
+      "capacity": "6",
+      "ele": "1545",
+      "name": "Bivacco Enzo Cozzolino",
+      "shelter_type": "basic_hut",
+      "wikidata": "Q26258021",
+      "wikipedia": "it:Bivacco Cozzolino"
+    }
+  },
+  {
+    "type": "way",
+    "id": 199056228,
+    "center": {
+      "lat": 46.2747131,
+      "lon": 11.9512893
+    },
+    "nodes": [
+      2091065648,
+      2091065649,
+      2091065647,
+      2091065646,
+      2091065648
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bin": "no",
+      "building": "hut",
+      "capacity": "9",
+      "ele": "2650",
+      "name": "Bivacco Giancarlo Biasin",
+      "operator": "Club Alpino Italiano Sezione di Agordo",
+      "ref:refuges.info": "5898",
+      "shelter_type": "basic_hut",
+      "wikidata": "Q106449186",
+      "wikipedia": "it:Bivacco Giancarlo Biasin"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200221569,
+    "center": {
+      "lat": 46.4963089,
+      "lon": 11.9599262
+    },
+    "nodes": [
+      2102155647,
+      2102155643,
+      2102155641,
+      2102155645,
+      2102155647
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "4",
+      "drinking_water": "no",
+      "internet_access": "no",
+      "maintenance": "CAI livinallongo",
+      "name": "Bivacco Brigata Alpina \"Cadore\"",
+      "shelter_type": "basic_hut",
+      "wheelchair": "no",
+      "ele": 2437
+    }
+  },
+  {
+    "type": "way",
+    "id": 200227675,
+    "center": {
+      "lat": 46.4500666,
+      "lon": 11.974192
+    },
+    "nodes": [
+      2102205366,
+      2102205369,
+      2102205365,
+      2102205363,
+      2102205366
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "fee": "no",
+      "name": "Bivacco Pian delle Stelle",
+      "tourism": "wilderness_hut",
+      "ele": 1512
+    }
+  },
+  {
+    "type": "way",
+    "id": 200336480,
+    "center": {
+      "lat": 46.5631183,
+      "lon": 12.0680052
+    },
+    "nodes": [
+      2103256539,
+      2103256540,
+      2103256538,
+      2103256537,
+      2103256539
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "7",
+      "building": "wilderness_hut",
+      "description": "Inaugurato il 5.9.1982, è stato realizzato per iniziativa di un gruppo di dipendenti della Società di gestione della Funivia Tofana. Ricostruzione in legno del ricovero di guerra degli alpini del Battaglione Lamon, di presidio sulla montagna nel 1917",
+      "ele": "2922",
+      "name": "Bivacco Baracca degli Alpini",
+      "operator": "C.A.I. Veneto",
+      "shelter_type": "basic_hut",
+      "water_source": "no",
+      "website": "https://www.caiveneto.it/bivacco/baracca-degli-alpini"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200789480,
+    "center": {
+      "lat": 46.5001068,
+      "lon": 12.2163155
+    },
+    "nodes": [
+      2107551616,
+      2107551625,
+      2107551621,
+      2107551608,
+      2107551616
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "2600",
+      "name": "Bivacco Slataper",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "wikipedia": "it:Bivacco Slataper"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200797150,
+    "center": {
+      "lat": 46.5147337,
+      "lon": 12.3142977
+    },
+    "nodes": [
+      2107601827,
+      2107601823,
+      2107601821,
+      2107601825,
+      2107601827
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "ele": "2246",
+      "name": "Bivacco Dino e Plinio Toso",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200797161,
+    "center": {
+      "lat": 46.5131452,
+      "lon": 12.2884188
+    },
+    "nodes": [
+      2107601811,
+      2107601817,
+      2107601819,
+      4930772928,
+      2107601811
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2111",
+      "name": "Bivacco Musatti",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200797188,
+    "center": {
+      "lat": 46.5148018,
+      "lon": 12.3141965
+    },
+    "nodes": [
+      2107601831,
+      2107601835,
+      2107601833,
+      2107601829,
+      2107601831
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2246",
+      "name": "Bivacco Rifugio Tiziano",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 200801676,
+    "center": {
+      "lat": 46.4178783,
+      "lon": 13.4655555
+    },
+    "nodes": [
+      2107650670,
+      2107650681,
+      2107650674,
+      2107650661,
+      2107650670
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "8",
+      "bench": "no",
+      "bin": "no",
+      "building": "hut",
+      "ele": "2531",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Bivacco_Luca_Vuerich.jpg",
+      "name": "Bivacco Luca Vuerich",
+      "operator": "Stazione del Corpo Nazionale del Soccorso Alpino e Speleologico di Cave del Predil",
+      "shelter_type": "basic_hut",
+      "source": "local knowledge",
+      "wikipedia": "it:Luca Vuerich"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201022556,
+    "center": {
+      "lat": 46.3147349,
+      "lon": 12.1812952
+    },
+    "nodes": [
+      2109759847,
+      2109759849,
+      2109759850,
+      2109759848,
+      2109759847
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "2010",
+      "name": "Bivacco Carnielli-DeMarchi",
+      "operator": "Club Alpino Italiano sez. di Conegliano",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201029948,
+    "center": {
+      "lat": 46.3623187,
+      "lon": 12.1208517
+    },
+    "nodes": [
+      2109829098,
+      2109829099,
+      2109829097,
+      2109829096,
+      2109829098
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1709",
+      "name": "Canazzè di Sopra",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201203189,
+    "center": {
+      "lat": 46.5409384,
+      "lon": 12.5582683
+    },
+    "nodes": [
+      2111532067,
+      4342489458,
+      2111532060,
+      2111532065,
+      2111532067
+    ],
+    "tags": {
+      "alt_name": "Bivacco Ciadon",
+      "building": "yes",
+      "description": "Bivacco interamente in legno con pannello solare che dispone di tavolo, stufa e uno specchio. Sono presenti 4 letti al piano inferiore e una mansarda, senza materassi",
+      "fireplace": "yes",
+      "mattress": "no",
+      "name": "Bivacco Monte Col",
+      "tourism": "wilderness_hut",
+      "ele": 1850
+    }
+  },
+  {
+    "type": "way",
+    "id": 201203192,
+    "center": {
+      "lat": 46.5145412,
+      "lon": 12.5251443
+    },
+    "nodes": [
+      2111532001,
+      2111532000,
+      2111531998,
+      2111531999,
+      2111532001
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "beds": "5",
+      "bin": "no",
+      "building": "yes",
+      "ele": "2000",
+      "lit": "no",
+      "name": "Bivacco Angelo Ursella Mario Zandonella",
+      "note": "acqua scendendo 20 minuti lungo il sentiero 330",
+      "operator": "Club Alpino Italiano sezione Val Comelico, sottosezione di Buja",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201203622,
+    "center": {
+      "lat": 46.5341922,
+      "lon": 12.6191235
+    },
+    "nodes": [
+      2111536972,
+      2111536974,
+      2111536973,
+      2111536971,
+      2111536972
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "5",
+      "ele": "2048",
+      "fireplace": "yes",
+      "name": "Bivacco Franco Marta",
+      "official_name": "Bivacco alle Terze \"Franco Marta\"",
+      "operator": "Club Alpino Italiano sezione Val Comelico",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201203634,
+    "center": {
+      "lat": 46.5270776,
+      "lon": 12.5886728
+    },
+    "nodes": [
+      2111536914,
+      2111536912,
+      2111536916,
+      2111536918,
+      2111536914
+    ],
+    "tags": {
+      "alt_name": "Bivacco Caimi al Cornon",
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "6",
+      "ele": "2045",
+      "name": "Bivacco Cornon",
+      "operator": "Club Alpino Italiano Sez. Valcomelico",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201450574,
+    "center": {
+      "lat": 46.3816032,
+      "lon": 12.4476391
+    },
+    "nodes": [
+      2114358808,
+      2114358810,
+      2114358814,
+      2114358812,
+      2114358808
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1940",
+      "name": "Bivacco Giusto Gervasutti",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201452736,
+    "center": {
+      "lat": 46.4222763,
+      "lon": 12.4186561
+    },
+    "nodes": [
+      2114389451,
+      2114389447,
+      2114389449,
+      2114389453,
+      2114389451
+    ],
+    "tags": {
+      "building": "yes",
+      "name": "Bivacco Valentino Ciotti",
+      "tourism": "wilderness_hut",
+      "ele": 1570
+    }
+  },
+  {
+    "type": "way",
+    "id": 201452741,
+    "center": {
+      "lat": 46.4337263,
+      "lon": 12.4545968
+    },
+    "nodes": [
+      2114389529,
+      2114389527,
+      2114389528,
+      2114389531,
+      2114389529
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "2006",
+      "name": "Bivacco Da Deppo Montanel",
+      "operator": "Club Alpino Italiano",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 201452746,
+    "center": {
+      "lat": 46.410181,
+      "lon": 12.4509259
+    },
+    "nodes": [
+      2114389323,
+      2114389325,
+      2114389322,
+      2114389321,
+      2114389323
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bench": "yes",
+      "bin": "no",
+      "building": "yes",
+      "ele": "1450",
+      "name": "Casel de Col",
+      "operator": "Rifugio Padova",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 202044951,
+    "center": {
+      "lat": 46.3011068,
+      "lon": 12.2651418
+    },
+    "nodes": [
+      2120236742,
+      2120236740,
+      2120236738,
+      2120236737,
+      2120236733,
+      2120236735,
+      2120236742
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1688",
+      "fireplace": "yes",
+      "name": "Bivacco Tovanella",
+      "operator": "Club Alpino Italiano - Sez. di Longarone",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 202049360,
+    "center": {
+      "lat": 46.3032696,
+      "lon": 12.3052554
+    },
+    "nodes": [
+      2120257248,
+      2120257249,
+      2120257244,
+      2120257242,
+      2120257248
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1262",
+      "name": "Bivacco Pian dei Boi",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 208630660,
+    "center": {
+      "lat": 46.0085888,
+      "lon": 12.1546222
+    },
+    "nodes": [
+      2189039146,
+      2189039153,
+      13018631849,
+      2189039155,
+      2189039146
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "3",
+      "internet_access": "no",
+      "name": "Bivacco Costa Curta",
+      "tourism": "wilderness_hut",
+      "ele": 1049
+    }
+  },
+  {
+    "type": "way",
+    "id": 209016700,
+    "center": {
+      "lat": 46.1555956,
+      "lon": 12.4746281
+    },
+    "nodes": [
+      2192603821,
+      2192603822,
+      2192603824,
+      2192603823,
+      2192603821
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Casera Pian de le Stele",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut",
+      "ele": 1419
+    }
+  },
+  {
+    "type": "way",
+    "id": 209017857,
+    "center": {
+      "lat": 46.1350626,
+      "lon": 12.4908812
+    },
+    "nodes": [
+      2192612673,
+      2192612677,
+      2192612675,
+      2192612671,
+      2192612673
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Bivacco Lastè",
+      "shelter_type": "basic",
+      "ele": 1997
+    }
+  },
+  {
+    "type": "way",
+    "id": 211971467,
+    "center": {
+      "lat": 46.3336538,
+      "lon": 12.4169501
+    },
+    "nodes": [
+      2218913386,
+      2218913390,
+      2218913392,
+      2218913387,
+      2218913386
+    ],
+    "tags": {
+      "access": "yes",
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "9",
+      "ele": "1988",
+      "fee": "no",
+      "fireplace": "no",
+      "name": "Bivacco Paolo Greselin",
+      "operator": "Club Alpino Italiano",
+      "ref": "319",
+      "shelter_type": "basic_hut",
+      "short_name": "Bivacco Greselin",
+      "wikidata": "Q94577374",
+      "wikipedia": "it:Bivacco Paolo Greselin"
+    }
+  },
+  {
+    "type": "way",
+    "id": 218175520,
+    "center": {
+      "lat": 45.8768068,
+      "lon": 11.8069811
+    },
+    "nodes": [
+      2274491096,
+      2274491092,
+      2274491095,
+      2274491099,
+      2274491096
+    ],
+    "tags": {
+      "building": "yes",
+      "name": "Bivacco Val Vecia",
+      "tourism": "wilderness_hut",
+      "ele": 1516
+    }
+  },
+  {
+    "type": "way",
+    "id": 218492146,
+    "center": {
+      "lat": 45.9030394,
+      "lon": 11.834689
+    },
+    "nodes": [
+      2277306598,
+      2277306602,
+      2277306600,
+      2277306596,
+      2277306598
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "name": "Casera Col de Lorso",
+      "shelter_type": "basic_hut",
+      "ele": 1279
+    }
+  },
+  {
+    "type": "way",
+    "id": 219926249,
+    "center": {
+      "lat": 46.4202919,
+      "lon": 13.0682018
+    },
+    "nodes": [
+      2290560964,
+      2290560963,
+      2290560965,
+      2290560966,
+      2290560964
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "1070",
+      "name": "Bivacco Romano Cimenti - Cirillo Floreanini",
+      "operator": "Club Alpino Italiano",
+      "ref": "409",
+      "tourism": "wilderness_hut",
+      "website": "http://caitolmezzo.it/bivacchi/bivacco-cimenti-floreanini/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 240016726,
+    "center": {
+      "lat": 46.2754436,
+      "lon": 12.8301963
+    },
+    "nodes": [
+      2477838701,
+      6855351071,
+      2477838709,
+      2477838712,
+      2477838715,
+      2477838718,
+      2477838720,
+      2477838723,
+      2477838701
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "8",
+      "ele": "660",
+      "name": "Bivacco Guglielmo Varnerin",
+      "operator": "Club Alpino Italiano sez. S.Vito al Tagliamento",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 241695511,
+    "center": {
+      "lat": 45.8155441,
+      "lon": 11.3482763
+    },
+    "nodes": [
+      2492804685,
+      2492804689,
+      2492804691,
+      2492804687,
+      2492804685
+    ],
+    "tags": {
+      "alt_name": "Rifugio Ottorino Vettori",
+      "building": "hut",
+      "ele": "1120",
+      "name": "Bivacco Vettori",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 241955847,
+    "center": {
+      "lat": 45.8166023,
+      "lon": 11.5533953
+    },
+    "nodes": [
+      2495254565,
+      13021644810,
+      2495254563,
+      13021644811,
+      2495254567,
+      2495254569,
+      2495254565
+    ],
+    "tags": {
+      "access": "permit",
+      "building": "hut",
+      "internet_access": "no",
+      "name": "Bivacco Rossingroba",
+      "operator": "Comune di Lusiana Conco",
+      "tourism": "wilderness_hut",
+      "ele": 1319
+    }
+  },
+  {
+    "type": "way",
+    "id": 243953506,
+    "center": {
+      "lat": 46.3873495,
+      "lon": 13.5312617
+    },
+    "nodes": [
+      2513075045,
+      2513075043,
+      2513075039,
+      2513075040,
+      2513075045
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "9",
+      "ele": "1741",
+      "fireplace": "no",
+      "height": "3 m",
+      "name": "Bivacco Daniele Bertolutti",
+      "operator": "Circolo speleologico idrologico friulano - Società alpina friulana",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 249411563,
+    "center": {
+      "lat": 46.502335,
+      "lon": 13.0218313
+    },
+    "nodes": [
+      2560168029,
+      2560168032,
+      2560168033,
+      2570033451,
+      2570033449,
+      2560168030,
+      2560168029
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "drinking_water": "no",
+      "ele": "1186",
+      "fireplace": "yes",
+      "name": "Bivacco Lander",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 277653275,
+    "center": {
+      "lat": 46.3513638,
+      "lon": 12.9886547
+    },
+    "nodes": [
+      2821336929,
+      2821336937,
+      2821336944,
+      2821336939,
+      2821336929
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1271",
+      "fireplace": "yes",
+      "name": "Bivacco Carcadè",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 280534464,
+    "center": {
+      "lat": 46.233653,
+      "lon": 12.4179424
+    },
+    "nodes": [
+      2846362472,
+      2846362474,
+      2846362473,
+      12956366828,
+      2846362472
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1537",
+      "fireplace": "yes",
+      "name": "Ricovero Casera Frugna",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 283352130,
+    "center": {
+      "lat": 46.6168618,
+      "lon": 12.3988372
+    },
+    "nodes": [
+      2872267458,
+      2872267459,
+      2872267460,
+      2872267461,
+      2872267458
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "name": "Bivacco Battaglione Cadore",
+      "shelter_type": "basic_hut",
+      "ele": 2220
+    }
+  },
+  {
+    "type": "way",
+    "id": 291662157,
+    "center": {
+      "lat": 46.3385485,
+      "lon": 12.0543577
+    },
+    "nodes": [
+      2951279993,
+      2951279992,
+      2951279994,
+      12135715104,
+      2951279993
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "4",
+      "ele": "2601",
+      "name": "Bivacco Ghedini",
+      "shelter_type": "basic"
+    }
+  },
+  {
+    "type": "way",
+    "id": 321722578,
+    "center": {
+      "lat": 46.3278653,
+      "lon": 12.6806878
+    },
+    "nodes": [
+      3254412570,
+      3284871965,
+      3284871966,
+      3284871964,
+      3254412570
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "813",
+      "name": "Ricovero Casera Chiarpin",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 330662137,
+    "center": {
+      "lat": 46.2278889,
+      "lon": 12.6030608
+    },
+    "nodes": [
+      3376526649,
+      3376526650,
+      3376526651,
+      3376526652,
+      3376526649
+    ],
+    "tags": {
+      "alt_name": "Bivacco di Forcella dell'Asta",
+      "amenity": "shelter",
+      "description": "L’edificio è in legno e dispone di quattro posti letto, stufa, tavolo e panca.",
+      "ele": "1370",
+      "fireplace": "yes",
+      "name": "Bivacco dell'Asta",
+      "stove": "yes",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 334089973,
+    "center": {
+      "lat": 46.0215461,
+      "lon": 12.3680894
+    },
+    "nodes": [
+      3411804326,
+      3411804327,
+      3411804328,
+      3411804329,
+      3411804326
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "1010",
+      "name": "Bivacco Nino Lot",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 335043600,
+    "center": {
+      "lat": 46.2273214,
+      "lon": 12.7420183
+    },
+    "nodes": [
+      3421735054,
+      3421735056,
+      3421735055,
+      3421735053,
+      3421735054
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "651",
+      "name": "Bivacco col Maior",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 381142798,
+    "center": {
+      "lat": 46.3477805,
+      "lon": 12.2780996
+    },
+    "nodes": [
+      3843850341,
+      3843850334,
+      3843850340,
+      3843850347,
+      3843850341
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "capacity": "12",
+      "drinking_water": "yes",
+      "ele": "1649",
+      "fireplace": "yes",
+      "mattress": "yes",
+      "name": "Bivacco Casera Campestrin",
+      "operator": "Club Alpino Italiano- Sez. San Donà di Piave",
+      "reservation": "no",
+      "source": "local knowledge",
+      "tourism": "wilderness_hut",
+      "water_source": "stream",
+      "website": "http://www.caisandona.it/2k15/bivacco-casera-campestrin/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 381145445,
+    "center": {
+      "lat": 46.3388781,
+      "lon": 12.3966705
+    },
+    "nodes": [
+      3843872254,
+      3843872256,
+      3843873657,
+      3843872255,
+      3843872254
+    ],
+    "tags": {
+      "access": "yes",
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "fee": "no",
+      "fireplace": "no",
+      "name": "Bivacco Sergio Baroni",
+      "operator": "CAI venezia",
+      "shelter_type": "basic_hut",
+      "ele": 1732
+    }
+  },
+  {
+    "type": "way",
+    "id": 383683105,
+    "center": {
+      "lat": 46.4314366,
+      "lon": 12.493626
+    },
+    "nodes": [
+      3869936528,
+      3869936527,
+      3869936529,
+      3869936530,
+      3869936528
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "ele": "2050",
+      "internet_access:fee": "no",
+      "name": "Bivacco Aldo e Miranda Vaccari",
+      "operator": "Club Alpino Italiano sezioni Lorenzago e Montebelluna",
+      "ref": "340",
+      "shelter_type": "basic_hut",
+      "short_name": "Bivacco Vaccari"
+    }
+  },
+  {
+    "type": "way",
+    "id": 384572044,
+    "center": {
+      "lat": 46.5046384,
+      "lon": 12.5275041
+    },
+    "nodes": [
+      3878826484,
+      3878826480,
+      3878826486,
+      3878826488,
+      3878826484
+    ],
+    "tags": {
+      "beds": "11",
+      "building": "yes",
+      "drinking_water": "no",
+      "ele": "2047",
+      "fee": "no",
+      "name": "Bivacco Giovanni Spagnolli",
+      "operator": "Club Alpino Italiano, sezione di Vigo di Cadore",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 384573095,
+    "center": {
+      "lat": 46.5189216,
+      "lon": 12.4947094
+    },
+    "nodes": [
+      3878827103,
+      3878827096,
+      3878827098,
+      3878827106,
+      3878827103
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "capacity": "9",
+      "drinking_water": "no",
+      "ele": "2100",
+      "fee": "no",
+      "name": "Bivacco Da Rin Chiaurei",
+      "reservation": "no",
+      "toilets": "no",
+      "tourism": "wilderness_hut",
+      "website": "https://www.caivigodicadore.it/bivacco-l-da-rin-chiaurei-monte-tudaio/"
+    }
+  },
+  {
+    "type": "way",
+    "id": 425955532,
+    "center": {
+      "lat": 46.4634797,
+      "lon": 11.8883021
+    },
+    "nodes": [
+      4252859806,
+      4252859807,
+      4252859808,
+      4252859809,
+      4252859806
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "bench": "yes",
+      "building": "hut",
+      "name": "Bivacco Bontadini",
+      "shelter_type": "basic_hut",
+      "wikidata": "Q130307934",
+      "ele": 2579
+    }
+  },
+  {
+    "type": "way",
+    "id": 443054150,
+    "center": {
+      "lat": 46.1310464,
+      "lon": 12.5924831
+    },
+    "nodes": [
+      4406951618,
+      4406951615,
+      4406951617,
+      4406951619,
+      4406951618
+    ],
+    "tags": {
+      "alt_name": "Baita Polo",
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "810",
+      "height": "3 m",
+      "it:fvg:ctrn:code": "4AED",
+      "it:fvg:ctrn:revision": "000",
+      "name": "Casera Britol",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 514981409,
+    "center": {
+      "lat": 46.2937278,
+      "lon": 11.8380916
+    },
+    "nodes": [
+      5030250072,
+      5030250073,
+      5030250074,
+      5030250075,
+      5030250072
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "capacity": "9",
+      "ele": "2632",
+      "name": "Bivacco Giorgio Brunner",
+      "operator": "Club Alpino Italiano Sezione XXX Ottobre",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 606404295,
+    "center": {
+      "lat": 46.3037261,
+      "lon": 12.7348025
+    },
+    "nodes": [
+      5749490535,
+      5749490534,
+      5749490533,
+      5749490532,
+      5749490535
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "4",
+      "ele": "540",
+      "height": "7",
+      "name": "Bivacco Frassaneit di Sotto",
+      "note": "Ex scuola di Frassaneit",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 713601860,
+    "center": {
+      "lat": 46.2839365,
+      "lon": 11.8272644
+    },
+    "nodes": [
+      6709413474,
+      6709413475,
+      6709413476,
+      6709413477,
+      6709413474
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "yes",
+      "ele": "3005",
+      "name": "Bivacco Fiamme Gialle",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 777333372,
+    "center": {
+      "lat": 46.2882093,
+      "lon": 12.8466876
+    },
+    "nodes": [
+      7253438436,
+      7253438437,
+      7253438438,
+      7253438439,
+      7253438436
+    ],
+    "tags": {
+      "building": "yes",
+      "capacity": "4",
+      "ele": "627",
+      "fireplace": "yes",
+      "name": "Bivacco Palcoda",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 968522870,
+    "center": {
+      "lat": 46.5868131,
+      "lon": 13.1069577
+    },
+    "nodes": [
+      8960401804,
+      8960401803,
+      8960401802,
+      8960401801,
+      8960401804
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "ele": "1473",
+      "fireplace": "yes",
+      "name": "Casera Ramaz Bassa",
+      "shelter_type": "basic_hut",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1191913772,
+    "center": {
+      "lat": 46.4367663,
+      "lon": 13.4283644
+    },
+    "nodes": [
+      4370651877,
+      4370651876,
+      402895998,
+      11065676209,
+      11065676210,
+      4370651877
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "building": "hut",
+      "capacity": "4",
+      "ele": "2430",
+      "name": "Bivacco Adriano Suringar",
+      "ref": "621",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1193404338,
+    "center": {
+      "lat": 46.6146638,
+      "lon": 12.4273233
+    },
+    "nodes": [
+      3135200806,
+      11077490210,
+      11077490209,
+      11077490208,
+      3135200806
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "capacity": "5",
+      "ele": "2070",
+      "name": "Bivacco Piovan",
+      "note": "supply water 400 m South West following the path to Forcella Anna",
+      "official_name": "Bivacco Franco Piovan",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1193404648,
+    "center": {
+      "lat": 46.6016173,
+      "lon": 12.4283689
+    },
+    "nodes": [
+      3135213437,
+      11077500740,
+      11077500739,
+      11077500738,
+      3135213437
+    ],
+    "tags": {
+      "amenity": "shelter",
+      "ele": "2240",
+      "name": "Bivacco Gera",
+      "note": "water supply 200 m South",
+      "shelter_type": "basic_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1233304744,
+    "center": {
+      "lat": 46.4749968,
+      "lon": 12.9237351
+    },
+    "nodes": [
+      426428418,
+      11443573223,
+      426428415,
+      426428416,
+      426428417,
+      426428418
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "1638",
+      "name": "Bivacco Claupa",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1252842345,
+    "center": {
+      "lat": 46.2393771,
+      "lon": 13.0066961
+    },
+    "nodes": [
+      11645450962,
+      11645450961,
+      11645450960,
+      11645450959,
+      11645450962
+    ],
+    "tags": {
+      "building": "yes",
+      "ele": "785",
+      "name": "Bivacco Tamars",
+      "tourism": "wilderness_hut"
+    }
+  },
+  {
+    "type": "way",
+    "id": 1417046291,
+    "center": {
+      "lat": 45.8165623,
+      "lon": 11.5533856
+    },
+    "nodes": [
+      13021644811,
+      2495254563,
+      13021644810,
+      13021644812,
+      13021644811
+    ],
+    "tags": {
+      "access": "yes",
+      "building": "yes",
+      "fee": "no",
+      "name": "Bivacco Rossingroba",
+      "operator": "Comune di Lusiana Conco",
+      "tourism": "wilderness_hut",
+      "ele": 1319
+    }
+  }
+]

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bivacchi Nord-Est Italia</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <main class="main-content">
+            <header>
+                <div class="header-top">
+                    <h2>🏔️ Bivacchi del Nord-Est Italia</h2>
+                    <div id="auth-area">
+                        <button id="auth-btn" class="auth-btn">🔐 Accedi</button>
+                    </div>
+                </div>
+                <input type="text" id="search-input" placeholder="Cerca per nome...">
+            </header>
+            
+            <section class="filters">
+                <div class="view-buttons" id="view-buttons">
+                    <button id="view-list">📋 Lista</button>
+                    <button id="view-map">🗺️ Mappa</button>
+                </div>
+                <div class="filter-group">
+                    <label>Altitudine Min: <span id="alt-min-val">0</span>m</label>
+                    <input type="range" id="filter-alt-min" min="0" max="4000" step="100" value="0">
+                </div>
+                <div class="filter-group">
+                    <label>Altitudine Max: <span id="alt-max-val">4000</span>m</label>
+                    <input type="range" id="filter-alt-max" min="0" max="4000" step="100" value="4000">
+                </div>
+                <div class="filter-group">
+                    <label>Temperatura Min: <span id="temp-min-val">-20</span>°C</label>
+                    <input type="range" id="filter-temp-min" min="-20" max="40" step="1" value="-20">
+                </div>
+                <div class="filter-group">
+                    <label>Temperatura Max: <span id="temp-max-val">40</span>°C</label>
+                    <input type="range" id="filter-temp-max" min="-20" max="40" step="1" value="40">
+                </div>
+                <div id="distance-filter-group" class="filter-group" style="display:none;">
+                    <label>Distanza Max da casa: <span id="dist-max-val">50</span>km</label>
+                    <input type="range" id="filter-dist-max" min="0" max="100" step="5" value="50">
+                </div>
+                <div class="filter-group">
+                    <label>Ordina per:</label>
+                    <select id="sort-by">
+                        <option value="nome">Nome (A-Z)</option>
+                        <option value="nome-desc">Nome (Z-A)</option>
+                        <option value="alt-asc">Altitudine (crescente)</option>
+                        <option value="alt-desc">Altitudine (decrescente)</option>
+                        <option value="temp-asc">Temperatura (crescente)</option>
+                        <option value="temp-desc">Temperatura (decrescente)</option>
+                        <option value="dist-asc">Distanza da casa (crescente)</option>
+                        <option value="dist-desc">Distanza da casa (decrescente)</option>
+                    </select>
+                </div>
+            </section>
+
+            <div class="content-wrapper">
+                <div id="bivacchi-list" class="list-container">
+                    <p class="placeholder-text">Caricamento dei bivacchi nel Nord-Est Italia...</p>
+                </div>
+                <div id="map" class="map-container"></div>
+            </div>
+        </main>
+
+    </div>
+
+    <div id="detail-view" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('detail-view').style.display='none'">&times;</span>
+            <div id="detail-data">
+                </div>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+            <div id="auth-form">
+                <h3>Accedi</h3>
+                <input type="email" id="login-email" placeholder="Email" class="form-input">
+                <input type="password" id="login-password" placeholder="Password" class="form-input">
+                <button onclick="handleLogin()" class="form-btn">Accedi</button>
+                <p class="form-divider">Non hai un account? <a href="#" onclick="showRegister()">Registrati</a></p>
+            </div>
+            <div id="register-form" style="display:none;">
+                <h3>Registrati</h3>
+                <input type="text" id="register-name" placeholder="Nome" class="form-input">
+                <input type="email" id="register-email" placeholder="Email" class="form-input">
+                <input type="password" id="register-password" placeholder="Password" class="form-input">
+                <button onclick="handleRegister()" class="form-btn">Registrati</button>
+                <p class="form-divider">Hai già un account? <a href="#" onclick="showLogin()">Accedi</a></p>
+            </div>
+            <div id="auth-error" class="form-error"></div>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
+            <div id="profile-data">
+                <h3>Profilo Utente</h3>
+                <p><strong>Nome:</strong> <span id="profile-name"></span></p>
+                <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                <p><strong>Registrato:</strong> <span id="profile-date"></span></p>
+                <p><strong>Indirizzo casa:</strong> <span id="profile-address">Non impostato</span> <button onclick="openAddressModal()" class="form-btn small-btn">Modifica</button></p>
+                <h4>Bivacchi Preferiti</h4>
+                <div id="favorites-list" class="favorites-list">
+                    <p>Nessun bivacco preferito</p>
+                </div>
+                <button onclick="handleLogout()" class="form-btn logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="address-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAddressModal()">&times;</span>
+            <div id="address-form">
+                <h3>Indirizzo Casa</h3>
+                <input type="text" id="address-input" placeholder="Es: Via Roma 10, Roma" class="form-input">
+                <p class="small-text">Seleziona le coordinate sulla mappa cliccando su di essa</p>
+                <div id="address-map" style="height: 300px; border: 1px solid #ccc; margin-bottom: 15px; border-radius: 5px;"></div>
+                <p id="address-coords" class="small-text">Coordinate: <span id="coords-display">Non selezionate</span></p>
+                <button onclick="handleSaveAddress()" class="form-btn">Salva Indirizzo</button>
+                <div id="address-error" class="form-error"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
