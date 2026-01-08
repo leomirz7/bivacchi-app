@@ -62,7 +62,13 @@ app.post('/api/register', (req, res) => {
     saveUsers(users);
 
     req.session.userId = newUser.id;
-    res.json({ success: true, user: { id: newUser.id, email, name } });
+    res.json({ success: true, user: { 
+        id: newUser.id, 
+        email, 
+        name,
+        favorites: [],
+        home_address: null
+    }});
 });
 
 // Endpoint per login
@@ -81,7 +87,13 @@ app.post('/api/login', (req, res) => {
     }
 
     req.session.userId = user.id;
-    res.json({ success: true, user: { id: user.id, email: user.email, name: user.name } });
+    res.json({ success: true, user: { 
+        id: user.id, 
+        email: user.email, 
+        name: user.name,
+        favorites: user.favorites || [],
+        home_address: user.home_address || null
+    }});
 });
 
 // Endpoint per logout

@@ -14,6 +14,7 @@ let markers = [];
 let currentUser = null;
 let addressMap = null;
 let selectedCoords = null;
+let dataLoaded = false; // Flag per tracciare se i dati sono caricati
 
 // Funzione per calcolare altitudini con retry
 async function calculateElevationsWithRetry(toCalculate, retries = 5) {
@@ -104,6 +105,45 @@ async function fetchTemperaturesForAll(data) {
 
 // Funzione per caricare i dati dei bivacchi nel Nord-Est Italia
 async function caricaDatiNordEst() {
+    // Prima controlla se abbiamo i dati in localStorage
+    const cachedData = localStorage.getItem('bivacchi-data');
+    if (cachedData) {
+        try {
+            rawData = JSON.parse(cachedData);
+            dataLoaded = true; // Segna che i dati sono caricati
+            // Mostra subito i dati dal localStorage (assicurandosi che currentUser sia caricato)
+            // Attendi un tick per assicurarti che checkAuth sia completato
+            await new Promise(resolve => setTimeout(resolve, 0));
+            aggiornaInterfaccia();
+            
+            // Controlla se le temperature vanno aggiornate in background
+            const needsUpdate = rawData.some(el => {
+                const lastUpdate = el.tags?.temperature_updated_at || 0;
+                const oneHourAgo = Date.now() - (60 * 60 * 1000);
+                return lastUpdate < oneHourAgo;
+            });
+            
+            if (needsUpdate) {
+                console.log("Aggiornamento temperature in background...");
+                fetchTemperaturesInBackground(rawData).then(() => {
+                    // Salva nel localStorage
+                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                    // Salva sul server
+                    fetch('/api/bivacchi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(rawData)
+                    }).catch(e => console.error("Errore salvataggio dati:", e));
+                });
+            }
+            return;
+        } catch (e) {
+            console.error("Errore lettura localStorage:", e);
+            // Continua con il caricamento dal server
+        }
+    }
+
+    // Se non ci sono dati in localStorage, carica dal server
     listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal server...</p>';
 
     try {
@@ -116,7 +156,11 @@ async function caricaDatiNordEst() {
                 const hasTrentino = data.some(el => (el.center?.lat ?? el.lat) > 46.5);
                 const hasFriuli = data.some(el => (el.center?.lon ?? el.lon) > 13);
                 if (hasTrentino && hasFriuli) {
+                    // Salva in localStorage
+                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                    
                     // Mostra subito i dati dalla cache
+                    dataLoaded = true;
                     aggiornaInterfaccia();
                     
                     // Aggiorna le temperature in background (ogni ora se non sono aggiornate)
@@ -130,6 +174,7 @@ async function caricaDatiNordEst() {
                         console.log("Aggiornamento temperature in background...");
                         fetchTemperaturesInBackground(rawData).then(() => {
                             // Salva i dati aggiornati
+                            localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
                             fetch('/api/bivacchi', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
@@ -192,6 +237,7 @@ async function caricaDatiNordEst() {
         }
 
         // Mostra i dati immediatamente senza aspettare le temperature
+        dataLoaded = true;
         aggiornaInterfaccia();
 
         // Salva sul server i dati di base
@@ -494,9 +540,13 @@ function initMap() {
 }
 
 // Avvio iniziale
-checkAuth();
-initMap();
-caricaDatiNordEst();
+async function initApp() {
+    await checkAuth();
+    initMap();
+    caricaDatiNordEst();
+}
+
+initApp();
 
 // Funzione per controllare autenticazione
 async function checkAuth() {
@@ -611,7 +661,10 @@ async function handleLogin() {
             currentUser = data.user;
             closeAuthModal();
             updateAuthUI();
-            aggiornaInterfaccia(); // Aggiorna UI per mostrare cuori
+            // Aggiorna UI se i dati sono già caricati
+            if (dataLoaded) {
+                aggiornaInterfaccia(); // Aggiorna UI per mostrare cuori
+            }
             document.getElementById('auth-error').innerText = '';
         } else {
             document.getElementById('auth-error').innerText = data.error;
@@ -643,6 +696,10 @@ async function handleRegister() {
             currentUser = data.user;
             closeAuthModal();
             updateAuthUI();
+            // Aggiorna UI se i dati sono già caricati
+            if (dataLoaded) {
+                aggiornaInterfaccia(); // Aggiorna UI per mostrare cuori e feature da logged
+            }
             document.getElementById('auth-error').innerText = '';
         } else {
             document.getElementById('auth-error').innerText = data.error;
@@ -660,6 +717,7 @@ async function handleLogout() {
             closeProfileModal();
             document.getElementById('auth-area').innerHTML = '<button id="auth-btn" class="auth-btn">🔐 Accedi</button>';
             document.getElementById('auth-btn').addEventListener('click', openAuthModal);
+            aggiornaInterfaccia(); // Aggiorna UI per nascondere cuori e feature da logged
         }
     } catch (e) {
         console.error("Errore logout:", e);
