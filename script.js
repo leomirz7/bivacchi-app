@@ -7,6 +7,270 @@ function debounce(func, wait) {
     };
 }
 
+// ==================== PWA ONLINE/OFFLINE SYNC MANAGER ====================
+const SyncManager = {
+    QUEUE_KEY: 'bivacchi_sync_queue',
+    
+    getQueue() {
+        try {
+            return JSON.parse(localStorage.getItem(this.QUEUE_KEY) || '[]');
+        } catch { return []; }
+    },
+    
+    addToQueue(action) {
+        const queue = this.getQueue();
+        // Add timestamp and unique ID
+        action.timestamp = Date.now();
+        action.id = Math.random().toString(36).substr(2, 9);
+        queue.push(action);
+        localStorage.setItem(this.QUEUE_KEY, JSON.stringify(queue));
+        this.updatePendingCount();
+        showConnectionBanner('offline-pending');
+    },
+    
+    removeFromQueue(id) {
+        let queue = this.getQueue();
+        queue = queue.filter(item => item.id !== id);
+        localStorage.setItem(this.QUEUE_KEY, JSON.stringify(queue));
+        this.updatePendingCount();
+    },
+    
+    updatePendingCount() {
+        // Update UI indicator if needed (can be implemented later)
+        const count = this.getQueue().length;
+        console.log(`[SyncManager] Pending actions: ${count}`);
+    },
+    
+    async processQueue() {
+        const queue = this.getQueue();
+        if (queue.length === 0) return;
+        
+        console.log(`[SyncManager] Processing ${queue.length} pending actions...`);
+        showConnectionBanner('syncing');
+        
+        for (const action of queue) {
+            try {
+                let success = false;
+                
+                switch (action.type) {
+                    case 'COMMENT':
+                        success = await this.syncComment(action);
+                        break;
+                    case 'FAVORITE':
+                        success = await this.syncFavorite(action);
+                        break;
+                    case 'ADDRESS':
+                        success = await this.syncAddress(action);
+                        break;
+                }
+                
+                if (success) {
+                    this.removeFromQueue(action.id);
+                }
+            } catch (e) {
+                console.error(`[SyncManager] Failed to sync action ${action.type}:`, e);
+                // Keep in queue for next retry
+            }
+        }
+        
+        const remaining = this.getQueue();
+        if (remaining.length === 0) {
+            showConnectionBanner('online');
+            // Refresh data to ensure consistency
+            if (currentUser) checkAuth();
+        } else {
+            console.warn(`[SyncManager] ${remaining.length} actions failed to sync.`);
+        }
+    },
+    
+    async syncComment(action) {
+        const res = await fetch(`${API_BASE_URL}/api/bivacchi/${action.bivaccoId}/comments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: action.text })
+        });
+        return res.ok;
+    },
+    
+    async syncFavorite(action) {
+        // We only support toggle, so replaying might be tricky if state changed.
+        // Ideally we should send "add" or "remove".
+        // For now, toggle is idempotent if client state matched server state at time of offline.
+        // Better: check current state? API is toggle. 
+        // Let's assume sequential playback restores state.
+        const res = await fetch(`/api/favorites/${action.bivaccoId}`, { method: 'POST' });
+        return res.ok;
+    },
+    
+    async syncAddress(action) {
+        const res = await fetch(API_BASE_URL + '/api/home-address', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(action.payload)
+        });
+        return res.ok;
+    }
+};
+
+// ==================== PWA & OFFLINE SUPPORT ====================
+let isOnline = navigator.onLine;
+let swRegistration = null;
+
+// Registra Service Worker
+async function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        try {
+            swRegistration = await navigator.serviceWorker.register('/service-worker.js');
+            console.log('[PWA] Service Worker registered:', swRegistration.scope);
+            
+            // Gestisci aggiornamenti SW
+            swRegistration.addEventListener('updatefound', () => {
+                const newWorker = swRegistration.installing;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        showUpdateBanner();
+                    }
+                });
+            });
+            
+            // Ascolta messaggi dal SW
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data.type === 'ONLINE_SYNC') {
+                    handleOnlineSync();
+                }
+            });
+        } catch (err) {
+            console.error('[PWA] SW registration failed:', err);
+        }
+    }
+}
+
+// Gestione stato online/offline
+function setupOnlineOfflineHandlers() {
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    // Stato iniziale
+    updateConnectionStatus(navigator.onLine);
+}
+
+function handleOnline() {
+    console.log('[PWA] Back online');
+    isOnline = true;
+    updateConnectionStatus(true);
+    showConnectionBanner('online');
+    
+    // Sync dati quando torniamo online
+    handleOnlineSync();
+}
+
+function handleOffline() {
+    console.log('[PWA] Gone offline');
+    isOnline = false;
+    updateConnectionStatus(false);
+    showConnectionBanner('offline');
+}
+
+function handleOnlineSync() {
+    console.log('[PWA] Syncing data...');
+    
+    // 1. Process Pending Actions Queue
+    SyncManager.processQueue();
+    
+    // 2. Ricarica temperature in background
+    if (rawData.length > 0) {
+        fetchTemperaturesInBackground(rawData);
+    }
+    
+    // 3. Aggiorna ore di luce
+    if (rawData.length > 0) {
+        fetchDaylightInBackground(rawData);
+    }
+}
+
+// Banner stato connessione
+function showConnectionBanner(status) {
+    // Rimuovi banner esistente
+    const existingBanner = document.querySelector('.connection-banner');
+    if (existingBanner) {
+        existingBanner.remove();
+    }
+    
+    const banner = document.createElement('div');
+    banner.className = `connection-banner ${status}`;
+    
+    if (status === 'online') {
+        banner.innerHTML = '✅ Connessione ripristinata - sincronizzazione in corso...';
+        banner.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+    } else if (status === 'syncing') {
+         banner.innerHTML = '🔄 Sincronizzazione modifiche offline...';
+         banner.style.background = 'linear-gradient(135deg, #f39c12, #f1c40f)';
+    } else if (status === 'offline-pending') {
+         banner.innerHTML = '💾 Salvato in locale (in attesa di connessione)';
+         banner.style.background = 'linear-gradient(135deg, #e67e22, #d35400)';
+         // Auto-rimuovi dopo 3 secondi
+         setTimeout(() => {
+            banner.classList.add('fade-out');
+            setTimeout(() => banner.remove(), 500);
+        }, 3000);
+        document.body.prepend(banner);
+        return;
+    } else {
+        banner.innerHTML = '📴 Modalità offline - puoi usare l\'app, le modifiche verranno salvate';
+        banner.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+    }
+    
+    document.body.prepend(banner);
+    
+    // Auto-rimuovi dopo 4 secondi (solo per online)
+    if (status === 'online') {
+        setTimeout(() => {
+            banner.classList.add('fade-out');
+            setTimeout(() => banner.remove(), 500);
+        }, 4000);
+    }
+}
+
+// ...existing code...
+function updateConnectionStatus(online) {
+    // ...existing code...
+    let indicator = document.getElementById('connection-indicator');
+    // ...existing code...
+    if (!indicator) {
+        indicator = document.createElement('span');
+        // ...existing code...
+        indicator.id = 'connection-indicator';
+        indicator.style.cssText = 'margin-left: 10px; font-size: 0.8em;';
+        const headerTop = document.querySelector('.header-top');
+        if (headerTop) {
+            headerTop.appendChild(indicator);
+        }
+    }
+    
+    if (online) {
+        indicator.innerHTML = '<span style="color: #27ae60;">●</span>';
+        indicator.title = 'Online';
+    } else {
+        indicator.innerHTML = '<span style="color: #e74c3c;">●</span>';
+        indicator.title = 'Offline';
+    }
+}
+
+
+// Cache dati bivacchi nel SW
+function cacheBivacchiInSW(data) {
+    if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'CACHE_BIVACCHI',
+            data: data
+        });
+    }
+}
+
+// Inizializza PWA
+registerServiceWorker();
+setupOnlineOfflineHandlers();
+
 // URL base dell'API - usa percorsi relativi
 // Questo funziona automaticamente sia in locale che tramite reverse proxy Caddy
 // - localhost:3000 → /api/... → localhost:3000/api/...
@@ -514,45 +778,73 @@ async function caricaDatiNordEst() {
             dataLoaded = true;
             await new Promise(resolve => setTimeout(resolve, 0));
             aggiornaInterfaccia();
-            // Aggiorna temperature in background
-            fetchTemperaturesInBackground(rawData).then(() => {
-                localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-            });
-            // Calcola esposizione/pendenza in background
-            computeAspectInBackground(rawData);
-            // Calcola ore di luce in background
-            fetchDaylightInBackground(rawData);
-        } catch (e) {
-            console.error("Errore lettura localStorage:", e);
-        }
-    }
-
-    // 2. Carica sempre dal server e mostra appena disponibili
-    try {
-        const res = await fetch(API_BASE_URL + '/api/bivacchi');
-        if (res.ok) {
-            const data = await res.json();
-            if (data.length > 0) {
-                rawData = data;
-                localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                dataLoaded = true;
-                aggiornaInterfaccia();
+            
+            // Cache nel Service Worker per offline
+            cacheBivacchiInSW(rawData);
+            
+            // Se online, aggiorna in background
+            if (isOnline) {
                 // Aggiorna temperature in background
                 fetchTemperaturesInBackground(rawData).then(() => {
                     localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                    cacheBivacchiInSW(rawData);
                 });
                 // Calcola esposizione/pendenza in background
                 computeAspectInBackground(rawData);
                 // Calcola ore di luce in background
                 fetchDaylightInBackground(rawData);
+            }
+        } catch (e) {
+            console.error("Errore lettura localStorage:", e);
+        }
+    }
+
+    // 2. Se online, carica dal server
+    if (isOnline) {
+        try {
+            const res = await fetch(API_BASE_URL + '/api/bivacchi');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.length > 0) {
+                    rawData = data;
+                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                    cacheBivacchiInSW(rawData);
+                    dataLoaded = true;
+                    aggiornaInterfaccia();
+                    // Aggiorna temperature in background
+                    fetchTemperaturesInBackground(rawData).then(() => {
+                        localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                        cacheBivacchiInSW(rawData);
+                    });
+                    // Calcola esposizione/pendenza in background
+                    computeAspectInBackground(rawData);
+                    // Calcola ore di luce in background
+                    fetchDaylightInBackground(rawData);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error("Errore caricamento da server:", e);
+            // Se abbiamo dati in cache, continuiamo con quelli
+            if (rawData.length > 0) {
+                console.log('[PWA] Using cached data due to network error');
                 return;
             }
         }
-    } catch (e) {
-        console.error("Errore caricamento da server:", e);
+    } else {
+        // Offline: usa solo dati in cache
+        if (rawData.length > 0) {
+            console.log('[PWA] Offline mode: using cached data');
+            return;
+        }
     }
 
-    // 3. Se non ci sono dati sul server, carica da API Overpass
+    // 3. Se online e senza dati, carica da API Overpass
+    if (!isOnline) {
+        listContainer.innerHTML = '<p class="placeholder-text">📴 Nessun dato in cache. Connettiti a internet per caricare i bivacchi.</p>';
+        return;
+    }
+    
     listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal Nord-Est Italia...</p>';
 
     // Query Overpass per i bivacchi in Veneto, Trentino e Friuli
@@ -1029,6 +1321,46 @@ async function renderComments(el) {
                     input.focus();
                     return;
                 }
+                
+                if (!isOnline) {
+                    // Optimistic update
+                    const fakeComment = {
+                        userName: currentUser.name,
+                        text: text,
+                        created_at: new Date().toISOString()
+                    };
+                    
+                    // Add to UI immediately
+                    const list = document.getElementById('comment-list');
+                    if (list) {
+                        const newCommentHtml = `
+                            <div class="comment-item" style="border-left: 3px solid #f39c12;">
+                                <div class="comment-header">
+                                    <strong>${escapeHtml(currentUser.name)}</strong> · 
+                                    <span class="small-text">In attesa di sync...</span>
+                                </div>
+                                <p>${escapeHtml(text)}</p>
+                            </div>
+                        `;
+                        // Insert at top or replace empty
+                        if (list.innerHTML.includes('Nessun commento ancora')) {
+                            list.innerHTML = newCommentHtml;
+                        } else {
+                            list.innerHTML = newCommentHtml + list.innerHTML;
+                        }
+                    }
+                    
+                    // Add to queue
+                    SyncManager.addToQueue({
+                        type: 'COMMENT',
+                        bivaccoId: el.id,
+                        text: text
+                    });
+                    
+                    input.value = '';
+                    return;
+                }
+
                 btn.disabled = true;
                 btn.innerText = 'Invio...';
                 try {
@@ -1430,6 +1762,28 @@ async function toggleFavorite(bivaccoId) {
         return;
     }
 
+    if (!isOnline) {
+        // Optimistic update for offline
+        let favs = currentUser.favorites || [];
+        const strId = bivaccoId.toString();
+        if (favs.includes(strId)) {
+            favs = favs.filter(id => id !== strId);
+        } else {
+            favs.push(strId);
+        }
+        currentUser.favorites = favs;
+        
+        // Add to sync queue
+        SyncManager.addToQueue({
+            type: 'FAVORITE',
+            bivaccoId: strId,
+            payload: {}
+        });
+        
+        aggiornaInterfaccia();
+        return;
+    }
+
     try {
         const res = await fetch(`/api/favorites/${bivaccoId}`, { method: 'POST' });
         if (res.ok) {
@@ -1473,6 +1827,29 @@ async function handleSaveAddress() {
     
     if (!address || !selectedCoords) {
         document.getElementById('address-error').innerText = 'Compila indirizzo e seleziona coordinata sulla mappa';
+        return;
+    }
+    
+    if (!isOnline) {
+        // Optimistic update
+        currentUser.home_address = {
+            address: address,
+            lat: selectedCoords.lat,
+            lon: selectedCoords.lng
+        };
+        
+        SyncManager.addToQueue({
+            type: 'ADDRESS',
+            payload: {
+                address,
+                lat: selectedCoords.lat,
+                lon: selectedCoords.lng
+            }
+        });
+        
+        closeAddressModal();
+        openProfileModal();
+        aggiornaInterfaccia();
         return;
     }
 

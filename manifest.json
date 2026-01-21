@@ -1,0 +1,21 @@
+{
+  "name": "Bivacchi Nord-Est Italia",
+  "short_name": "Bivacchi",
+  "description": "Trova bivacchi nelle Alpi del Nord-Est Italia con meteo, neve e filtri avanzati",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f4f8",
+  "theme_color": "#3498db",
+  "orientation": "any",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "navigation", "weather"],
+  "lang": "it-IT"
+}
