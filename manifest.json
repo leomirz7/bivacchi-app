@@ -4,8 +4,8 @@
   "description": "Trova bivacchi nelle Alpi del Nord-Est Italia con meteo, neve e filtri avanzati",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f4f4f8",
-  "theme_color": "#3498db",
+  "background_color": "#09090b",
+  "theme_color": "#ea580c",
   "orientation": "any",
   "scope": "/",
   "icons": [

@@ -112,6 +112,522 @@ const SyncManager = {
     }
 };
 
+// ==================== GLOBAL API QUEUE ====================
+// Coda globale per serializzare TUTTE le richieste API (elevation + meteo)
+// Questo garantisce che non ci siano mai chiamate parallele che saturano il rate limit
+const API_QUEUE_DELAY = 350; // 350ms = ~2.8 req/s (molto conservativo)
+let apiQueueLastTime = 0;
+let apiQueuePending = [];
+let apiQueueProcessing = false;
+
+async function enqueueApiCall(fn) {
+    return new Promise((resolve, reject) => {
+        apiQueuePending.push({ fn, resolve, reject });
+        processApiQueue();
+    });
+}
+
+async function processApiQueue() {
+    if (apiQueueProcessing || apiQueuePending.length === 0) return;
+    apiQueueProcessing = true;
+    
+    while (apiQueuePending.length > 0) {
+        const { fn, resolve, reject } = apiQueuePending.shift();
+        
+        // Rispetta il delay minimo tra richieste
+        const elapsed = Date.now() - apiQueueLastTime;
+        if (elapsed < API_QUEUE_DELAY) {
+            await new Promise(r => setTimeout(r, API_QUEUE_DELAY - elapsed));
+        }
+        apiQueueLastTime = Date.now();
+        
+        try {
+            const result = await fn();
+            resolve(result);
+        } catch (error) {
+            reject(error);
+        }
+    }
+    
+    apiQueueProcessing = false;
+}
+
+// ==================== DATA VALIDATION & STATUS SYSTEM ====================
+// Sistema per validare, riparare e tracciare lo stato dei dati
+
+const DataStatus = {
+    LOADING: 'loading',     // ⏳ In caricamento
+    AVAILABLE: 'available', // ✓ Dato presente
+    UNAVAILABLE: 'unavailable', // ✗ Dato non reperibile
+    STALE: 'stale',         // ⚠ Dato vecchio, da aggiornare
+    CORRUPTED: 'corrupted'  // ⚠ Dato corrotto, da ricalcolare
+};
+
+// Valida l'elevazione di un bivacco
+function validateElevation(el) {
+    const ele = el.tags?.ele;
+    if (ele === undefined || ele === null || ele === '') return DataStatus.UNAVAILABLE;
+    const num = parseInt(ele, 10);
+    if (isNaN(num)) return DataStatus.CORRUPTED;
+    if (num < 0 || num > 5000) return DataStatus.CORRUPTED; // Altitudini impossibili per l'Italia
+    if (num === 0) return DataStatus.UNAVAILABLE; // 0m è probabilmente mancante
+    return DataStatus.AVAILABLE;
+}
+
+// Valida la temperatura di un bivacco
+function validateTemperature(el) {
+    const temp = el.tags?.temperature;
+    const updatedAt = el.tags?.temperature_updated_at;
+    
+    if (temp === undefined || temp === null) return DataStatus.UNAVAILABLE;
+    const num = parseInt(temp, 10);
+    if (isNaN(num)) return DataStatus.CORRUPTED;
+    if (num < -50 || num > 50) return DataStatus.CORRUPTED; // Temperature impossibili
+    
+    // Controlla se è stale (più di 2 ore)
+    if (updatedAt && Date.now() - updatedAt > 2 * 60 * 60 * 1000) return DataStatus.STALE;
+    
+    return DataStatus.AVAILABLE;
+}
+
+// Valida tutti i dati di un bivacco e restituisce un report
+function validateBivacco(el) {
+    return {
+        elevation: validateElevation(el),
+        temperature: validateTemperature(el),
+        hasAspect: !!(el.tags?.aspect_card),
+        hasSnow: el.tags?.snow !== undefined,
+        hasDaylight: !!(el.tags?.sunrise && el.tags?.sunset)
+    };
+}
+
+// Trova bivacchi con dati corrotti o mancanti
+function findBivacchiToRepair(data) {
+    const toRepair = {
+        elevation: [],
+        temperature: [],
+        aspect: [],
+        snow: [],
+        daylight: []
+    };
+    
+    for (const el of data) {
+        const status = validateBivacco(el);
+        
+        if (status.elevation !== DataStatus.AVAILABLE) {
+            toRepair.elevation.push(el);
+        }
+        if (status.temperature !== DataStatus.AVAILABLE) {
+            toRepair.temperature.push(el);
+        }
+        if (!status.hasAspect) {
+            toRepair.aspect.push(el);
+        }
+        if (!status.hasSnow) {
+            toRepair.snow.push(el);
+        }
+        if (!status.hasDaylight) {
+            toRepair.daylight.push(el);
+        }
+    }
+    
+    return toRepair;
+}
+
+// Formatta il valore per la UI in base allo stato
+function formatDataValue(value, status, unit = '', loadingText = '...') {
+    switch (status) {
+        case DataStatus.LOADING:
+            return `<span class="data-loading">${loadingText}</span>`;
+        case DataStatus.AVAILABLE:
+            return `${value}${unit}`;
+        case DataStatus.STALE:
+            return `<span class="data-stale">${value}${unit}</span>`;
+        case DataStatus.CORRUPTED:
+        case DataStatus.UNAVAILABLE:
+        default:
+            return `<span class="data-unavailable">-</span>`;
+    }
+}
+
+// ==================== PROGRESS INDICATOR ====================
+function showProgress(label, percent) {
+    const container = document.getElementById('progress-bar-container');
+    const bar = document.getElementById('progress-bar');
+    const labelEl = document.getElementById('progress-label');
+    
+    if (container && bar && labelEl) {
+        container.classList.add('active');
+        labelEl.classList.add('active');
+        bar.style.width = `${percent}%`;
+        labelEl.textContent = label;
+    }
+}
+
+function hideProgress() {
+    const container = document.getElementById('progress-bar-container');
+    const labelEl = document.getElementById('progress-label');
+    
+    if (container && labelEl) {
+        container.classList.remove('active');
+        labelEl.classList.remove('active');
+    }
+}
+
+// ==================== BACKGROUND DATA MANAGER ====================
+// Gestisce tutti i calcoli in background in modo intelligente:
+// - DATI FISSI (esposizione, pendenza): calcolati UNA VOLTA e salvati sul server
+// - DATI VARIABILI (temperatura, neve, ore luce): aggiornati periodicamente con rate limiting
+const BackgroundDataManager = {
+    // Stato dei job in corso
+    isRunning: false,
+    currentJob: null,
+    abortController: null,
+    
+    // Progress tracking
+    totalItems: 0,
+    processedItems: 0,
+    
+    // Rate limiting (ora gestito dalla coda globale)
+    API_DELAY_MS: 0,             // Non più usato, la coda gestisce tutto
+    BATCH_SIZE: 50,              // Salva ogni 50 elementi (riduce log di salvataggio)
+    MAX_ERRORS: 3,               // Errori consecutivi prima di fermarsi
+    
+    // Stale times (quando aggiornare)
+    WEATHER_STALE_MS: 60 * 60 * 1000,  // 1 ora per meteo
+    DAYLIGHT_STALE_MS: 24 * 60 * 60 * 1000, // 1 giorno per ore luce
+    
+    // Aggiorna progress bar
+    updateProgress(current, total, jobName) {
+        const percent = Math.round((current / total) * 100);
+        showProgress(`${jobName}: ${current}/${total}`, percent);
+    },
+    
+    // Avvia tutti i job in sequenza (non parallelo!)
+    async startAllJobs(data) {
+        if (this.isRunning) {
+            console.log('[BDM] Jobs già in esecuzione, salto.');
+            return;
+        }
+        
+        if (!navigator.onLine) {
+            console.log('[BDM] Offline, nessun job avviato.');
+            return;
+        }
+        
+        this.isRunning = true;
+        this.abortController = new AbortController();
+        
+        console.log('[BDM] Avvio job in background...');
+        
+        try {
+            // 0. PRIMA DI TUTTO: recupera elevazioni mancanti (critiche per UX)
+            await this.fetchMissingElevations(data);
+            
+            // 1. Poi i dati FISSI (una tantum) - esposizione/pendenza
+            await this.computeStaticData(data);
+            
+            // 2. Poi i dati VARIABILI - meteo (priorità alta)
+            await this.updateWeatherData(data);
+            
+            // 3. Infine ore di luce (priorità bassa)
+            await this.updateDaylightData(data);
+            
+            console.log('[BDM] Tutti i job completati.');
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                console.log('[BDM] Jobs interrotti dall\'utente.');
+            } else {
+                console.error('[BDM] Errore nei job:', e);
+            }
+        } finally {
+            this.isRunning = false;
+            this.currentJob = null;
+            hideProgress();
+            // Aggiorna UI finale
+            pendingUIUpdate = true;
+            throttledUIUpdate();
+        }
+    },
+    
+    // Ferma tutti i job
+    stop() {
+        if (this.abortController) {
+            this.abortController.abort();
+        }
+        this.isRunning = false;
+    },
+    
+    // ========== ELEVAZIONI MANCANTI (priorità massima) ==========
+    async fetchMissingElevations(data) {
+        this.currentJob = 'elevations';
+        
+        // Filtra bivacchi senza elevazione
+        const toFetch = data.filter(el => !el.tags?.ele || el.tags.ele === '0' || el.tags.ele === 0);
+        
+        if (toFetch.length === 0) {
+            console.log('[BDM:Elevation] Tutte le elevazioni sono già presenti.');
+            return;
+        }
+        
+        console.log(`[BDM:Elevation] ${toFetch.length} bivacchi senza elevazione, recupero da API...`);
+        
+        let successCount = 0;
+        let errorCount = 0;
+        let processed = 0;
+        const total = toFetch.length;
+        
+        for (const el of toFetch) {
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+            
+            processed++;
+            this.updateProgress(processed, total, '🏔️ Altitudini');
+            
+            const lat = el.center?.lat ?? el.lat;
+            const lon = el.center?.lon ?? el.lon;
+            
+            if (!lat || !lon) continue;
+            
+            try {
+                // Usa la coda globale per non saturare rate limit
+                const elevation = await enqueueApiCall(async () => {
+                    const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+                    if (r.status === 429) {
+                        console.warn(`[Queue] 429 su elevation ${lat},${lon}`);
+                        return null;
+                    }
+                    if (!r.ok) return null;
+                    const d = await r.json();
+                    if (d.elevation && d.elevation.length > 0 && !isNaN(d.elevation[0])) {
+                        return Math.round(Number(d.elevation[0]));
+                    }
+                    return null;
+                });
+                
+                if (elevation !== null) {
+                    el.tags = el.tags || {};
+                    el.tags.ele = elevation;
+                    successCount++;
+                    errorCount = 0;
+                    
+                    // Batch save
+                    if (successCount % this.BATCH_SIZE === 0) {
+                        await saveBivacchiToStorage(rawData);
+                        pendingUIUpdate = true;
+                        throttledUIUpdate();
+                    }
+                } else {
+                    errorCount++;
+                }
+            } catch (e) {
+                errorCount++;
+            }
+            
+            if (errorCount >= this.MAX_ERRORS) {
+                console.warn(`[BDM:Elevation] Troppi errori, stop dopo ${successCount} successi.`);
+                break;
+            }
+        }
+        
+        if (successCount > 0) {
+            await this.saveProgress(data, true); // Sync to server
+            pendingUIUpdate = true;
+            throttledUIUpdate();
+            console.log(`[BDM:Elevation] ${successCount}/${toFetch.length} elevazioni recuperate e salvate.`);
+        }
+    },
+    
+    // ========== DATI FISSI (una tantum) ==========
+    async computeStaticData(data) {
+        this.currentJob = 'static';
+        
+        // Filtra solo bivacchi senza esposizione/pendenza già calcolate
+        const toCompute = data.filter(el => 
+            !el.tags?.aspect_deg && !el.tags?.aspect_card
+        );
+        
+        if (toCompute.length === 0) {
+            console.log('[BDM:Static] Tutti i bivacchi hanno già i dati fissi.');
+            return;
+        }
+        
+        console.log(`[BDM:Static] ${toCompute.length} bivacchi da calcolare (una tantum - disabilitato, usa /api/admin/compute-aspects)`);
+        // DISABILITATO: i calcoli di aspect/slope sono troppo lenti sul client
+        // Usa invece l'endpoint POST /api/admin/compute-aspects sul server
+        // per calcolarli in batch in modo molto più veloce
+        return;
+        
+        let successCount = 0;
+        let errorCount = 0;
+        
+        for (const el of toCompute) {
+            // Check abort
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+            
+            try {
+                const ok = await calculateAspectForEl(el);
+                if (ok) {
+                    successCount++;
+                    errorCount = 0; // Reset error count on success
+                    
+                    // Batch save
+                    if (successCount % this.BATCH_SIZE === 0) {
+                        await this.saveProgress(data);
+                    }
+                } else {
+                    errorCount++;
+                }
+            } catch (e) {
+                errorCount++;
+            }
+            
+            // Stop se troppi errori (rate limit raggiunto)
+            if (errorCount >= this.MAX_ERRORS) {
+                console.warn(`[BDM:Static] Troppi errori (${errorCount}), riproverà dopo.`);
+                break;
+            }
+        }
+        
+        // Salva finale + sync server
+        if (successCount > 0) {
+            await this.saveProgress(data, true);
+            console.log(`[BDM:Static] ${successCount}/${toCompute.length} bivacchi calcolati e salvati.`);
+        }
+    },
+    
+    // ========== DATI VARIABILI - METEO ==========
+    async updateWeatherData(data) {
+        this.currentJob = 'weather';
+        const now = Date.now();
+        
+        // Filtra solo bivacchi con meteo stale
+        const toUpdate = data.filter(el => {
+            const lastUpdate = el.tags?.temperature_updated_at || 0;
+            return (now - lastUpdate) > this.WEATHER_STALE_MS;
+        });
+        
+        if (toUpdate.length === 0) {
+            console.log('[BDM:Weather] Tutti i dati meteo sono aggiornati.');
+            return;
+        }
+        
+        console.log(`[BDM:Weather] ${toUpdate.length} bivacchi da aggiornare.`);
+        
+        let successCount = 0;
+        let errorCount = 0;
+        let processed = 0;
+        const total = toUpdate.length;
+        
+        for (const el of toUpdate) {
+            // Check abort
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+            
+            processed++;
+            this.updateProgress(processed, total, '🌡️ Temperature');
+            
+            try {
+                const ok = await fetchTemperature(el);
+                if (ok) {
+                    successCount++;
+                    errorCount = 0;
+                    
+                    // Batch save (solo locale, no server per meteo)
+                    if (successCount % this.BATCH_SIZE === 0) {
+                        await saveBivacchiToStorage(rawData);
+                        // Aggiorna anche la UI durante il caricamento
+                        pendingUIUpdate = true;
+                        throttledUIUpdate();
+                    }
+                } else {
+                    errorCount++;
+                }
+            } catch (e) {
+                errorCount++;
+            }
+            
+            if (errorCount >= this.MAX_ERRORS) {
+                console.warn(`[BDM:Weather] Rate limit raggiunto dopo ${successCount} successi, riproverà dopo.`);
+                break;
+            }
+        }
+        
+        if (successCount > 0) {
+            await saveBivacchiToStorage(rawData);
+            pendingUIUpdate = true;
+            throttledUIUpdate();
+            console.log(`[BDM:Weather] ${successCount}/${toUpdate.length} bivacchi aggiornati.`);
+        }
+    },
+    
+    // ========== DATI VARIABILI - ORE DI LUCE ==========
+    async updateDaylightData(data) {
+        this.currentJob = 'daylight';
+        const now = Date.now();
+        
+        const toUpdate = data.filter(el => {
+            const lastUpdate = el.tags?.daylight_updated_at || 0;
+            return (now - lastUpdate) > this.DAYLIGHT_STALE_MS;
+        });
+        
+        if (toUpdate.length === 0) {
+            console.log('[BDM:Daylight] Tutti i dati luce sono aggiornati.');
+            return;
+        }
+        
+        console.log(`[BDM:Daylight] ${toUpdate.length} bivacchi da aggiornare.`);
+        
+        let successCount = 0;
+        let errorCount = 0;
+        
+        for (const el of toUpdate) {
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
+            
+            try {
+                await fetchDaylightForEl(el);
+                successCount++;
+                errorCount = 0;
+                
+                if (successCount % this.BATCH_SIZE === 0) {
+                    await saveBivacchiToStorage(rawData);
+                }
+            } catch (e) {
+                errorCount++;
+            }
+            
+            if (errorCount >= this.MAX_ERRORS) {
+                console.warn(`[BDM:Daylight] Rate limit raggiunto, riproverà dopo.`);
+                break;
+            }
+        }
+        
+        if (successCount > 0) {
+            await saveBivacchiToStorage(rawData);
+            console.log(`[BDM:Daylight] ${successCount}/${toUpdate.length} bivacchi aggiornati.`);
+        }
+    },
+    
+    // ========== HELPERS ==========
+    async saveProgress(data, syncToServer = false) {
+        await saveBivacchiToStorage(data);
+        
+        if (syncToServer && navigator.onLine) {
+            try {
+                await fetch(API_BASE_URL + '/api/bivacchi', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (e) {
+                console.warn('[BDM] Sync to server failed, will retry later.');
+            }
+        }
+    },
+    
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+};
+
 // ==================== PWA & OFFLINE SUPPORT ====================
 let isOnline = navigator.onLine;
 let swRegistration = null;
@@ -171,11 +687,23 @@ function handleOffline() {
     showConnectionBanner('offline');
 }
 
-function handleOnlineSync() {
+async function handleOnlineSync() {
     console.log('[PWA] Syncing data...');
     
-    // 1. Process Pending Actions Queue
+    // 1. Process Pending Actions Queue (localStorage)
     SyncManager.processQueue();
+    
+    // 1b. Process IndexedDB sync queue if available
+    if (typeof DBService !== 'undefined') {
+        try {
+            const result = await DBService.processSyncQueue(API_BASE_URL);
+            if (result.success > 0) {
+                console.log(`[DB] Synced ${result.success} actions from IndexedDB`);
+            }
+        } catch (e) {
+            console.error('[DB] Error processing IndexedDB sync queue:', e);
+        }
+    }
     
     // 2. Ricarica temperature in background
     if (rawData.length > 0) {
@@ -418,7 +946,7 @@ async function fetchDaylightInBackground(data) {
         const ok = await fetchDaylightForEl(el);
         if (ok) {
             updateCount++;
-            try { localStorage.setItem('bivacchi-data', JSON.stringify(rawData)); } catch {}
+            saveBivacchiToStorage(rawData);
         }
     }
     // Single POST after all daylight calculations are complete
@@ -450,32 +978,27 @@ async function getElevationSingle(lat, lon) {
     if (cached && Date.now() - cached.ts < ELEVATION_CACHE_MS) {
         return cached.val;
     }
-    // Rate limiting: attendi il minimo delay, poi applica backoff se necessario
-    const elapsed = Date.now() - lastElevationFetchTime;
-    if (elapsed < elevationBackoffMs) {
-        await new Promise(r => setTimeout(r, elevationBackoffMs - elapsed));
-    }
-    lastElevationFetchTime = Date.now();
-    try {
-        const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
-        if (r.status === 429) {
-            // Rate limit hit, aumenta backoff esponenzialmente
-            elevationBackoffMs = Math.min(elevationBackoffMs * 2, 5000);
-            return null;
+    
+    // TUTTE le chiamate API passano per la coda globale
+    return enqueueApiCall(async () => {
+        try {
+            const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+            if (r.status === 429) {
+                console.warn(`[Queue] 429 su elevation ${lat},${lon}`);
+                return null;
+            }
+            if (!r.ok) return null;
+            const d = await r.json();
+            if (d.elevation && d.elevation.length > 0 && !isNaN(d.elevation[0])) {
+                const val = Number(d.elevation[0]);
+                elevationCache[key] = { val, ts: Date.now() };
+                return val;
+            }
+        } catch (e) {
+            console.error(`Errore elevazione ${lat},${lon}:`, e.message);
         }
-        if (!r.ok) return null;
-        const d = await r.json();
-        if (d.elevation && d.elevation.length > 0 && !isNaN(d.elevation[0])) {
-            const val = Number(d.elevation[0]);
-            elevationCache[key] = { val, ts: Date.now() };
-            elevationBackoffMs = 500; // reset backoff
-            return val;
-        }
-    } catch (e) {
-        console.error(`Errore elevazione ${lat},${lon}:`, e.message);
-    }
-    // Open-elevation ha problemi CORS frequenti, skip per evitare spam
-    return null;
+        return null;
+    });
 }
 
 async function computeSlopeAspect(lat, lon) {
@@ -516,35 +1039,52 @@ async function calculateAspectForEl(el) {
     return true;
 }
 
+// Flag per prevenire esecuzioni multiple simultanee
+let isComputingAspect = false;
+
 async function computeAspectInBackground(data) {
+    // Previeni esecuzioni duplicate
+    if (isComputingAspect) {
+        console.log('[Aspect] Calcolo già in corso, salto questa esecuzione.');
+        return;
+    }
+    
     // Filtra solo bivacchi senza esposizione/pendenza già calcolate
     const toCompute = data.filter(el => !el.tags || (el.tags.aspect_deg === undefined && el.tags.aspect_card === undefined));
     if (toCompute.length === 0) return;
-    console.log(`Inizio calcolo esposizione/pendenza: ${toCompute.length} bivacchi da calcolare una sola volta.`);
+    
+    isComputingAspect = true;
+    console.log(`Inizio calcolo esposizione/pendenza: ${toCompute.length} bivacchi da calcolare.`);
+    
     let successCount = 0;
     for (const el of toCompute) {
         const ok = await calculateAspectForEl(el);
         if (ok) {
             successCount++;
-            // Save to localStorage only
-            try { localStorage.setItem('bivacchi-data', JSON.stringify(rawData)); } catch {}
+            // Salva ogni 10 calcoli per non perdere progressi
+            if (successCount % 10 === 0) {
+                saveBivacchiToStorage(rawData);
+            }
         } else {
             // Fallito (rate limit, rete, ecc), stop gracefully: riproverà al prossimo caricamento
             console.warn(`Calcolo esposizione interrotto dopo ${successCount} successi, riproverà al prossimo caricamento.`);
             break;
         }
-        // Delay gestito dal rate limiter
-        await new Promise(r => setTimeout(r, Math.max(500, elevationBackoffMs)));
+        // Aumenta delay per rispettare rate limit (max 10 req/s = 100ms tra richieste)
+        await new Promise(r => setTimeout(r, Math.max(150, elevationBackoffMs)));
     }
+    
     // Single POST after all calculations complete
     if (successCount > 0) {
-        try { localStorage.setItem('bivacchi-data', JSON.stringify(rawData)); } catch {}
+        saveBivacchiToStorage(rawData);
         fetch(API_BASE_URL + '/api/bivacchi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rawData)
         }).catch(() => {});
     }
+    
+    isComputingAspect = false;
     console.log(`Calcolo esposizione completato: ${successCount}/${toCompute.length} bivacchi calcolati e salvati.`);
 }
 
@@ -552,6 +1092,7 @@ let rawData = [];
 const listContainer = document.getElementById('bivacchi-list');
 let map;
 let markers = [];
+let markerClusterGroup = null; // MarkerCluster layer per performance
 let currentUser = null;
 let addressMap = null;
 let selectedCoords = null;
@@ -561,6 +1102,20 @@ let mapFitPending = false; // Fit in sospeso quando la mappa era nascosta
 let homeMarker = null; // Marker dell'indirizzo di casa
 let altSlider = null; // noUiSlider per altitudine
 let tempSlider = null; // noUiSlider per temperatura
+
+// Performance: throttled UI update durante fetch meteo
+let pendingUIUpdate = false;
+const throttledUIUpdate = debounce(() => {
+    if (pendingUIUpdate) {
+        aggiornaInterfaccia();
+        pendingUIUpdate = false;
+    }
+}, 2000); // Aggiorna UI max ogni 2 secondi durante fetch background
+
+// Performance: lazy loading lista - mostra solo N elementi iniziali
+const LIST_PAGE_SIZE = 50;
+let currentListPage = 1;
+let currentFilteredData = [];
 
 function isMapVisible() {
     const el = document.getElementById('map');
@@ -620,11 +1175,17 @@ async function fetchTemperature(el) {
     const lon = el.center?.lon ?? el.lon;
     if (!lat || !lon) return false;
     
-    try {
-        // Usa dati orari + daily min/max per stima più robusta: temperatura, snowfall, snow_depth
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,snowfall,snow_depth&daily=temperature_2m_max,temperature_2m_min&past_days=2&forecast_days=1&timezone=auto`;
-        const resMeteo = await fetch(url);
-        const dataMeteo = await resMeteo.json();
+    // TUTTE le chiamate API passano per la coda globale
+    return enqueueApiCall(async () => {
+        try {
+            // Usa dati orari + daily min/max per stima più robusta: temperatura, snowfall, snow_depth
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,snowfall,snow_depth&daily=temperature_2m_max,temperature_2m_min&past_days=2&forecast_days=1&timezone=auto`;
+            const resMeteo = await fetch(url);
+            if (resMeteo.status === 429) {
+                console.warn(`[Queue] 429 su weather ${lat},${lon}`);
+                return false;
+            }
+            const dataMeteo = await resMeteo.json();
         const hourly = dataMeteo.hourly || {};
         const temps = Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
         const snowfall = Array.isArray(hourly.snowfall) ? hourly.snowfall : [];
@@ -720,16 +1281,19 @@ async function fetchTemperature(el) {
         if (recentMinTemp !== null) el.tags.temp_min_48h = recentMinTemp;
         el.tags.snow_updated_at = Date.now();
         return true;
-    } catch(e) {
-        console.error(`Errore temperatura per ${lat},${lon}:`, e);
-    }
-    return false;
+        } catch(e) {
+            console.error(`Errore temperatura per ${lat},${lon}:`, e);
+            return false;
+        }
+    });
 }
 
 // Funzione per ottenere temperature per i bivacchi (in background, non blocca)
 async function fetchTemperaturesInBackground(data) {
     const now = Date.now();
     let updateCount = 0;
+    const BATCH_SIZE = 10; // Salva ogni 10 aggiornamenti
+    
     for (const el of data) {
         const lastTemp = el.tags?.temperature_updated_at || 0;
         const lastSnow = el.tags?.snow_updated_at || 0;
@@ -741,21 +1305,57 @@ async function fetchTemperaturesInBackground(data) {
         // Aggiorna meteo in modo asincrono
         await fetchTemperature(el);
         updateCount++;
-        // Persisti cache locale e aggiorna UI
-        try {
-            localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-        } catch {}
-        aggiornaInterfaccia();
+        
+        // Performance: batch saves e throttled UI updates
+        if (updateCount % BATCH_SIZE === 0) {
+            saveBivacchiToStorage(rawData);
+            pendingUIUpdate = true;
+            throttledUIUpdate();
+        }
         // Delay tra richieste per non sovraccaricare l'API
         await new Promise(resolve => setTimeout(resolve, 500));
     }
-    // Single POST after all temperature updates complete
+    
+    // Final save and UI update
     if (updateCount > 0) {
+        saveBivacchiToStorage(rawData);
+        aggiornaInterfaccia();
+        
+        // Single POST after all temperature updates complete
         fetch(API_BASE_URL + '/api/bivacchi', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rawData)
         }).catch(() => {});
+    }
+}
+
+// Helper per salvare dati bivacchi in IndexedDB e localStorage
+let lastSaveTime = 0;
+const SAVE_DEBOUNCE_MS = 2000; // Non salvare più frequentemente di ogni 2 secondi
+
+async function saveBivacchiToStorage(data) {
+    const now = Date.now();
+    
+    // Debounce: evita salvataggi troppo frequenti
+    if (now - lastSaveTime < SAVE_DEBOUNCE_MS) {
+        return;
+    }
+    lastSaveTime = now;
+    
+    // Salva in IndexedDB (preferito)
+    if (typeof DBService !== 'undefined') {
+        try {
+            await DBService.saveBivacchi(data);
+        } catch (e) {
+            console.error('[DB] Error saving to IndexedDB:', e);
+        }
+    }
+    // Fallback/backup in localStorage
+    try {
+        localStorage.setItem('bivacchi-data', JSON.stringify(data));
+    } catch (e) {
+        console.warn('[Storage] localStorage quota exceeded or unavailable');
     }
 }
 
@@ -770,32 +1370,41 @@ async function fetchTemperaturesForAll(data) {
 
 // Funzione per caricare i dati dei bivacchi nel Nord-Est Italia
 async function caricaDatiNordEst() {
-    // 1. Prova a caricare da localStorage e mostra subito
-    const cachedData = localStorage.getItem('bivacchi-data');
-    if (cachedData) {
-        try {
-            rawData = JSON.parse(cachedData);
-            dataLoaded = true;
-            await new Promise(resolve => setTimeout(resolve, 0));
-            aggiornaInterfaccia();
-            
-            // Cache nel Service Worker per offline
-            cacheBivacchiInSW(rawData);
-            
-            // Se online, aggiorna in background
-            if (isOnline) {
-                // Aggiorna temperature in background
-                fetchTemperaturesInBackground(rawData).then(() => {
-                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                    cacheBivacchiInSW(rawData);
-                });
-                // Calcola esposizione/pendenza in background
-                computeAspectInBackground(rawData);
-                // Calcola ore di luce in background
-                fetchDaylightInBackground(rawData);
+    // 1. Prova a caricare da IndexedDB (preferito) o localStorage (fallback)
+    let cachedData = null;
+    
+    try {
+        if (typeof DBService !== 'undefined') {
+            cachedData = await DBService.getBivacchi();
+        }
+    } catch (e) {
+        console.log('[DB] IndexedDB not available, falling back to localStorage');
+    }
+    
+    // Fallback a localStorage se IndexedDB vuoto
+    if (!cachedData || cachedData.length === 0) {
+        const lsData = localStorage.getItem('bivacchi-data');
+        if (lsData) {
+            try {
+                cachedData = JSON.parse(lsData);
+            } catch (e) {
+                console.error("Errore lettura localStorage:", e);
             }
-        } catch (e) {
-            console.error("Errore lettura localStorage:", e);
+        }
+    }
+    
+    if (cachedData && cachedData.length > 0) {
+        rawData = cachedData;
+        dataLoaded = true;
+        await new Promise(resolve => setTimeout(resolve, 0));
+        aggiornaInterfaccia();
+        
+        // Cache nel Service Worker per offline
+        cacheBivacchiInSW(rawData);
+        
+        // Se online, avvia job in background (centralizzato)
+        if (isOnline) {
+            BackgroundDataManager.startAllJobs(rawData);
         }
     }
 
@@ -807,19 +1416,13 @@ async function caricaDatiNordEst() {
                 const data = await res.json();
                 if (data.length > 0) {
                     rawData = data;
-                    localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
+                    saveBivacchiToStorage(rawData);
                     cacheBivacchiInSW(rawData);
                     dataLoaded = true;
                     aggiornaInterfaccia();
-                    // Aggiorna temperature in background
-                    fetchTemperaturesInBackground(rawData).then(() => {
-                        localStorage.setItem('bivacchi-data', JSON.stringify(rawData));
-                        cacheBivacchiInSW(rawData);
-                    });
-                    // Calcola esposizione/pendenza in background
-                    computeAspectInBackground(rawData);
-                    // Calcola ore di luce in background
-                    fetchDaylightInBackground(rawData);
+                    
+                    // Avvia job in background (centralizzato) - NON duplica se già in corso
+                    BackgroundDataManager.startAllJobs(rawData);
                     return;
                 }
             }
@@ -1079,7 +1682,27 @@ function aggiornaInterfaccia() {
         }
     });
 
-    filtrati.forEach(el => {
+    // Performance: salva i dati filtrati e usa lazy loading
+    currentFilteredData = filtrati;
+    currentListPage = 1;
+    renderListPage();
+
+    // Aggiorna la mappa
+    updateMap(filtrati);
+}
+
+// Funzione per renderizzare una pagina della lista (lazy loading)
+function renderListPage() {
+    const startIdx = 0;
+    const endIdx = currentListPage * LIST_PAGE_SIZE;
+    const itemsToShow = currentFilteredData.slice(startIdx, endIdx);
+    
+    listContainer.innerHTML = '';
+    
+    // Usa DocumentFragment per performance
+    const fragment = document.createDocumentFragment();
+    
+    itemsToShow.forEach(el => {
         const item = document.createElement('div');
         item.className = 'bivacco-item';
         const isFavorite = currentUser && currentUser.favorites && currentUser.favorites.includes(el.id.toString());
@@ -1093,35 +1716,92 @@ function aggiornaInterfaccia() {
                 el.center?.lat ?? el.lat,
                 el.center?.lon ?? el.lon
             );
-            distanceText = ` | ${dist} km da casa`;
+            distanceText = ` | ${dist} km`;
         }
         
-        const temp = el.tags?.temperature !== undefined ? parseInt(el.tags.temperature, 10) : null;
-        const tempDisplay = temp !== null ? `${temp}°C` : 'N/A';
+        // Usa il sistema di validazione per determinare lo stato dei dati
+        const eleStatus = validateElevation(el);
+        const tempStatus = validateTemperature(el);
         const snow = el.tags?.snow;
-        const snowDisplay = snow === undefined ? '' : (snow ? ' | ❄️ Neve' : ' | ❄️ No neve');
+        
+        // Formatta elevazione
+        let eleDisplay;
+        if (eleStatus === DataStatus.AVAILABLE) {
+            eleDisplay = `${el.tags.ele}m`;
+        } else if (BackgroundDataManager.isRunning && BackgroundDataManager.currentJob === 'elevations') {
+            eleDisplay = '<span class="data-loading">...</span>';
+        } else {
+            eleDisplay = '<span class="data-unavailable">-</span>';
+        }
+        
+        // Formatta temperatura
+        let tempDisplay;
+        if (tempStatus === DataStatus.AVAILABLE) {
+            tempDisplay = `${el.tags.temperature}°C`;
+        } else if (tempStatus === DataStatus.STALE) {
+            tempDisplay = `<span class="data-stale">${el.tags.temperature}°C</span>`;
+        } else if (BackgroundDataManager.isRunning && BackgroundDataManager.currentJob === 'weather') {
+            tempDisplay = '<span class="data-loading">...</span>';
+        } else {
+            tempDisplay = '<span class="data-unavailable">-</span>';
+        }
+        
+        // Formatta neve
+        const snowDisplay = snow === undefined ? '' : (snow ? ' | ❄️' : '');
         
         item.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h4>${el.tags.name || 'Senza nome'}</h4>
-                    <p>${el.tags.ele || 0}m | ${tempDisplay}${snowDisplay}${distanceText}</p>
+                    <p>${eleDisplay} | ${tempDisplay}${snowDisplay}${distanceText}</p>
                 </div>
                 ${currentUser ? `<button onclick="event.stopPropagation(); toggleFavorite('${el.id}')" class="heart-btn">${heartColor}</button>` : ''}
             </div>
         `;
         item.onclick = () => mostraDettagli(el);
-        listContainer.appendChild(item);
+        fragment.appendChild(item);
     });
-
-    // Aggiorna la mappa
-    updateMap(filtrati);
+    
+    listContainer.appendChild(fragment);
+    
+    // Mostra pulsante "Carica altri" se ci sono più elementi
+    if (endIdx < currentFilteredData.length) {
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.className = 'load-more-btn';
+        loadMoreBtn.textContent = `Mostra altri (${currentFilteredData.length - endIdx} rimanenti)`;
+        loadMoreBtn.onclick = () => {
+            currentListPage++;
+            renderListPage();
+        };
+        listContainer.appendChild(loadMoreBtn);
+    }
+    
+    // Mostra contatore
+    const counter = document.createElement('div');
+    counter.className = 'list-counter';
+    counter.textContent = `Mostrati ${Math.min(endIdx, currentFilteredData.length)} di ${currentFilteredData.length} bivacchi`;
+    listContainer.insertBefore(counter, listContainer.firstChild);
 }
 
 // Funzione per aggiornare la mappa con i bivacchi filtrati
 function updateMap(filtrati) {
-    // Rimuovi marker esistenti
-    markers.forEach(marker => map.removeLayer(marker));
+    // Rimuovi cluster group esistente
+    if (markerClusterGroup) {
+        map.removeLayer(markerClusterGroup);
+    }
+    
+    // Crea nuovo cluster group con impostazioni ottimizzate
+    markerClusterGroup = L.markerClusterGroup({
+        chunkedLoading: true, // Carica marker a chunks per non bloccare UI
+        chunkProgress: null,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: 50, // Raggio clustering in pixel
+        disableClusteringAtZoom: 16, // Mostra marker singoli a zoom alto
+        animate: false // Disabilita animazioni per performance
+    });
+    
     markers = [];
 
     // Aggiungi marker della casa se impostato
@@ -1140,24 +1820,27 @@ function updateMap(filtrati) {
         }).bindPopup('🏠 Casa').addTo(map);
     }
 
-    // Aggiungi nuovi marker
+    // Aggiungi nuovi marker al cluster group
     filtrati.forEach(el => {
         const lat = el.center?.lat ?? el.lat;
         const lon = el.center?.lon ?? el.lon;
         if (lat && lon) {
-            const marker = L.marker([lat, lon]).addTo(map);
+            const marker = L.marker([lat, lon]);
             marker.bindPopup(`<b>${el.tags.name || 'Bivacco'}</b><br>Altitudine: ${el.tags.ele || 0}m`);
             marker.on('click', () => mostraDettagli(el));
             markers.push(marker);
         }
     });
+    
+    // Aggiungi tutti i marker al cluster group in una sola operazione
+    markerClusterGroup.addLayers(markers);
+    map.addLayer(markerClusterGroup);
 
     // Adatta la vista SOLO al primo caricamento, non ad ogni filtro
     // E fallo solo quando la mappa è visibile (mobile può essere nascosta)
     if (!mapInitialized && markers.length > 0) {
-        const group = new L.featureGroup(markers);
         if (isMapVisible()) {
-            map.fitBounds(group.getBounds().pad(0.1));
+            map.fitBounds(markerClusterGroup.getBounds().pad(0.1));
             mapInitialized = true;
             mapFitPending = false;
         } else {
@@ -1183,15 +1866,22 @@ async function mostraDettagli(el) {
     const tempStale = Date.now() - lastTempUpdate > WEATHER_STALE_MS;
     if (tempStale || el.tags?.temperature_min === undefined || el.tags?.temperature_max === undefined) {
         await fetchTemperature(el);
-        try { localStorage.setItem('bivacchi-data', JSON.stringify(rawData)); } catch {}
+        saveBivacchiToStorage(rawData);
     }
 
     let meteoInfo = "Non disponibile";
     if (lat && lon) {
+        // Usa la coda globale anche per questa chiamata
         try {
-            const resMeteo = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-            const dataM = await resMeteo.json();
-            if (dataM.current_weather) {
+            const dataM = await enqueueApiCall(async () => {
+                const resMeteo = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                if (resMeteo.status === 429) {
+                    console.warn(`[Queue] 429 su current_weather ${lat},${lon}`);
+                    return null;
+                }
+                return await resMeteo.json();
+            });
+            if (dataM && dataM.current_weather) {
                 meteoInfo = `${dataM.current_weather.temperature}°C`;
             }
         } catch(e) {
@@ -1240,14 +1930,18 @@ async function mostraDettagli(el) {
 
     const tempMin = el.tags?.temperature_min;
     const tempMax = el.tags?.temperature_max;
+    
+    // Mostra placeholder per dati non ancora calcolati
+    const aspectDisplay = el.tags?.aspect_card ? `${el.tags.aspect_card}${el.tags?.aspect_deg !== undefined ? ` (${el.tags.aspect_deg}°)` : ''}` : '⏳ Caricamento...';
+    const slopeDisplay = el.tags?.slope_deg !== undefined ? `${el.tags.slope_deg}°` : '⏳ Caricamento...';
 
     container.innerHTML = `
         <h2>${el.tags.name || "Bivacco"}</h2>
         <hr>
         <p><strong>🏔️ Altitudine:</strong> ${quota} m</p>
         ${el.tags?.sunrise && el.tags?.sunset ? `<p><strong>☀️ Ore di luce:</strong> Alba ${el.tags.sunrise} - Tramonto ${el.tags.sunset} (${el.tags.daylight_hours || 'N/A'}h)</p>` : ''}
-        ${el.tags?.aspect_card || el.tags?.aspect_deg !== undefined ? `<p><strong>🧭 Esposizione:</strong> ${el.tags.aspect_card || ''}${el.tags?.aspect_deg !== undefined ? ` (${el.tags.aspect_deg}°)` : ''}</p>` : ''}
-        ${el.tags?.slope_deg !== undefined ? `<p><strong>📐 Pendenza:</strong> ${el.tags.slope_deg}°</p>` : ''}
+        <p><strong>🧭 Esposizione:</strong> ${aspectDisplay}</p>
+        <p><strong>📐 Pendenza:</strong> ${slopeDisplay}</p>
         <p><strong>🌡️ Temperatura attuale:</strong> ${meteoInfo}</p>
         ${(tempMin !== undefined || tempMax !== undefined) ? `<p><strong>🌡️ Min/Max oggi:</strong> ${tempMin !== undefined ? tempMin + '°C' : 'N/A'} / ${tempMax !== undefined ? tempMax + '°C' : 'N/A'}</p>` : ''}
         <p><strong>❄️ Neve nella zona:</strong> ${el.tags?.snow === true ? 'Sì' : (el.tags?.snow === false ? 'No' : 'N/A')}</p>
@@ -1431,6 +2125,89 @@ function initMap() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+    
+    // Inizializza il servizio radar
+    initRadarControls();
+}
+
+// Inizializza i controlli radar
+function initRadarControls() {
+    if (typeof RadarService === 'undefined') {
+        console.warn('RadarService non disponibile');
+        return;
+    }
+    
+    const toggleBtn = document.getElementById('radar-toggle-btn');
+    const controlPanel = document.getElementById('radar-control-panel');
+    const closeBtn = document.getElementById('radar-close-btn');
+    const playBtn = document.getElementById('radar-play-btn');
+    const opacitySlider = document.getElementById('radar-opacity');
+    const colorScheme = document.getElementById('radar-color-scheme');
+    
+    if (!toggleBtn || !controlPanel) return;
+    
+    let radarInitialized = false;
+    
+    // Toggle pannello radar
+    toggleBtn.addEventListener('click', async () => {
+        const isVisible = controlPanel.style.display !== 'none';
+        
+        if (!isVisible) {
+            controlPanel.style.display = 'block';
+            toggleBtn.classList.add('active');
+            
+            // Inizializza radar al primo utilizzo
+            if (!radarInitialized && map) {
+                try {
+                    await RadarService.init(map);
+                    radarInitialized = true;
+                    // Show radar after initialization
+                    RadarService.showRadar();
+                } catch (err) {
+                    console.error('Errore inizializzazione radar:', err);
+                    alert('Impossibile caricare i dati radar. Riprova più tardi.');
+                    controlPanel.style.display = 'none';
+                    toggleBtn.classList.remove('active');
+                    return;
+                }
+            } else if (radarInitialized) {
+                // Radar già inizializzato, mostralo
+                RadarService.showRadar();
+            }
+        } else {
+            controlPanel.style.display = 'none';
+            toggleBtn.classList.remove('active');
+            RadarService.stop();
+        }
+    });
+    
+    // Chiudi pannello
+    closeBtn?.addEventListener('click', () => {
+        controlPanel.style.display = 'none';
+        toggleBtn.classList.remove('active');
+        RadarService.stop();
+    });
+    
+    // Play/Pause
+    playBtn?.addEventListener('click', () => {
+        if (RadarService.isPlaying) {
+            RadarService.pause();
+            playBtn.textContent = '▶️';
+        } else {
+            RadarService.play();
+            playBtn.textContent = '⏸️';
+        }
+    });
+    
+    // Opacità
+    opacitySlider?.addEventListener('input', (e) => {
+        RadarService.setOpacity(parseInt(e.target.value) / 100);
+    });
+    
+    // Schema colori
+    colorScheme?.addEventListener('change', (e) => {
+        RadarService.setColorScheme(parseInt(e.target.value));
+    });
 }
 
 // Avvio iniziale
@@ -1547,13 +2324,25 @@ async function checkAuth() {
 
 function updateAuthUI() {
     const authArea = document.getElementById('auth-area');
+    const hasGPX = typeof GPXService !== 'undefined' && GPXService.currentStats;
+    const isAdmin = currentUser.role === 'admin';
     authArea.innerHTML = `
+        <label class="gpx-upload-btn" title="Carica traccia GPX">
+            📍 GPX
+            <input type="file" id="gpx-file-input" accept=".gpx" style="display:none;">
+        </label>
+        <button id="gpx-info-btn" class="gpx-upload-btn" title="Mostra/Nascondi info traccia" style="display:${hasGPX ? 'inline-flex' : 'none'};" onclick="GPXService.toggleStatsPanel()">
+            ℹ️ Info
+        </button>
+        ${isAdmin ? '<a href="/admin.html" class="auth-btn" style="text-decoration:none;" title="Admin Portal">🛠️</a>' : ''}
         <span class="user-name">${currentUser.name}</span>
         <button id="profile-btn" class="auth-btn">👤 Profilo</button>
     `;
     document.getElementById('profile-btn').addEventListener('click', () => {
         openProfileModal();
     });
+    // Re-attach GPX listener after DOM update
+    setupGPXUploadListener();
 }
 
 function openAuthModal() {
@@ -1887,3 +2676,21 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return Math.round(R * c * 10) / 10; // km
 }
+
+// ==================== GPX UPLOAD HANDLER ====================
+function setupGPXUploadListener() {
+    const gpxInput = document.getElementById('gpx-file-input');
+    if (gpxInput) {
+        gpxInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && typeof GPXService !== 'undefined' && typeof map !== 'undefined') {
+                GPXService.handleFileUpload(file, map);
+            }
+            // Reset input so same file can be loaded again
+            e.target.value = '';
+        });
+    }
+}
+
+// Initialize GPX listener on page load
+setupGPXUploadListener();

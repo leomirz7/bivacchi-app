@@ -7,9 +7,10 @@
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="Trova bivacchi nelle Alpi del Nord-Est Italia con meteo, neve e filtri avanzati">
-    <meta name="theme-color" content="#3498db">
+    <meta name="theme-color" content="#ea580c">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Bivacchi">
     
     <!-- PWA Manifest -->
@@ -22,8 +23,16 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 </head>
 <body>
+
+    <!-- Progress indicator per background tasks -->
+    <div id="progress-bar-container" class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div id="progress-label" class="progress-label"></div>
 
     <div class="app-container">
         
@@ -32,6 +41,13 @@
                 <div class="header-top">
                     <h2>🏔️ Bivacchi del Nord-Est Italia</h2>
                     <div id="auth-area">
+                        <label class="gpx-upload-btn" title="Carica traccia GPX">
+                            📍 GPX
+                            <input type="file" id="gpx-file-input" accept=".gpx" style="display:none;">
+                        </label>
+                        <button id="gpx-info-btn" class="gpx-upload-btn" title="Mostra/Nascondi info traccia" style="display:none;" onclick="GPXService.toggleStatsPanel()">
+                            ℹ️ Info
+                        </button>
                         <button id="auth-btn" class="auth-btn">🔐 Accedi</button>
                     </div>
                 </div>
@@ -72,7 +88,48 @@
                 <div id="bivacchi-list" class="list-container">
                     <p class="placeholder-text">Caricamento dei bivacchi nel Nord-Est Italia...</p>
                 </div>
-                <div id="map" class="map-container"></div>
+                <div id="map" class="map-container">
+                    <!-- Radar Controls -->
+                    <button id="radar-toggle-btn" class="radar-toggle-btn" title="Radar precipitazioni">
+                        🌧️
+                    </button>
+                    <div id="radar-control-panel" class="radar-control-panel" style="display: none;">
+                        <div class="radar-header">
+                            <span>Radar Precipitazioni</span>
+                            <button id="radar-close-btn" class="radar-close-btn">&times;</button>
+                        </div>
+                        <div class="radar-timeline">
+                            <div class="radar-time-labels">
+                                <span id="radar-time-start">-2h</span>
+                                <span id="radar-time-current">Ora</span>
+                                <span id="radar-time-end">+30m</span>
+                            </div>
+                            <div class="radar-progress-container">
+                                <div id="radar-progress" class="radar-progress" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="radar-controls-row">
+                            <button id="radar-play-btn" class="radar-play-btn">▶️</button>
+                            <div class="radar-settings">
+                                <label>
+                                    Opacità:
+                                    <input type="range" id="radar-opacity" min="0" max="100" value="60">
+                                </label>
+                                <label>
+                                    Colori:
+                                    <select id="radar-color-scheme">
+                                        <option value="0">Universale</option>
+                                        <option value="1">NOAA</option>
+                                        <option value="2">Rosso/Verde</option>
+                                        <option value="3">TITAN</option>
+                                        <option value="4">The Weather Channel</option>
+                                        <option value="6">Dark Sky</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -182,7 +239,11 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.js"></script>
+    <script src="dbService.js"></script>
+    <script src="gpxService.js"></script>
+    <script src="radarService.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

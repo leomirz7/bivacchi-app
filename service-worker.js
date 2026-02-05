@@ -1,5 +1,5 @@
 // Service Worker per Bivacchi PWA
-const CACHE_VERSION = 'bivacchi-v3';
+const CACHE_VERSION = 'bivacchi-v15';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const MAP_CACHE = `${CACHE_VERSION}-maps`;
@@ -8,8 +8,12 @@ const MAP_CACHE = `${CACHE_VERSION}-maps`;
 const STATIC_ASSETS = [
     '/',
     '/index.html',
+    '/admin.html',
     '/style.css',
     '/script.js',
+    '/dbService.js',
+    '/gpxService.js',
+    '/radarService.js',
     '/manifest.json',
     '/icons/icon.svg',
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
@@ -167,8 +171,10 @@ async function staleWhileRevalidate(request, cacheName) {
     
     const fetchPromise = fetchWithTimeout(request, 5000)
         .then(networkResponse => {
-            if (networkResponse.ok) {
+            if (networkResponse && networkResponse.ok) {
+                // Clone una volta per la cache, una volta per il ritorno
                 caches.open(cacheName).then(cache => cache.put(request, networkResponse.clone()));
+                return networkResponse.clone();
             }
             return networkResponse;
         })

@@ -4,6 +4,7 @@
     "email": "test@gmail.com",
     "password": "$2a$10$sdH/lIvFd1JnZ1ihgLFdZee6SiOqVj5NqecgKipk0t2lD3eyg1rdu",
     "name": "Leonardo",
+    "role": "admin",
     "created_at": "2026-01-08T00:01:53.551Z",
     "home_address": {
       "address": "Trento",
@@ -18,5 +19,15 @@
       "2597599726",
       "597632935"
     ]
+  },
+  {
+    "id": "1770299973050",
+    "email": "admin@bivacchi.it",
+    "password": "$2a$10$Cn4YZ2xkJNqG.q4ni9Qe7uUm3CdFnH8mBw6xApQdTsdAC.j78Lyha",
+    "name": "Admin",
+    "role": "admin",
+    "created_at": "2026-02-05T13:59:33.109Z",
+    "home_address": null,
+    "favorites": []
   }
 ]

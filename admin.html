@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Bivacchi</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin-specific styles */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .admin-header h1 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .admin-nav a, .admin-nav button {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        
+        .admin-nav a:hover, .admin-nav button:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-card .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-card .stat-label {
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        
+        .admin-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .admin-section h2 {
+            margin: 0 0 20px 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .import-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95em;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            font-family: monospace;
+            font-size: 0.85em;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: black;
+        }
+        
+        .btn-warning:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .data-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        
+        .data-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .badge-admin {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        
+        .badge-user {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+        }
+        
+        .import-result {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+        }
+        
+        .import-result.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: var(--success);
+        }
+        
+        .import-result.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+        }
+        
+        .loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        .preview-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+        
+        .preview-item {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+        
+        .preview-item strong {
+            color: var(--accent);
+        }
+        
+        .regioni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .regione-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 0.9em;
+        }
+        
+        .regione-stat span:last-child {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .table-actions button {
+            padding: 4px 8px;
+            font-size: 0.8em;
+        }
+        
+        .access-denied {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .access-denied h2 {
+            color: var(--danger);
+            margin-bottom: 16px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        
+        .tab.active {
+            color: var(--accent);
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .data-table {
+                font-size: 0.85em;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>🛠️ Admin Portal</h1>
+            <nav class="admin-nav">
+                <a href="/">← Torna all'App</a>
+                <button onclick="logout()">Esci</button>
+            </nav>
+        </header>
+        
+        <div id="loading" class="loading">Verifica accesso...</div>
+        
+        <div id="access-denied" class="access-denied" style="display:none;">
+            <h2>⛔ Accesso Negato</h2>
+            <p>Devi essere un amministratore per accedere a questa pagina.</p>
+            <a href="/" class="btn btn-primary" style="display:inline-block;margin-top:20px;">Torna alla Home</a>
+        </div>
+        
+        <main id="admin-content" style="display:none;">
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-bivacchi">-</div>
+                    <div class="stat-label">Bivacchi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-users">-</div>
+                    <div class="stat-label">Utenti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-comments">-</div>
+                    <div class="stat-label">Commenti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-regioni">-</div>
+                    <div class="stat-label">Regioni</div>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="import">📥 Import OSM</button>
+                <button class="tab" data-tab="bivacchi">🏔️ Bivacchi</button>
+                <button class="tab" data-tab="users">👥 Utenti</button>
+                <button class="tab" data-tab="regioni">🗺️ Regioni</button>
+            </div>
+            
+            <!-- Import Tab -->
+            <div id="tab-import" class="tab-content active">
+                <section class="admin-section">
+                    <h2>📥 Importa da OpenStreetMap</h2>
+                    <p style="color:var(--text-muted);margin-bottom:20px;">
+                        Importa bivacchi da OpenStreetMap usando l'API Overpass. 
+                        La query cerca elementi con "bivacco" o "bivouac" nel nome, e wilderness_hut con shelter_type=basic_hut.
+                        <strong>Esclusi</strong>: casere, baite, malga, rifugi custoditi e shelter generici.
+                    </p>
+                    
+                    <div class="import-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="import-regione">Regione (opzionale)</label>
+                                <select id="import-regione">
+                                    <option value="">🇮🇹 Tutta Italia</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:0;min-width:auto;">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-secondary" onclick="testImport()">🔍 Anteprima</button>
+                            </div>
+                            <div class="form-group" style="flex:0;min-width:auto;">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary" onclick="executeImport()" id="btn-import">📥 Importa</button>
+                            </div>
+                        </div>
+                        
+                        <details>
+                            <summary style="cursor:pointer;color:var(--text-muted);margin-bottom:10px;">⚙️ Query personalizzata (avanzato)</summary>
+                            <div class="form-group">
+                                <label for="custom-query">Query Overpass (lascia vuoto per query default)</label>
+                                <textarea id="custom-query" placeholder="[out:json][timeout:180];
+(
+  node[&quot;name&quot;~&quot;[Bb]ivacco&quot;](35.5,6.5,47.5,18.6);
+  ...
+);
+out center meta;"></textarea>
+                            </div>
+                        </details>
+                    </div>
+                    
+                    <div id="import-result"></div>
+                </section>
+            </div>
+            
+            <!-- Bivacchi Tab -->
+            <div id="tab-bivacchi" class="tab-content">
+                <section class="admin-section">
+                    <h2>🏔️ Gestione Bivacchi</h2>
+                    
+                    <div class="search-box">
+                        <input type="text" id="search-bivacchi" placeholder="Cerca per nome...">
+                        <select id="filter-regione">
+                            <option value="">Tutte le regioni</option>
+                        </select>
+                        <button class="btn btn-warning" onclick="cleanupInvalid()">🧹 Rimuovi non-bivacchi</button>
+                        <button class="btn btn-warning" onclick="cleanupOutsideItaly()">🧹 Pulisci fuori Italia</button>
+                        <button class="btn btn-danger" onclick="deleteAllBivacchi()">🗑️ Elimina Tutti</button>
+                    </div>
+                    
+                    <div style="overflow-x:auto;">
+                        <table class="data-table" id="bivacchi-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Altitudine</th>
+                                    <th>Regione</th>
+                                    <th>Coordinate</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bivacchi-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="bivacchi-pagination" style="margin-top:16px;text-align:center;"></div>
+                </section>
+            </div>
+            
+            <!-- Users Tab -->
+            <div id="tab-users" class="tab-content">
+                <section class="admin-section">
+                    <h2>👥 Gestione Utenti</h2>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Ruolo</th>
+                                <th>Registrato</th>
+                                <th>Preferiti</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            
+            <!-- Regioni Tab -->
+            <div id="tab-regioni" class="tab-content">
+                <section class="admin-section">
+                    <h2>🗺️ Distribuzione per Regione</h2>
+                    <div class="regioni-grid" id="regioni-grid"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        let allBivacchi = [];
+        let allUsers = [];
+        let stats = null;
+        
+        const REGIONI_BOUNDS = {
+            'Valle d\'Aosta': { minLat: 45.47, maxLat: 45.99, minLon: 6.80, maxLon: 7.95 },
+            'Piemonte': { minLat: 44.06, maxLat: 46.46, minLon: 6.63, maxLon: 9.21 },
+            'Lombardia': { minLat: 44.68, maxLat: 46.64, minLon: 8.50, maxLon: 11.43 },
+            'Trentino-Alto Adige': { minLat: 45.67, maxLat: 47.09, minLon: 10.38, maxLon: 12.48 },
+            'Veneto': { minLat: 44.79, maxLat: 46.68, minLon: 10.62, maxLon: 13.10 },
+            'Friuli-Venezia Giulia': { minLat: 45.58, maxLat: 46.65, minLon: 12.29, maxLon: 13.92 },
+            'Liguria': { minLat: 43.78, maxLat: 44.68, minLon: 7.50, maxLon: 10.07 },
+            'Emilia-Romagna': { minLat: 43.73, maxLat: 45.14, minLon: 9.20, maxLon: 12.76 },
+            'Toscana': { minLat: 42.24, maxLat: 44.47, minLon: 9.69, maxLon: 12.37 },
+            'Umbria': { minLat: 42.37, maxLat: 43.62, minLon: 12.09, maxLon: 13.26 },
+            'Marche': { minLat: 42.69, maxLat: 43.97, minLon: 11.69, maxLon: 13.92 },
+            'Lazio': { minLat: 41.19, maxLat: 42.84, minLon: 11.45, maxLon: 14.03 },
+            'Abruzzo': { minLat: 41.68, maxLat: 42.90, minLon: 13.02, maxLon: 14.79 },
+            'Molise': { minLat: 41.35, maxLat: 42.07, minLon: 13.93, maxLon: 15.16 },
+            'Campania': { minLat: 39.99, maxLat: 41.51, minLon: 13.76, maxLon: 15.81 },
+            'Puglia': { minLat: 39.79, maxLat: 42.23, minLon: 15.34, maxLon: 18.52 },
+            'Basilicata': { minLat: 39.90, maxLat: 41.14, minLon: 15.34, maxLon: 16.87 },
+            'Calabria': { minLat: 37.92, maxLat: 40.14, minLon: 15.63, maxLon: 17.21 },
+            'Sicilia': { minLat: 36.64, maxLat: 38.82, minLon: 12.37, maxLon: 15.65 },
+            'Sardegna': { minLat: 38.86, maxLat: 41.31, minLon: 8.13, maxLon: 9.83 }
+        };
+        
+        // Init
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAccess();
+            setupTabs();
+        });
+        
+        async function checkAccess() {
+            try {
+                const res = await fetch('/api/me');
+                const user = await res.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                
+                if (!user || user.role !== 'admin') {
+                    document.getElementById('access-denied').style.display = 'block';
+                    return;
+                }
+                
+                currentUser = user;
+                document.getElementById('admin-content').style.display = 'block';
+                
+                // Load data
+                await loadStats();
+                await loadBivacchi();
+                await loadUsers();
+                populateRegioniSelects();
+                
+            } catch (err) {
+                console.error('Error checking access:', err);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('access-denied').style.display = 'block';
+            }
+        }
+        
+        function setupTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                });
+            });
+        }
+        
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/admin/stats');
+                stats = await res.json();
+                
+                document.getElementById('stat-bivacchi').textContent = stats.totalBivacchi;
+                document.getElementById('stat-users').textContent = stats.totalUsers;
+                document.getElementById('stat-comments').textContent = stats.totalComments;
+                document.getElementById('stat-regioni').textContent = Object.keys(stats.bivacchiPerRegione).length;
+                
+                // Regioni grid
+                const grid = document.getElementById('regioni-grid');
+                grid.innerHTML = Object.entries(stats.bivacchiPerRegione)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([regione, count]) => `
+                        <div class="regione-stat">
+                            <span>${regione}</span>
+                            <span>${count}</span>
+                        </div>
+                    `).join('');
+                    
+            } catch (err) {
+                console.error('Error loading stats:', err);
+            }
+        }
+        
+        async function loadBivacchi() {
+            try {
+                const res = await fetch('/api/bivacchi');
+                allBivacchi = await res.json();
+                renderBivacchiTable();
+            } catch (err) {
+                console.error('Error loading bivacchi:', err);
+            }
+        }
+        
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/admin/users');
+                allUsers = await res.json();
+                renderUsersTable();
+            } catch (err) {
+                console.error('Error loading users:', err);
+            }
+        }
+        
+        function populateRegioniSelects() {
+            const options = Object.keys(REGIONI_BOUNDS).map(r => 
+                `<option value="${r}">${r}</option>`
+            ).join('');
+            
+            document.getElementById('import-regione').innerHTML = 
+                '<option value="">🇮🇹 Tutta Italia</option>' + options;
+            document.getElementById('filter-regione').innerHTML = 
+                '<option value="">Tutte le regioni</option>' + options;
+        }
+        
+        function detectRegione(lat, lon) {
+            for (const [regione, bounds] of Object.entries(REGIONI_BOUNDS)) {
+                if (lat >= bounds.minLat && lat <= bounds.maxLat &&
+                    lon >= bounds.minLon && lon <= bounds.maxLon) {
+                    return regione;
+                }
+            }
+            return 'Altro';
+        }
+        
+        let bivacchiPage = 0;
+        const PAGE_SIZE = 50;
+        
+        function renderBivacchiTable() {
+            const search = document.getElementById('search-bivacchi').value.toLowerCase();
+            const regioneFilter = document.getElementById('filter-regione').value;
+            
+            let filtered = allBivacchi.filter(b => {
+                const name = (b.tags?.name || '').toLowerCase();
+                const regione = detectRegione(b.lat, b.lon);
+                
+                if (search && !name.includes(search)) return false;
+                if (regioneFilter && regione !== regioneFilter) return false;
+                return true;
+            });
+            
+            const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+            const start = bivacchiPage * PAGE_SIZE;
+            const paginated = filtered.slice(start, start + PAGE_SIZE);
+            
+            const tbody = document.getElementById('bivacchi-tbody');
+            tbody.innerHTML = paginated.map(b => {
+                const regione = detectRegione(b.lat, b.lon);
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(b.tags?.name || 'Senza nome')}</strong></td>
+                        <td>${b.tags?.ele ? b.tags.ele + 'm' : '-'}</td>
+                        <td>${regione}</td>
+                        <td style="font-size:0.85em;color:var(--text-muted);">${b.lat.toFixed(4)}, ${b.lon.toFixed(4)}</td>
+                        <td class="table-actions">
+                            <button class="btn btn-secondary" onclick="viewBivacco(${b.id})">👁️</button>
+                            <button class="btn btn-danger" onclick="deleteBivacco(${b.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Pagination
+            document.getElementById('bivacchi-pagination').innerHTML = `
+                <span style="color:var(--text-muted);">
+                    Mostrando ${start + 1}-${Math.min(start + PAGE_SIZE, filtered.length)} di ${filtered.length}
+                </span>
+                ${totalPages > 1 ? `
+                    <button class="btn btn-secondary" ${bivacchiPage === 0 ? 'disabled' : ''} 
+                            onclick="bivacchiPage--; renderBivacchiTable();">← Prev</button>
+                    <button class="btn btn-secondary" ${bivacchiPage >= totalPages - 1 ? 'disabled' : ''} 
+                            onclick="bivacchiPage++; renderBivacchiTable();">Next →</button>
+                ` : ''}
+            `;
+        }
+        
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-tbody');
+            tbody.innerHTML = allUsers.map(u => `
+                <tr>
+                    <td><strong>${escapeHtml(u.name)}</strong></td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td>
+                        <span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-user'}">
+                            ${u.role || 'user'}
+                        </span>
+                    </td>
+                    <td style="font-size:0.85em;color:var(--text-muted);">
+                        ${new Date(u.created_at).toLocaleDateString('it-IT')}
+                    </td>
+                    <td>${u.favoritesCount}</td>
+                    <td class="table-actions">
+                        ${u.role !== 'admin' ? 
+                            `<button class="btn btn-secondary" onclick="setUserRole('${u.id}', 'admin')">⬆️ Admin</button>` :
+                            `<button class="btn btn-secondary" onclick="setUserRole('${u.id}', 'user')">⬇️ User</button>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Search handlers
+        document.getElementById('search-bivacchi')?.addEventListener('input', () => {
+            bivacchiPage = 0;
+            renderBivacchiTable();
+        });
+        document.getElementById('filter-regione')?.addEventListener('change', () => {
+            bivacchiPage = 0;
+            renderBivacchiTable();
+        });
+        
+        // Import functions
+        async function testImport() {
+            await doImport(true);
+        }
+        
+        async function executeImport() {
+            if (!confirm('Sei sicuro di voler importare i bivacchi? Quelli già esistenti verranno saltati.')) {
+                return;
+            }
+            await doImport(false);
+        }
+        
+        async function doImport(testMode) {
+            const resultDiv = document.getElementById('import-result');
+            const btn = document.getElementById('btn-import');
+            const regione = document.getElementById('import-regione').value;
+            const customQuery = document.getElementById('custom-query').value.trim();
+            
+            resultDiv.innerHTML = '<div class="loading">Importazione in corso... (può richiedere alcuni minuti)</div>';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch('/api/admin/import-osm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        regione: regione || undefined,
+                        query: customQuery || undefined,
+                        testMode
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                    throw new Error(data.error || 'Errore sconosciuto');
+                }
+                
+                if (testMode) {
+                    resultDiv.innerHTML = `
+                        <div class="import-result success">
+                            <strong>✅ Anteprima completata!</strong><br>
+                            Trovati <strong>${data.totalFound}</strong> bivacchi.
+                            <div class="preview-list">
+                                ${data.preview.map(b => `
+                                    <div class="preview-item">
+                                        <strong>${escapeHtml(b.tags?.name || 'Senza nome')}</strong> 
+                                        - ${b.tags?.ele ? b.tags.ele + 'm' : 'Alt. n/d'}
+                                        <span style="color:var(--text-muted);font-size:0.85em;">
+                                            (${b.lat.toFixed(4)}, ${b.lon.toFixed(4)})
+                                        </span>
+                                    </div>
+                                `).join('')}
+                                ${data.totalFound > 20 ? `<div style="color:var(--text-muted);padding:8px;">...e altri ${data.totalFound - 20}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="import-result success">
+                            <strong>✅ Importazione completata!</strong><br>
+                            Importati: <strong>${data.imported}</strong> bivacchi<br>
+                            Saltati (già esistenti): <strong>${data.skipped}</strong><br>
+                            Totale nel database: <strong>${data.total}</strong>
+                        </div>
+                    `;
+                    // Reload data
+                    await loadStats();
+                    await loadBivacchi();
+                }
+                
+            } catch (err) {
+                resultDiv.innerHTML = `
+                    <div class="import-result error">
+                        <strong>❌ Errore:</strong> ${escapeHtml(err.message)}
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        async function deleteBivacco(id) {
+            if (!confirm('Sei sicuro di voler eliminare questo bivacco?')) return;
+            
+            try {
+                const res = await fetch(`/api/admin/bivacchi/${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Errore eliminazione');
+                
+                await loadStats();
+                await loadBivacchi();
+            } catch (err) {
+                alert('Errore: ' + err.message);
+            }
+        }
+        
+        async function deleteAllBivacchi() {
+            if (!confirm('⚠️ ATTENZIONE: Stai per eliminare TUTTI i bivacchi. Sei sicuro?')) return;
+            if (!confirm('Conferma finale: scrivi DELETE_ALL per confermare')) return;
+            
+            try {
+                const res = await fetch('/api/admin/bivacchi', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirm: 'DELETE_ALL' })
+                });
+                if (!res.ok) throw new Error('Errore eliminazione');
+                
+                await loadStats();
+                await loadBivacchi();
+                alert('Tutti i bivacchi sono stati eliminati.');
+            } catch (err) {
+                alert('Errore: ' + err.message);
+            }
+        }
+        
+        async function cleanupOutsideItaly() {
+            if (!confirm('Vuoi rimuovere tutti i bivacchi che si trovano fuori dall\'Italia?')) return;
+            
+            try {
+                const res = await fetch('/api/admin/cleanup-outside-italy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!res.ok) throw new Error('Errore durante la pulizia');
+                
+                const data = await res.json();
+                await loadStats();
+                await loadBivacchi();
+                alert(`✅ ${data.message}\nRimasti: ${data.remaining} bivacchi`);
+            } catch (err) {
+                alert('Errore: ' + err.message);
+            }
+        }
+        
+        async function cleanupInvalid() {
+            if (!confirm('Vuoi rimuovere casere, baite, rifugi e shelter generici che non sono bivacchi?\n\nVerranno mantenuti solo elementi con "bivacco" nel nome o wilderness_hut basic_hut.')) return;
+            
+            try {
+                const res = await fetch('/api/admin/cleanup-invalid', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!res.ok) throw new Error('Errore durante la pulizia');
+                
+                const data = await res.json();
+                await loadStats();
+                await loadBivacchi();
+                alert(`✅ ${data.message}\nRimasti: ${data.remaining} bivacchi`);
+            } catch (err) {
+                alert('Errore: ' + err.message);
+            }
+        }
+        
+        function viewBivacco(id) {
+            const b = allBivacchi.find(x => x.id === id);
+            if (b) {
+                window.open(`/?bivacco=${id}`, '_blank');
+            }
+        }
+        
+        async function setUserRole(userId, role) {
+            if (!confirm(`Sei sicuro di voler impostare il ruolo "${role}" per questo utente?`)) return;
+            
+            try {
+                const res = await fetch(`/api/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role })
+                });
+                if (!res.ok) throw new Error('Errore modifica ruolo');
+                
+                await loadUsers();
+            } catch (err) {
+                alert('Errore: ' + err.message);
+            }
+        }
+        
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
