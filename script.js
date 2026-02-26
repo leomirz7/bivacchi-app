@@ -669,7 +669,7 @@ function updateFilterBadges() {
     const minAlt = parseInt(document.getElementById('filter-alt-min').value), maxAlt = parseInt(document.getElementById('filter-alt-max').value);
     const minTemp = parseInt(document.getElementById('filter-temp-min').value), maxTemp = parseInt(document.getElementById('filter-temp-max').value);
     let html = '';
-    if (minAlt > 0 || maxAlt < 4810) html += `<span class="filter-badge" onclick="resetFilter('alt')">🏔️ ${minAlt}-${maxAlt}m ✕</span>`;
+    if (minAlt > 0 || maxAlt < 4800) html += `<span class="filter-badge" onclick="resetFilter('alt')">🏔️ ${minAlt}-${maxAlt}m ✕</span>`;
     if (minTemp > -30 || maxTemp < 40) html += `<span class="filter-badge" onclick="resetFilter('temp')">🌡️ ${minTemp}°/${maxTemp}° ✕</span>`;
     // Snow badge
     const snowYesActive = document.getElementById('filter-snow-yes')?.classList.contains('active');
@@ -694,7 +694,7 @@ function updateFilterBadges() {
 }
 
 function resetFilter(type) {
-    if (type === 'alt') { document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4810; }
+    if (type === 'alt') { document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4800; }
     if (type === 'temp') { document.getElementById('filter-temp-min').value = -30; document.getElementById('filter-temp-max').value = 40; }
     if (type === 'snow') { document.querySelectorAll('[data-snow]').forEach(c => c.classList.remove('active')); document.getElementById('filter-snow-all')?.classList.add('active'); }
     if (type === 'aspect') { document.querySelectorAll('#aspect-chips .filter-chip').forEach(c => c.classList.remove('active')); document.querySelector('#aspect-chips [data-aspect="all"]')?.classList.add('active'); }
@@ -765,11 +765,11 @@ function renderSignalBars(score) {
 async function updateWeatherWidget() {
     if (!map) return;
     const center = map.getCenter();
+    const widget = document.getElementById('weather-widget');
     try {
         const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,weather_code`);
         const d = await r.json();
         if (d.current) {
-            const widget = document.getElementById('weather-widget');
             widget.style.display = 'flex';
             document.getElementById('ww-temp').textContent = `${Math.round(d.current.temperature_2m)}\u00B0C`;
             document.getElementById('ww-hum').textContent = `${d.current.relative_humidity_2m}%`;
@@ -783,7 +783,9 @@ async function updateWeatherWidget() {
             else if (code >= 95) icon = '\u26C8\uFE0F';
             document.getElementById('ww-icon').textContent = icon;
         }
-    } catch {}
+    } catch(e) {
+        console.warn('Weather widget fetch failed:', e);
+    }
 }
 
 // ==================== WEATHER PANEL (detailed) ====================
@@ -1337,7 +1339,14 @@ function updateAuthUI() {
     }
 }
 
-function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; document.getElementById('auth-error').innerHTML = ''; }
+function openAuthModal() {
+    document.getElementById('auth-modal').style.display = 'flex';
+    document.getElementById('auth-error').innerHTML = '';
+    // Clear form fields
+    const fields = ['login-email','login-password','register-name','register-email','register-password'];
+    fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    showLogin();
+}
 function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
 function openProfileModal() {
     document.getElementById('profile-name').innerText = currentUser.name;
@@ -1364,7 +1373,17 @@ async function handleRegister() {
 }
 
 async function handleLogout() {
-    try { const res = await fetch(API_BASE_URL+'/api/logout', { method:'POST' }); if (res.ok) { currentUser = null; closeProfileModal(); updateAuthUI(); aggiornaInterfaccia(); } } catch {}
+    try {
+        const res = await fetch(API_BASE_URL+'/api/logout', { method:'POST' });
+        if (res.ok) {
+            currentUser = null;
+            // Remove home marker from map
+            if (homeMarker) { map.removeLayer(homeMarker); homeMarker = null; }
+            closeProfileModal();
+            updateAuthUI();
+            aggiornaInterfaccia();
+        }
+    } catch {}
 }
 
 async function toggleFavorite(bivaccoId) {
@@ -1564,7 +1583,7 @@ function setupEventListeners() {
 
     // Reset & Clear
     document.getElementById('btn-reset-filters')?.addEventListener('click', () => {
-        document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4810;
+        document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4800;
         document.getElementById('filter-temp-min').value = -30; document.getElementById('filter-temp-max').value = 40;
         document.getElementById('filter-dist-max').value = 50;
         document.getElementById('sort-by').value = 'nome';
