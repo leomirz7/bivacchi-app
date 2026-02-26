@@ -67,6 +67,19 @@ function isInItaly(lat, lon) {
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
+
+// Proper headers for PWA: service worker scope + manifest
+app.use((req, res, next) => {
+    if (req.path === '/service-worker.js') {
+        res.setHeader('Service-Worker-Allowed', '/');
+        res.setHeader('Cache-Control', 'no-cache');
+    }
+    if (req.path === '/manifest.json') {
+        res.setHeader('Content-Type', 'application/manifest+json');
+    }
+    next();
+});
+
 app.use(express.static(path.join(__dirname)));
 app.use(cors());
 app.use(session({

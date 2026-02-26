@@ -10,112 +10,47 @@ function debounce(func, wait) {
 // ==================== PWA ONLINE/OFFLINE SYNC MANAGER ====================
 const SyncManager = {
     QUEUE_KEY: 'bivacchi_sync_queue',
-    
-    getQueue() {
-        try {
-            return JSON.parse(localStorage.getItem(this.QUEUE_KEY) || '[]');
-        } catch { return []; }
-    },
-    
+    getQueue() { try { return JSON.parse(localStorage.getItem(this.QUEUE_KEY) || '[]'); } catch { return []; } },
     addToQueue(action) {
         const queue = this.getQueue();
-        // Add timestamp and unique ID
         action.timestamp = Date.now();
         action.id = Math.random().toString(36).substr(2, 9);
         queue.push(action);
         localStorage.setItem(this.QUEUE_KEY, JSON.stringify(queue));
-        this.updatePendingCount();
         showConnectionBanner('offline-pending');
     },
-    
     removeFromQueue(id) {
         let queue = this.getQueue();
         queue = queue.filter(item => item.id !== id);
         localStorage.setItem(this.QUEUE_KEY, JSON.stringify(queue));
-        this.updatePendingCount();
     },
-    
-    updatePendingCount() {
-        // Update UI indicator if needed (can be implemented later)
-        const count = this.getQueue().length;
-        console.log(`[SyncManager] Pending actions: ${count}`);
-    },
-    
     async processQueue() {
         const queue = this.getQueue();
         if (queue.length === 0) return;
-        
-        console.log(`[SyncManager] Processing ${queue.length} pending actions...`);
         showConnectionBanner('syncing');
-        
         for (const action of queue) {
             try {
                 let success = false;
-                
                 switch (action.type) {
-                    case 'COMMENT':
-                        success = await this.syncComment(action);
-                        break;
-                    case 'FAVORITE':
-                        success = await this.syncFavorite(action);
-                        break;
-                    case 'ADDRESS':
-                        success = await this.syncAddress(action);
-                        break;
+                    case 'COMMENT': success = await this.syncComment(action); break;
+                    case 'FAVORITE': success = await this.syncFavorite(action); break;
+                    case 'ADDRESS': success = await this.syncAddress(action); break;
                 }
-                
-                if (success) {
-                    this.removeFromQueue(action.id);
-                }
-            } catch (e) {
-                console.error(`[SyncManager] Failed to sync action ${action.type}:`, e);
-                // Keep in queue for next retry
-            }
+                if (success) this.removeFromQueue(action.id);
+            } catch (e) { console.error(`[SyncManager] Failed:`, e); }
         }
-        
-        const remaining = this.getQueue();
-        if (remaining.length === 0) {
+        if (this.getQueue().length === 0) {
             showConnectionBanner('online');
-            // Refresh data to ensure consistency
             if (currentUser) checkAuth();
-        } else {
-            console.warn(`[SyncManager] ${remaining.length} actions failed to sync.`);
         }
     },
-    
-    async syncComment(action) {
-        const res = await fetch(`${API_BASE_URL}/api/bivacchi/${action.bivaccoId}/comments`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: action.text })
-        });
-        return res.ok;
-    },
-    
-    async syncFavorite(action) {
-        // We only support toggle, so replaying might be tricky if state changed.
-        // Ideally we should send "add" or "remove".
-        // For now, toggle is idempotent if client state matched server state at time of offline.
-        // Better: check current state? API is toggle. 
-        // Let's assume sequential playback restores state.
-        const res = await fetch(`/api/favorites/${action.bivaccoId}`, { method: 'POST' });
-        return res.ok;
-    },
-    
-    async syncAddress(action) {
-        const res = await fetch(API_BASE_URL + '/api/home-address', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(action.payload)
-        });
-        return res.ok;
-    }
+    async syncComment(a) { const r = await fetch(`${API_BASE_URL}/api/bivacchi/${a.bivaccoId}/comments`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text:a.text}) }); return r.ok; },
+    async syncFavorite(a) { const r = await fetch(`/api/favorites/${a.bivaccoId}`, { method:'POST' }); return r.ok; },
+    async syncAddress(a) { const r = await fetch(API_BASE_URL+'/api/home-address', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(a.payload) }); return r.ok; }
 };
 
 // ==================== GLOBAL API QUEUE ====================
-// Coda globale per serializzare TUTTE le richieste API (elevation + meteo)
-// Questo garantisce che non ci siano mai chiamate parallele che saturano il rate limit
-const API_QUEUE_DELAY = 350; // 350ms = ~2.8 req/s (molto conservativo)
+const API_QUEUE_DELAY = 350;
 let apiQueueLastTime = 0;
 let apiQueuePending = [];
 let apiQueueProcessing = false;
@@ -130,2252 +65,1324 @@ async function enqueueApiCall(fn) {
 async function processApiQueue() {
     if (apiQueueProcessing || apiQueuePending.length === 0) return;
     apiQueueProcessing = true;
-    
     while (apiQueuePending.length > 0) {
         const { fn, resolve, reject } = apiQueuePending.shift();
-        
-        // Rispetta il delay minimo tra richieste
         const elapsed = Date.now() - apiQueueLastTime;
-        if (elapsed < API_QUEUE_DELAY) {
-            await new Promise(r => setTimeout(r, API_QUEUE_DELAY - elapsed));
-        }
+        if (elapsed < API_QUEUE_DELAY) await new Promise(r => setTimeout(r, API_QUEUE_DELAY - elapsed));
         apiQueueLastTime = Date.now();
-        
-        try {
-            const result = await fn();
-            resolve(result);
-        } catch (error) {
-            reject(error);
-        }
+        try { resolve(await fn()); } catch (error) { reject(error); }
     }
-    
     apiQueueProcessing = false;
 }
 
-// ==================== DATA VALIDATION & STATUS SYSTEM ====================
-// Sistema per validare, riparare e tracciare lo stato dei dati
+// ==================== DATA VALIDATION ====================
+const DataStatus = { LOADING:'loading', AVAILABLE:'available', UNAVAILABLE:'unavailable', STALE:'stale', CORRUPTED:'corrupted' };
 
-const DataStatus = {
-    LOADING: 'loading',     // ⏳ In caricamento
-    AVAILABLE: 'available', // ✓ Dato presente
-    UNAVAILABLE: 'unavailable', // ✗ Dato non reperibile
-    STALE: 'stale',         // ⚠ Dato vecchio, da aggiornare
-    CORRUPTED: 'corrupted'  // ⚠ Dato corrotto, da ricalcolare
-};
-
-// Valida l'elevazione di un bivacco
 function validateElevation(el) {
     const ele = el.tags?.ele;
     if (ele === undefined || ele === null || ele === '') return DataStatus.UNAVAILABLE;
     const num = parseInt(ele, 10);
     if (isNaN(num)) return DataStatus.CORRUPTED;
-    if (num < 0 || num > 5000) return DataStatus.CORRUPTED; // Altitudini impossibili per l'Italia
-    if (num === 0) return DataStatus.UNAVAILABLE; // 0m è probabilmente mancante
+    if (num < 0 || num > 5000) return DataStatus.CORRUPTED;
+    if (num === 0) return DataStatus.UNAVAILABLE;
     return DataStatus.AVAILABLE;
 }
 
-// Valida la temperatura di un bivacco
 function validateTemperature(el) {
     const temp = el.tags?.temperature;
     const updatedAt = el.tags?.temperature_updated_at;
-    
     if (temp === undefined || temp === null) return DataStatus.UNAVAILABLE;
     const num = parseInt(temp, 10);
     if (isNaN(num)) return DataStatus.CORRUPTED;
-    if (num < -50 || num > 50) return DataStatus.CORRUPTED; // Temperature impossibili
-    
-    // Controlla se è stale (più di 2 ore)
+    if (num < -50 || num > 50) return DataStatus.CORRUPTED;
     if (updatedAt && Date.now() - updatedAt > 2 * 60 * 60 * 1000) return DataStatus.STALE;
-    
     return DataStatus.AVAILABLE;
 }
 
-// Valida tutti i dati di un bivacco e restituisce un report
 function validateBivacco(el) {
-    return {
-        elevation: validateElevation(el),
-        temperature: validateTemperature(el),
-        hasAspect: !!(el.tags?.aspect_card),
-        hasSnow: el.tags?.snow !== undefined,
-        hasDaylight: !!(el.tags?.sunrise && el.tags?.sunset)
-    };
+    return { elevation: validateElevation(el), temperature: validateTemperature(el), hasAspect: !!(el.tags?.aspect_card), hasSnow: el.tags?.snow !== undefined, hasDaylight: !!(el.tags?.sunrise && el.tags?.sunset) };
 }
 
-// Trova bivacchi con dati corrotti o mancanti
 function findBivacchiToRepair(data) {
-    const toRepair = {
-        elevation: [],
-        temperature: [],
-        aspect: [],
-        snow: [],
-        daylight: []
-    };
-    
+    const toRepair = { elevation: [], temperature: [], aspect: [], snow: [], daylight: [] };
     for (const el of data) {
-        const status = validateBivacco(el);
-        
-        if (status.elevation !== DataStatus.AVAILABLE) {
-            toRepair.elevation.push(el);
-        }
-        if (status.temperature !== DataStatus.AVAILABLE) {
-            toRepair.temperature.push(el);
-        }
-        if (!status.hasAspect) {
-            toRepair.aspect.push(el);
-        }
-        if (!status.hasSnow) {
-            toRepair.snow.push(el);
-        }
-        if (!status.hasDaylight) {
-            toRepair.daylight.push(el);
-        }
+        const s = validateBivacco(el);
+        if (s.elevation !== DataStatus.AVAILABLE) toRepair.elevation.push(el);
+        if (s.temperature !== DataStatus.AVAILABLE) toRepair.temperature.push(el);
+        if (!s.hasAspect) toRepair.aspect.push(el);
+        if (!s.hasSnow) toRepair.snow.push(el);
+        if (!s.hasDaylight) toRepair.daylight.push(el);
     }
-    
     return toRepair;
 }
 
-// Formatta il valore per la UI in base allo stato
-function formatDataValue(value, status, unit = '', loadingText = '...') {
-    switch (status) {
-        case DataStatus.LOADING:
-            return `<span class="data-loading">${loadingText}</span>`;
-        case DataStatus.AVAILABLE:
-            return `${value}${unit}`;
-        case DataStatus.STALE:
-            return `<span class="data-stale">${value}${unit}</span>`;
-        case DataStatus.CORRUPTED:
-        case DataStatus.UNAVAILABLE:
-        default:
-            return `<span class="data-unavailable">-</span>`;
-    }
-}
-
-// ==================== PROGRESS INDICATOR ====================
+// ==================== PROGRESS ====================
 function showProgress(label, percent) {
-    const container = document.getElementById('progress-bar-container');
-    const bar = document.getElementById('progress-bar');
-    const labelEl = document.getElementById('progress-label');
-    
-    if (container && bar && labelEl) {
-        container.classList.add('active');
-        labelEl.classList.add('active');
-        bar.style.width = `${percent}%`;
-        labelEl.textContent = label;
-    }
+    const c = document.getElementById('progress-bar-container');
+    const b = document.getElementById('progress-bar');
+    const l = document.getElementById('progress-label');
+    if (c && b && l) { c.classList.add('active'); l.classList.add('active'); b.style.width = `${percent}%`; l.textContent = label; }
 }
-
 function hideProgress() {
-    const container = document.getElementById('progress-bar-container');
-    const labelEl = document.getElementById('progress-label');
-    
-    if (container && labelEl) {
-        container.classList.remove('active');
-        labelEl.classList.remove('active');
-    }
+    const c = document.getElementById('progress-bar-container');
+    const l = document.getElementById('progress-label');
+    if (c && l) { c.classList.remove('active'); l.classList.remove('active'); }
 }
 
 // ==================== BACKGROUND DATA MANAGER ====================
-// Gestisce tutti i calcoli in background in modo intelligente:
-// - DATI FISSI (esposizione, pendenza): calcolati UNA VOLTA e salvati sul server
-// - DATI VARIABILI (temperatura, neve, ore luce): aggiornati periodicamente con rate limiting
 const BackgroundDataManager = {
-    // Stato dei job in corso
-    isRunning: false,
-    currentJob: null,
-    abortController: null,
-    
-    // Progress tracking
-    totalItems: 0,
-    processedItems: 0,
-    
-    // Rate limiting (ora gestito dalla coda globale)
-    API_DELAY_MS: 0,             // Non più usato, la coda gestisce tutto
-    BATCH_SIZE: 50,              // Salva ogni 50 elementi (riduce log di salvataggio)
-    MAX_ERRORS: 3,               // Errori consecutivi prima di fermarsi
-    
-    // Stale times (quando aggiornare)
-    WEATHER_STALE_MS: 60 * 60 * 1000,  // 1 ora per meteo
-    DAYLIGHT_STALE_MS: 24 * 60 * 60 * 1000, // 1 giorno per ore luce
-    
-    // Aggiorna progress bar
-    updateProgress(current, total, jobName) {
-        const percent = Math.round((current / total) * 100);
-        showProgress(`${jobName}: ${current}/${total}`, percent);
-    },
-    
-    // Avvia tutti i job in sequenza (non parallelo!)
+    isRunning: false, currentJob: null, abortController: null,
+    totalItems: 0, processedItems: 0,
+    BATCH_SIZE: 50, MAX_ERRORS: 3,
+    WEATHER_STALE_MS: 60 * 60 * 1000,
+    DAYLIGHT_STALE_MS: 24 * 60 * 60 * 1000,
+
+    updateProgress(current, total, jobName) { showProgress(`${jobName}: ${current}/${total}`, Math.round((current/total)*100)); },
+
     async startAllJobs(data) {
-        if (this.isRunning) {
-            console.log('[BDM] Jobs già in esecuzione, salto.');
-            return;
-        }
-        
-        if (!navigator.onLine) {
-            console.log('[BDM] Offline, nessun job avviato.');
-            return;
-        }
-        
+        if (this.isRunning || !navigator.onLine) return;
         this.isRunning = true;
         this.abortController = new AbortController();
-        
-        console.log('[BDM] Avvio job in background...');
-        
         try {
-            // 0. PRIMA DI TUTTO: recupera elevazioni mancanti (critiche per UX)
             await this.fetchMissingElevations(data);
-            
-            // 1. Poi i dati FISSI (una tantum) - esposizione/pendenza
             await this.computeStaticData(data);
-            
-            // 2. Poi i dati VARIABILI - meteo (priorità alta)
             await this.updateWeatherData(data);
-            
-            // 3. Infine ore di luce (priorità bassa)
             await this.updateDaylightData(data);
-            
-            console.log('[BDM] Tutti i job completati.');
-        } catch (e) {
-            if (e.name === 'AbortError') {
-                console.log('[BDM] Jobs interrotti dall\'utente.');
-            } else {
-                console.error('[BDM] Errore nei job:', e);
-            }
-        } finally {
-            this.isRunning = false;
-            this.currentJob = null;
-            hideProgress();
-            // Aggiorna UI finale
-            pendingUIUpdate = true;
-            throttledUIUpdate();
-        }
+        } catch (e) { if (e.name !== 'AbortError') console.error('[BDM]', e); }
+        finally { this.isRunning = false; this.currentJob = null; hideProgress(); pendingUIUpdate = true; throttledUIUpdate(); }
     },
-    
-    // Ferma tutti i job
-    stop() {
-        if (this.abortController) {
-            this.abortController.abort();
-        }
-        this.isRunning = false;
-    },
-    
-    // ========== ELEVAZIONI MANCANTI (priorità massima) ==========
+    stop() { if (this.abortController) this.abortController.abort(); this.isRunning = false; },
+
     async fetchMissingElevations(data) {
         this.currentJob = 'elevations';
-        
-        // Filtra bivacchi senza elevazione
         const toFetch = data.filter(el => !el.tags?.ele || el.tags.ele === '0' || el.tags.ele === 0);
-        
-        if (toFetch.length === 0) {
-            console.log('[BDM:Elevation] Tutte le elevazioni sono già presenti.');
-            return;
-        }
-        
-        console.log(`[BDM:Elevation] ${toFetch.length} bivacchi senza elevazione, recupero da API...`);
-        
-        let successCount = 0;
-        let errorCount = 0;
-        let processed = 0;
-        const total = toFetch.length;
-        
+        if (toFetch.length === 0) return;
+        let successCount = 0, errorCount = 0, processed = 0;
         for (const el of toFetch) {
-            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-            
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted','AbortError');
             processed++;
-            this.updateProgress(processed, total, '🏔️ Altitudini');
-            
-            const lat = el.center?.lat ?? el.lat;
-            const lon = el.center?.lon ?? el.lon;
-            
+            this.updateProgress(processed, toFetch.length, 'Altitudini');
+            const lat = el.center?.lat ?? el.lat, lon = el.center?.lon ?? el.lon;
             if (!lat || !lon) continue;
-            
             try {
-                // Usa la coda globale per non saturare rate limit
                 const elevation = await enqueueApiCall(async () => {
                     const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
-                    if (r.status === 429) {
-                        console.warn(`[Queue] 429 su elevation ${lat},${lon}`);
-                        return null;
-                    }
                     if (!r.ok) return null;
                     const d = await r.json();
-                    if (d.elevation && d.elevation.length > 0 && !isNaN(d.elevation[0])) {
-                        return Math.round(Number(d.elevation[0]));
-                    }
-                    return null;
+                    return (d.elevation?.length > 0 && !isNaN(d.elevation[0])) ? Math.round(Number(d.elevation[0])) : null;
                 });
-                
-                if (elevation !== null) {
-                    el.tags = el.tags || {};
-                    el.tags.ele = elevation;
-                    successCount++;
-                    errorCount = 0;
-                    
-                    // Batch save
-                    if (successCount % this.BATCH_SIZE === 0) {
-                        await saveBivacchiToStorage(rawData);
-                        pendingUIUpdate = true;
-                        throttledUIUpdate();
-                    }
-                } else {
-                    errorCount++;
-                }
-            } catch (e) {
-                errorCount++;
-            }
-            
-            if (errorCount >= this.MAX_ERRORS) {
-                console.warn(`[BDM:Elevation] Troppi errori, stop dopo ${successCount} successi.`);
-                break;
-            }
+                if (elevation !== null) { el.tags = el.tags || {}; el.tags.ele = elevation; successCount++; errorCount = 0;
+                    if (successCount % this.BATCH_SIZE === 0) { await saveBivacchiToStorage(rawData); pendingUIUpdate = true; throttledUIUpdate(); }
+                } else errorCount++;
+            } catch { errorCount++; }
+            if (errorCount >= this.MAX_ERRORS) break;
         }
-        
-        if (successCount > 0) {
-            await this.saveProgress(data, true); // Sync to server
-            pendingUIUpdate = true;
-            throttledUIUpdate();
-            console.log(`[BDM:Elevation] ${successCount}/${toFetch.length} elevazioni recuperate e salvate.`);
-        }
+        if (successCount > 0) { await this.saveProgress(data, true); pendingUIUpdate = true; throttledUIUpdate(); }
     },
-    
-    // ========== DATI FISSI (una tantum) ==========
-    async computeStaticData(data) {
-        this.currentJob = 'static';
-        
-        // Filtra solo bivacchi senza esposizione/pendenza già calcolate
-        const toCompute = data.filter(el => 
-            !el.tags?.aspect_deg && !el.tags?.aspect_card
-        );
-        
-        if (toCompute.length === 0) {
-            console.log('[BDM:Static] Tutti i bivacchi hanno già i dati fissi.');
-            return;
-        }
-        
-        console.log(`[BDM:Static] ${toCompute.length} bivacchi da calcolare (una tantum - disabilitato, usa /api/admin/compute-aspects)`);
-        // DISABILITATO: i calcoli di aspect/slope sono troppo lenti sul client
-        // Usa invece l'endpoint POST /api/admin/compute-aspects sul server
-        // per calcolarli in batch in modo molto più veloce
-        return;
-        
-        let successCount = 0;
-        let errorCount = 0;
-        
-        for (const el of toCompute) {
-            // Check abort
-            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-            
-            try {
-                const ok = await calculateAspectForEl(el);
-                if (ok) {
-                    successCount++;
-                    errorCount = 0; // Reset error count on success
-                    
-                    // Batch save
-                    if (successCount % this.BATCH_SIZE === 0) {
-                        await this.saveProgress(data);
-                    }
-                } else {
-                    errorCount++;
-                }
-            } catch (e) {
-                errorCount++;
-            }
-            
-            // Stop se troppi errori (rate limit raggiunto)
-            if (errorCount >= this.MAX_ERRORS) {
-                console.warn(`[BDM:Static] Troppi errori (${errorCount}), riproverà dopo.`);
-                break;
-            }
-        }
-        
-        // Salva finale + sync server
-        if (successCount > 0) {
-            await this.saveProgress(data, true);
-            console.log(`[BDM:Static] ${successCount}/${toCompute.length} bivacchi calcolati e salvati.`);
-        }
-    },
-    
-    // ========== DATI VARIABILI - METEO ==========
+
+    async computeStaticData(data) { this.currentJob = 'static'; /* Disabled - use server admin endpoint */ },
+
     async updateWeatherData(data) {
         this.currentJob = 'weather';
         const now = Date.now();
-        
-        // Filtra solo bivacchi con meteo stale
-        const toUpdate = data.filter(el => {
-            const lastUpdate = el.tags?.temperature_updated_at || 0;
-            return (now - lastUpdate) > this.WEATHER_STALE_MS;
-        });
-        
-        if (toUpdate.length === 0) {
-            console.log('[BDM:Weather] Tutti i dati meteo sono aggiornati.');
-            return;
-        }
-        
-        console.log(`[BDM:Weather] ${toUpdate.length} bivacchi da aggiornare.`);
-        
-        let successCount = 0;
-        let errorCount = 0;
-        let processed = 0;
-        const total = toUpdate.length;
-        
+        const toUpdate = data.filter(el => (now - (el.tags?.temperature_updated_at || 0)) > this.WEATHER_STALE_MS);
+        if (toUpdate.length === 0) return;
+        let successCount = 0, errorCount = 0, processed = 0;
         for (const el of toUpdate) {
-            // Check abort
-            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-            
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted','AbortError');
             processed++;
-            this.updateProgress(processed, total, '🌡️ Temperature');
-            
+            this.updateProgress(processed, toUpdate.length, 'Temperature');
             try {
-                const ok = await fetchTemperature(el);
-                if (ok) {
-                    successCount++;
-                    errorCount = 0;
-                    
-                    // Batch save (solo locale, no server per meteo)
-                    if (successCount % this.BATCH_SIZE === 0) {
-                        await saveBivacchiToStorage(rawData);
-                        // Aggiorna anche la UI durante il caricamento
-                        pendingUIUpdate = true;
-                        throttledUIUpdate();
-                    }
-                } else {
-                    errorCount++;
-                }
-            } catch (e) {
-                errorCount++;
-            }
-            
-            if (errorCount >= this.MAX_ERRORS) {
-                console.warn(`[BDM:Weather] Rate limit raggiunto dopo ${successCount} successi, riproverà dopo.`);
-                break;
-            }
+                if (await fetchTemperature(el)) { successCount++; errorCount = 0;
+                    if (successCount % this.BATCH_SIZE === 0) { await saveBivacchiToStorage(rawData); pendingUIUpdate = true; throttledUIUpdate(); }
+                } else errorCount++;
+            } catch { errorCount++; }
+            if (errorCount >= this.MAX_ERRORS) break;
         }
-        
-        if (successCount > 0) {
-            await saveBivacchiToStorage(rawData);
-            pendingUIUpdate = true;
-            throttledUIUpdate();
-            console.log(`[BDM:Weather] ${successCount}/${toUpdate.length} bivacchi aggiornati.`);
-        }
+        if (successCount > 0) { await saveBivacchiToStorage(rawData); pendingUIUpdate = true; throttledUIUpdate(); }
     },
-    
-    // ========== DATI VARIABILI - ORE DI LUCE ==========
+
     async updateDaylightData(data) {
         this.currentJob = 'daylight';
         const now = Date.now();
-        
-        const toUpdate = data.filter(el => {
-            const lastUpdate = el.tags?.daylight_updated_at || 0;
-            return (now - lastUpdate) > this.DAYLIGHT_STALE_MS;
-        });
-        
-        if (toUpdate.length === 0) {
-            console.log('[BDM:Daylight] Tutti i dati luce sono aggiornati.');
-            return;
-        }
-        
-        console.log(`[BDM:Daylight] ${toUpdate.length} bivacchi da aggiornare.`);
-        
-        let successCount = 0;
-        let errorCount = 0;
-        
+        const toUpdate = data.filter(el => (now - (el.tags?.daylight_updated_at || 0)) > this.DAYLIGHT_STALE_MS);
+        if (toUpdate.length === 0) return;
+        let successCount = 0, errorCount = 0;
         for (const el of toUpdate) {
-            if (this.abortController.signal.aborted) throw new DOMException('Aborted', 'AbortError');
-            
-            try {
-                await fetchDaylightForEl(el);
-                successCount++;
-                errorCount = 0;
-                
-                if (successCount % this.BATCH_SIZE === 0) {
-                    await saveBivacchiToStorage(rawData);
-                }
-            } catch (e) {
-                errorCount++;
-            }
-            
-            if (errorCount >= this.MAX_ERRORS) {
-                console.warn(`[BDM:Daylight] Rate limit raggiunto, riproverà dopo.`);
-                break;
-            }
+            if (this.abortController.signal.aborted) throw new DOMException('Aborted','AbortError');
+            try { await fetchDaylightForEl(el); successCount++; errorCount = 0;
+                if (successCount % this.BATCH_SIZE === 0) await saveBivacchiToStorage(rawData);
+            } catch { errorCount++; }
+            if (errorCount >= this.MAX_ERRORS) break;
         }
-        
-        if (successCount > 0) {
-            await saveBivacchiToStorage(rawData);
-            console.log(`[BDM:Daylight] ${successCount}/${toUpdate.length} bivacchi aggiornati.`);
-        }
+        if (successCount > 0) await saveBivacchiToStorage(rawData);
     },
-    
-    // ========== HELPERS ==========
+
     async saveProgress(data, syncToServer = false) {
         await saveBivacchiToStorage(data);
-        
         if (syncToServer && navigator.onLine) {
-            try {
-                await fetch(API_BASE_URL + '/api/bivacchi', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-            } catch (e) {
-                console.warn('[BDM] Sync to server failed, will retry later.');
-            }
+            try { await fetch(API_BASE_URL + '/api/bivacchi', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) }); } catch {}
         }
-    },
-    
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
 };
 
-// ==================== PWA & OFFLINE SUPPORT ====================
+// ==================== PWA ====================
 let isOnline = navigator.onLine;
 let swRegistration = null;
+let deferredInstallPrompt = null;
 
-// Registra Service Worker
 async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         try {
             swRegistration = await navigator.serviceWorker.register('/service-worker.js');
-            console.log('[PWA] Service Worker registered:', swRegistration.scope);
-            
-            // Gestisci aggiornamenti SW
+            console.log('[PWA] Service Worker registered, scope:', swRegistration.scope);
             swRegistration.addEventListener('updatefound', () => {
-                const newWorker = swRegistration.installing;
-                newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                        showUpdateBanner();
-                    }
+                const nw = swRegistration.installing;
+                nw.addEventListener('statechange', () => {
+                    if (nw.state === 'installed' && navigator.serviceWorker.controller) showUpdateBanner();
                 });
             });
-            
-            // Ascolta messaggi dal SW
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                if (event.data.type === 'ONLINE_SYNC') {
-                    handleOnlineSync();
-                }
+            navigator.serviceWorker.addEventListener('message', (e) => {
+                if (e.data.type === 'ONLINE_SYNC') handleOnlineSync();
             });
-        } catch (err) {
-            console.error('[PWA] SW registration failed:', err);
+        } catch (err) { console.error('[PWA] SW registration failed:', err); }
+    }
+}
+
+// ── PWA Install Prompt ──
+function setupInstallPrompt() {
+    const banner = document.getElementById('pwa-install-banner');
+    const acceptBtn = document.getElementById('pwa-install-accept');
+    const dismissBtn = document.getElementById('pwa-install-dismiss');
+    if (!banner) return;
+
+    // Listen for the browser's install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        console.log('[PWA] Install prompt captured');
+        // Don't show if user already dismissed recently
+        const dismissed = localStorage.getItem('pwa-install-dismissed');
+        if (dismissed && Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000) return;
+        // Show the banner after a short delay
+        setTimeout(() => { banner.style.display = 'flex'; }, 3000);
+    });
+
+    acceptBtn?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        banner.style.display = 'none';
+        deferredInstallPrompt.prompt();
+        const result = await deferredInstallPrompt.userChoice;
+        console.log('[PWA] Install choice:', result.outcome);
+        deferredInstallPrompt = null;
+    });
+
+    dismissBtn?.addEventListener('click', () => {
+        banner.style.display = 'none';
+        localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+        deferredInstallPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+        console.log('[PWA] App installed!');
+        banner.style.display = 'none';
+        deferredInstallPrompt = null;
+    });
+
+    // iOS standalone detection — show a custom hint for iOS users
+    if (isIOSNonStandalone()) {
+        const dismissed = localStorage.getItem('pwa-ios-hint-dismissed');
+        if (!dismissed || Date.now() - parseInt(dismissed) > 30 * 24 * 60 * 60 * 1000) {
+            setTimeout(() => showIOSInstallHint(), 5000);
         }
     }
 }
 
-// Gestione stato online/offline
+function isIOSNonStandalone() {
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    return isIOS && !isStandalone;
+}
+
+function showIOSInstallHint() {
+    const hint = document.createElement('div');
+    hint.className = 'pwa-ios-hint';
+    hint.innerHTML = `
+        <div class="pwa-ios-hint-content">
+            <span>Per installare l'app: tocca</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            <span>poi <strong>"Aggiungi a Home"</strong></span>
+        </div>
+        <button class="pwa-ios-hint-close" onclick="this.parentElement.remove();localStorage.setItem('pwa-ios-hint-dismissed',Date.now().toString())">✕</button>
+    `;
+    document.body.appendChild(hint);
+    // Auto-dismiss after 12 seconds
+    setTimeout(() => { if (hint.parentElement) { hint.classList.add('fade-out'); setTimeout(() => hint.remove(), 500); } }, 12000);
+}
+
 function setupOnlineOfflineHandlers() {
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
-    // Stato iniziale
-    updateConnectionStatus(navigator.onLine);
-}
-
-function handleOnline() {
-    console.log('[PWA] Back online');
-    isOnline = true;
-    updateConnectionStatus(true);
-    showConnectionBanner('online');
-    
-    // Sync dati quando torniamo online
-    handleOnlineSync();
-}
-
-function handleOffline() {
-    console.log('[PWA] Gone offline');
-    isOnline = false;
-    updateConnectionStatus(false);
-    showConnectionBanner('offline');
+    window.addEventListener('online', () => { isOnline = true; showConnectionBanner('online'); handleOnlineSync(); });
+    window.addEventListener('offline', () => { isOnline = false; showConnectionBanner('offline'); });
 }
 
 async function handleOnlineSync() {
-    console.log('[PWA] Syncing data...');
-    
-    // 1. Process Pending Actions Queue (localStorage)
     SyncManager.processQueue();
-    
-    // 1b. Process IndexedDB sync queue if available
-    if (typeof DBService !== 'undefined') {
-        try {
-            const result = await DBService.processSyncQueue(API_BASE_URL);
-            if (result.success > 0) {
-                console.log(`[DB] Synced ${result.success} actions from IndexedDB`);
-            }
-        } catch (e) {
-            console.error('[DB] Error processing IndexedDB sync queue:', e);
-        }
-    }
-    
-    // 2. Ricarica temperature in background
-    if (rawData.length > 0) {
-        fetchTemperaturesInBackground(rawData);
-    }
-    
-    // 3. Aggiorna ore di luce
-    if (rawData.length > 0) {
-        fetchDaylightInBackground(rawData);
-    }
+    if (typeof DBService !== 'undefined') { try { await DBService.processSyncQueue(API_BASE_URL); } catch {} }
+    if (rawData.length > 0) BackgroundDataManager.startAllJobs(rawData);
 }
 
-// Banner stato connessione
 function showConnectionBanner(status) {
-    // Rimuovi banner esistente
-    const existingBanner = document.querySelector('.connection-banner');
-    if (existingBanner) {
-        existingBanner.remove();
-    }
-    
+    document.querySelector('.connection-banner')?.remove();
     const banner = document.createElement('div');
     banner.className = `connection-banner ${status}`;
-    
-    if (status === 'online') {
-        banner.innerHTML = '✅ Connessione ripristinata - sincronizzazione in corso...';
-        banner.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-    } else if (status === 'syncing') {
-         banner.innerHTML = '🔄 Sincronizzazione modifiche offline...';
-         banner.style.background = 'linear-gradient(135deg, #f39c12, #f1c40f)';
-    } else if (status === 'offline-pending') {
-         banner.innerHTML = '💾 Salvato in locale (in attesa di connessione)';
-         banner.style.background = 'linear-gradient(135deg, #e67e22, #d35400)';
-         // Auto-rimuovi dopo 3 secondi
-         setTimeout(() => {
-            banner.classList.add('fade-out');
-            setTimeout(() => banner.remove(), 500);
-        }, 3000);
-        document.body.prepend(banner);
-        return;
-    } else {
-        banner.innerHTML = '📴 Modalità offline - puoi usare l\'app, le modifiche verranno salvate';
-        banner.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
-    }
-    
+    if (status === 'online') { banner.innerHTML = '✅ Connessione ripristinata'; banner.style.background = 'linear-gradient(135deg,#27ae60,#2ecc71)'; }
+    else if (status === 'syncing') { banner.innerHTML = '🔄 Sincronizzazione...'; banner.style.background = 'linear-gradient(135deg,#f39c12,#f1c40f)'; }
+    else if (status === 'offline-pending') { banner.innerHTML = '💾 Salvato localmente'; banner.style.background = 'linear-gradient(135deg,#e67e22,#d35400)'; }
+    else { banner.innerHTML = '📴 Offline - le modifiche verranno salvate'; banner.style.background = 'linear-gradient(135deg,#e74c3c,#c0392b)'; }
     document.body.prepend(banner);
-    
-    // Auto-rimuovi dopo 4 secondi (solo per online)
-    if (status === 'online') {
-        setTimeout(() => {
-            banner.classList.add('fade-out');
-            setTimeout(() => banner.remove(), 500);
-        }, 4000);
+    if (status === 'online' || status === 'offline-pending') {
+        setTimeout(() => { banner.classList.add('fade-out'); setTimeout(() => banner.remove(), 500); }, status === 'online' ? 4000 : 3000);
     }
 }
 
-// ...existing code...
-function updateConnectionStatus(online) {
-    // ...existing code...
-    let indicator = document.getElementById('connection-indicator');
-    // ...existing code...
-    if (!indicator) {
-        indicator = document.createElement('span');
-        // ...existing code...
-        indicator.id = 'connection-indicator';
-        indicator.style.cssText = 'margin-left: 10px; font-size: 0.8em;';
-        const headerTop = document.querySelector('.header-top');
-        if (headerTop) {
-            headerTop.appendChild(indicator);
-        }
-    }
-    
-    if (online) {
-        indicator.innerHTML = '<span style="color: #27ae60;">●</span>';
-        indicator.title = 'Online';
-    } else {
-        indicator.innerHTML = '<span style="color: #e74c3c;">●</span>';
-        indicator.title = 'Offline';
-    }
+function showUpdateBanner() {
+    const banner = document.createElement('div');
+    banner.className = 'connection-banner';
+    banner.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)';
+    banner.innerHTML = 'Aggiornamento disponibile <button onclick="location.reload()" style="margin-left:10px;padding:4px 12px;border:none;border-radius:6px;background:white;color:#7c3aed;cursor:pointer;font-weight:500">Aggiorna</button>';
+    document.body.prepend(banner);
 }
 
-
-// Cache dati bivacchi nel SW
 function cacheBivacchiInSW(data) {
-    if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            type: 'CACHE_BIVACCHI',
-            data: data
-        });
-    }
+    if (navigator.serviceWorker?.controller) navigator.serviceWorker.controller.postMessage({ type: 'CACHE_BIVACCHI', data });
 }
 
-// Inizializza PWA
 registerServiceWorker();
+setupInstallPrompt();
 setupOnlineOfflineHandlers();
 
-// URL base dell'API - usa percorsi relativi
-// Questo funziona automaticamente sia in locale che tramite reverse proxy Caddy
-// - localhost:3000 → /api/... → localhost:3000/api/...
-// - dominio.com (Caddy) → /api/... → Caddy intercetta e proxya a port 3000
+// ==================== CONSTANTS ====================
 const API_BASE_URL = '';
-// Soglie per stima neve più affidabile
-const SNOW_DEPTH_THRESHOLD_CM = 1; // neve al suolo considerata presente da >=1cm
-const SNOWFALL_RECENT_THRESHOLD_MM = 5; // nevicate recenti somma >=5mm
-const SNOW_RECENT_HOURS = 48; // finestra recente per nevicate/temperature
-const TEMP_FREEZE_THRESHOLD_C = 0; // congelamento
-const TEMP_NEAR_FREEZE_C = 2; // vicino a zero
-const ALTITUDE_SNOW_SUPPORT_M = 1700; // quota oltre la quale la neve è probabile
-const WEATHER_STALE_MS = 60 * 60 * 1000; // 1h: staleness per temperatura/neve
-const DAYLIGHT_STALE_MS = 24 * 60 * 60 * 1000; // 24h: staleness per ore di luce
-const SLOPE_SAMPLE_OFFSET_DEG = 0.001; // offset per campionamento pendenza/esposizione
-// Rate limiting per API elevazioni
-const ELEVATION_API_DELAY_MS = 500; // delay minimo tra richieste
-const ELEVATION_CACHE_MS = 7 * 24 * 60 * 60 * 1000; // cache per 7 giorni
+const SNOW_DEPTH_THRESHOLD_CM = 1;
+const SNOWFALL_RECENT_THRESHOLD_MM = 5;
+const SNOW_RECENT_HOURS = 48;
+const TEMP_FREEZE_THRESHOLD_C = 0;
+const TEMP_NEAR_FREEZE_C = 2;
+const ALTITUDE_SNOW_SUPPORT_M = 1700;
+const WEATHER_STALE_MS = 60 * 60 * 1000;
+const DAYLIGHT_STALE_MS = 24 * 60 * 60 * 1000;
+const SLOPE_SAMPLE_OFFSET_DEG = 0.001;
+const ELEVATION_CACHE_MS = 7 * 24 * 60 * 60 * 1000;
 let elevationCache = {};
-let lastElevationFetchTime = 0;
-let elevationBackoffMs = 500;
 
-// SPA simplified: calcolo base posizione sole
+// ==================== SOLAR POSITION & DAYLIGHT ====================
 function solarPosition(lat, lon, date = new Date()) {
     const deg2rad = Math.PI / 180;
     const J2000 = 2451545.0;
     const JD = date.getTime() / 86400000 + 2440587.5;
     const T = (JD - J2000) / 36525;
-    const L0 = (280.46646 + 36000.76983 * T + 0.0003032 * T * T) % 360;
-    const M = (357.52911 + 35999.05029 * T - 0.0001536 * T * T) % 360;
-    const e = 0.016708634 - 0.000042037 * T - 0.0000001267 * T * T;
-    const C = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(M * deg2rad) +
-              (0.019993 - 0.000101 * T) * Math.sin(2 * M * deg2rad) +
-              0.000289 * Math.sin(3 * M * deg2rad);
+    const L0 = (280.46646 + 36000.76983 * T) % 360;
+    const M = (357.52911 + 35999.05029 * T) % 360;
+    const C = (1.914602 - 0.004817 * T) * Math.sin(M * deg2rad) + 0.019993 * Math.sin(2 * M * deg2rad);
     const lambda = (L0 + C) % 360;
-    const nu = (M + C) % 360;
-    const Omega = (125.04 - 1934.136 * T) % 360;
-    const epsilon = 23.4393 - 0.0130 * T + (0.00000016 * T - 0.000000504) * T;
-    const alpha_deg = Math.atan2(Math.cos(epsilon * deg2rad) * Math.sin(lambda * deg2rad), Math.cos(lambda * deg2rad)) / deg2rad;
+    const epsilon = 23.4393 - 0.0130 * T;
     const delta = Math.asin(Math.sin(epsilon * deg2rad) * Math.sin(lambda * deg2rad)) / deg2rad;
     const H0 = Math.acos(-Math.tan(lat * deg2rad) * Math.tan(delta * deg2rad)) / deg2rad;
-    return { declination: delta, H0, lambda, epsilon };
+    return { declination: delta, H0 };
 }
 
 function calculateDaylight(lat, lon, elev_m = 0, slope_deg = 0, aspect_deg = 0, date = new Date()) {
     try {
         const sp = solarPosition(lat, lon, date);
-        let H0 = sp.H0; // half-day length in degrees
-        
-        // Adjust for horizon dip and terrain
-        // Dip angle ~ sqrt(2h/R) (in radians) where h in meters, R Earth radius
-        const elev = Math.max(0, elev_m);
-        const horizonDip = Math.sqrt((2 * elev) / 6371000) * (180 / Math.PI);
+        let H0 = sp.H0;
+        const horizonDip = Math.sqrt((2 * Math.max(0, elev_m)) / 6371000) * (180 / Math.PI);
         H0 -= horizonDip;
-        if (slope_deg > 10 && Math.abs((aspect_deg + 180) % 360 - 180) < 90) {
-            H0 -= slope_deg * 0.1;
-        }
+        if (slope_deg > 10 && Math.abs((aspect_deg + 180) % 360 - 180) < 90) H0 -= slope_deg * 0.1;
         H0 = Math.min(90, Math.max(0, H0));
-        
         const daylight_hours = Math.max(0, (2 * H0) / 15);
-        
-        // Solar noon UTC: adjust for longitude relative to standard meridian (15°E for Italy UTC+1)
-        const stdMeridian = 15;
-        const lonOffset = 4 * (lon - stdMeridian) / 60; // convert to hours
+        const lonOffset = 4 * (lon - 15) / 60;
         const solarNoonUTC = 12 + lonOffset;
-        
-        // Sunrise/sunset UTC (H0/15 is hours from solar noon)
-        const sunrise_utc = solarNoonUTC - H0 / 15;
-        const sunset_utc = solarNoonUTC + H0 / 15;
-        
-        // Timezone offset (negative for east)
         const tzOffset = -date.getTimezoneOffset() / 60;
-        
-        // Convert to local times
-        const sunrise_local = sunrise_utc + tzOffset;
-        const sunset_local = sunset_utc + tzOffset;
-        
-        // Format times with proper wrapping
         const formatTime = (hours) => {
-            let totalMinutes = Math.round(hours * 60);
-            totalMinutes %= (24 * 60);
+            let totalMinutes = Math.round(hours * 60) % (24 * 60);
             if (totalMinutes < 0) totalMinutes += 24 * 60;
-            const h = Math.floor(totalMinutes / 60);
-            const m = totalMinutes % 60;
-            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+            return `${String(Math.floor(totalMinutes / 60)).padStart(2, '0')}:${String(totalMinutes % 60).padStart(2, '0')}`;
         };
-        
-        return {
-            sunrise: formatTime(sunrise_local),
-            sunset: formatTime(sunset_local),
-            daylight_hours: Math.round(daylight_hours * 100) / 100,
-            date_computed: date.toISOString().split('T')[0]
-        };
-    } catch (e) {
-        console.error('Errore calcolo luce solare:', e);
-        return null;
-    }
+        return { sunrise: formatTime(solarNoonUTC - H0 / 15 + tzOffset), sunset: formatTime(solarNoonUTC + H0 / 15 + tzOffset), daylight_hours: Math.round(daylight_hours * 100) / 100 };
+    } catch { return null; }
 }
 
-function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-}
+function escapeHtml(str) { return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-// Verifica se i dati di alba/tramonto salvati sono plausibili
 function isDaylightInvalid(tags = {}) {
     const { sunrise, sunset, daylight_hours } = tags;
-    if (!sunrise || !sunset || daylight_hours === undefined || daylight_hours === null) return true;
-    const re = /^\d{2}:\d{2}$/;
-    if (!re.test(sunrise) || !re.test(sunset)) return true;
+    if (!sunrise || !sunset || daylight_hours == null) return true;
+    if (!/^\d{2}:\d{2}$/.test(sunrise) || !/^\d{2}:\d{2}$/.test(sunset)) return true;
     const dh = Number(daylight_hours);
-    if (!Number.isFinite(dh) || dh <= 0 || dh > 24) return true;
-    if (sunrise === sunset) return true;
+    if (!Number.isFinite(dh) || dh <= 0 || dh > 24 || sunrise === sunset) return true;
     return false;
 }
 
 async function fetchDaylightForEl(el) {
-    const lat = el.center?.lat ?? el.lat;
-    const lon = el.center?.lon ?? el.lon;
-    const elev = parseInt(el.tags?.ele ?? 0, 10) || 0;
-    const slope = el.tags?.slope_deg ?? 0;
-    const aspect = el.tags?.aspect_deg ?? 0;
-    try {
-        const daylight = calculateDaylight(lat, lon, elev, slope, aspect, new Date());
-        if (daylight) {
-            el.tags = el.tags || {};
-            el.tags.sunrise = daylight.sunrise;
-            el.tags.sunset = daylight.sunset;
-            el.tags.daylight_hours = daylight.daylight_hours;
-            el.tags.daylight_updated_at = Date.now();
-            return true;
-        }
-    } catch (e) {
-        console.error(`Errore luce per ${lat},${lon}:`, e);
-    }
+    const lat = el.center?.lat ?? el.lat, lon = el.center?.lon ?? el.lon;
+    const daylight = calculateDaylight(lat, lon, parseInt(el.tags?.ele ?? 0) || 0, el.tags?.slope_deg ?? 0, el.tags?.aspect_deg ?? 0);
+    if (daylight) { el.tags = el.tags || {}; Object.assign(el.tags, daylight, { daylight_updated_at: Date.now() }); return true; }
     return false;
 }
 
-async function fetchDaylightInBackground(data) {
-    const now = Date.now();
-    let updateCount = 0;
-    for (const el of data) {
-        const lastDaylight = el.tags?.daylight_updated_at || 0;
-        const invalid = isDaylightInvalid(el.tags);
-        if (!invalid && now - lastDaylight < DAYLIGHT_STALE_MS) continue;
-        const ok = await fetchDaylightForEl(el);
-        if (ok) {
-            updateCount++;
-            saveBivacchiToStorage(rawData);
-        }
-    }
-    // Single POST after all daylight calculations are complete
-    if (updateCount > 0) {
-        fetch(API_BASE_URL + '/api/bivacchi', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rawData)
-        }).catch(() => {});
-    }
-}
-
-function metersPerDegree(lat) {
-    const latRad = (lat * Math.PI) / 180;
-    const mPerDegLat = 111320;
-    const mPerDegLon = 111320 * Math.cos(latRad);
-    return { mPerDegLat, mPerDegLon };
-}
-
-function degToCardinal(deg) {
-    const dirs = ['N','NE','E','SE','S','SW','W','NW'];
-    const ix = Math.round(((deg % 360) / 45)) % 8;
-    return dirs[ix];
-}
+function metersPerDegree(lat) { const r = (lat * Math.PI) / 180; return { mPerDegLat: 111320, mPerDegLon: 111320 * Math.cos(r) }; }
+function degToCardinal(deg) { return ['N','NE','E','SE','S','SW','W','NW'][Math.round(((deg % 360) / 45)) % 8]; }
 
 async function getElevationSingle(lat, lon) {
-    const key = `${Math.round(lat * 1000)},${Math.round(lon * 1000)}`;
+    const key = `${Math.round(lat*1000)},${Math.round(lon*1000)}`;
     const cached = elevationCache[key];
-    if (cached && Date.now() - cached.ts < ELEVATION_CACHE_MS) {
-        return cached.val;
-    }
-    
-    // TUTTE le chiamate API passano per la coda globale
+    if (cached && Date.now() - cached.ts < ELEVATION_CACHE_MS) return cached.val;
     return enqueueApiCall(async () => {
         try {
             const r = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
-            if (r.status === 429) {
-                console.warn(`[Queue] 429 su elevation ${lat},${lon}`);
-                return null;
-            }
             if (!r.ok) return null;
             const d = await r.json();
-            if (d.elevation && d.elevation.length > 0 && !isNaN(d.elevation[0])) {
-                const val = Number(d.elevation[0]);
-                elevationCache[key] = { val, ts: Date.now() };
-                return val;
-            }
-        } catch (e) {
-            console.error(`Errore elevazione ${lat},${lon}:`, e.message);
-        }
-        return null;
+            if (d.elevation?.length > 0 && !isNaN(d.elevation[0])) { const val = Number(d.elevation[0]); elevationCache[key] = { val, ts: Date.now() }; return val; }
+        } catch {} return null;
     });
 }
 
 async function computeSlopeAspect(lat, lon) {
     const { mPerDegLat, mPerDegLon } = metersPerDegree(lat);
-    const dLat = SLOPE_SAMPLE_OFFSET_DEG;
-    const dLon = SLOPE_SAMPLE_OFFSET_DEG;
-    const [zN, zS, zE, zW] = await Promise.all([
-        getElevationSingle(lat + dLat, lon),
-        getElevationSingle(lat - dLat, lon),
-        getElevationSingle(lat, lon + dLon),
-        getElevationSingle(lat, lon - dLon)
-    ]);
-    if ([zN, zS, zE, zW].some(z => z === null)) return null;
-    const dy = 2 * dLat * mPerDegLat;
-    const dx = 2 * dLon * mPerDegLon;
-    const dzdy = (zN - zS) / dy;
-    const dzdx = (zE - zW) / dx;
-    const slopeRad = Math.atan(Math.sqrt(dzdx*dzdx + dzdy*dzdy));
-    const slopeDeg = Math.round((slopeRad * 180) / Math.PI);
-    let aspectRad = Math.atan2(dzdy, -dzdx);
-    let aspectDeg = (aspectRad * 180) / Math.PI;
-    if (aspectDeg < 0) aspectDeg += 360;
-    aspectDeg = Math.round(aspectDeg);
+    const d = SLOPE_SAMPLE_OFFSET_DEG;
+    const [zN,zS,zE,zW] = await Promise.all([getElevationSingle(lat+d,lon),getElevationSingle(lat-d,lon),getElevationSingle(lat,lon+d),getElevationSingle(lat,lon-d)]);
+    if ([zN,zS,zE,zW].some(z => z === null)) return null;
+    const dzdy = (zN-zS)/(2*d*mPerDegLat), dzdx = (zE-zW)/(2*d*mPerDegLon);
+    const slopeDeg = Math.round(Math.atan(Math.sqrt(dzdx*dzdx+dzdy*dzdy))*180/Math.PI);
+    let aspectDeg = Math.round(Math.atan2(dzdy,-dzdx)*180/Math.PI); if (aspectDeg < 0) aspectDeg += 360;
     return { slopeDeg, aspectDeg, aspectCard: degToCardinal(aspectDeg) };
 }
 
-async function calculateAspectForEl(el) {
-    const lat = el.center?.lat ?? el.lat;
-    const lon = el.center?.lon ?? el.lon;
+// ==================== WEATHER FETCHING ====================
+async function fetchTemperature(el) {
+    const lat = el.center?.lat ?? el.lat, lon = el.center?.lon ?? el.lon;
     if (!lat || !lon) return false;
-    const r = await computeSlopeAspect(lat, lon);
-    if (!r) return false;
-    el.tags = el.tags || {};
-    el.tags.slope_deg = r.slopeDeg;
-    el.tags.aspect_deg = r.aspectDeg;
-    el.tags.aspect_card = r.aspectCard;
-    el.tags.aspect_updated_at = Date.now();
-    return true;
+    return enqueueApiCall(async () => {
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,snowfall,snow_depth&daily=temperature_2m_max,temperature_2m_min&past_days=2&forecast_days=1&timezone=auto`;
+            const r = await fetch(url);
+            if (!r.ok) return false;
+            const data = await r.json();
+            const hourly = data.hourly || {}, temps = hourly.temperature_2m || [], snowfall = hourly.snowfall || [], snowDepth = hourly.snow_depth || [];
+            const daily = data.daily || {};
+            if (temps.length > 0) { const last = temps[temps.length-1]; if (last != null && !isNaN(last)) { el.tags.temperature = Math.round(last); el.tags.temperature_updated_at = Date.now(); } }
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dayList = daily.time || [];
+            const idx = dayList.indexOf(todayStr);
+            const pick = (arr) => Array.isArray(arr) ? (idx >= 0 && idx < arr.length ? arr[idx] : arr[arr.length-1]) : null;
+            const vMin = pick(daily.temperature_2m_min), vMax = pick(daily.temperature_2m_max);
+            if (vMin != null && !isNaN(vMin)) el.tags.temperature_min = Math.round(vMin);
+            if (vMax != null && !isNaN(vMax)) el.tags.temperature_max = Math.round(vMax);
+            // Snow
+            let recentSnowfallSum = 0;
+            if (snowfall.length > 0) { for (let i = Math.max(0,snowfall.length-SNOW_RECENT_HOURS); i < snowfall.length; i++) { const v = snowfall[i]; if (v != null && !isNaN(v)) recentSnowfallSum += v; } }
+            let lastSnowDepth = null;
+            if (snowDepth.length > 0) { const v = snowDepth[snowDepth.length-1]; if (v != null && !isNaN(v)) lastSnowDepth = Math.round(v); }
+            let recentMinTemp = null;
+            if (temps.length > 0) { for (let i = Math.max(0,temps.length-SNOW_RECENT_HOURS); i < temps.length; i++) { const v = temps[i]; if (v != null && !isNaN(v)) recentMinTemp = recentMinTemp === null ? v : Math.min(recentMinTemp, v); } if (recentMinTemp !== null) recentMinTemp = Math.round(recentMinTemp); }
+            const ele = parseInt(el.tags?.ele ?? 0) || 0;
+            let snowDetected = false, confidence = 'basso';
+            if (lastSnowDepth !== null && lastSnowDepth >= SNOW_DEPTH_THRESHOLD_CM) { snowDetected = true; confidence = 'alto'; }
+            else if (recentSnowfallSum >= SNOWFALL_RECENT_THRESHOLD_MM && recentMinTemp !== null && recentMinTemp <= TEMP_FREEZE_THRESHOLD_C) { snowDetected = true; confidence = 'medio'; }
+            else if (ele >= ALTITUDE_SNOW_SUPPORT_M && recentMinTemp !== null && recentMinTemp <= TEMP_NEAR_FREEZE_C) { snowDetected = true; confidence = 'basso'; }
+            el.tags.snow = snowDetected; el.tags.snow_confidence = confidence;
+            if (lastSnowDepth !== null) el.tags.snow_depth_cm = lastSnowDepth;
+            el.tags.snowfall_48h_mm = Math.round(recentSnowfallSum);
+            if (recentMinTemp !== null) el.tags.temp_min_48h = recentMinTemp;
+            el.tags.snow_updated_at = Date.now();
+            return true;
+        } catch { return false; }
+    });
 }
 
-// Flag per prevenire esecuzioni multiple simultanee
-let isComputingAspect = false;
-
-async function computeAspectInBackground(data) {
-    // Previeni esecuzioni duplicate
-    if (isComputingAspect) {
-        console.log('[Aspect] Calcolo già in corso, salto questa esecuzione.');
-        return;
-    }
-    
-    // Filtra solo bivacchi senza esposizione/pendenza già calcolate
-    const toCompute = data.filter(el => !el.tags || (el.tags.aspect_deg === undefined && el.tags.aspect_card === undefined));
-    if (toCompute.length === 0) return;
-    
-    isComputingAspect = true;
-    console.log(`Inizio calcolo esposizione/pendenza: ${toCompute.length} bivacchi da calcolare.`);
-    
-    let successCount = 0;
-    for (const el of toCompute) {
-        const ok = await calculateAspectForEl(el);
-        if (ok) {
-            successCount++;
-            // Salva ogni 10 calcoli per non perdere progressi
-            if (successCount % 10 === 0) {
-                saveBivacchiToStorage(rawData);
-            }
-        } else {
-            // Fallito (rate limit, rete, ecc), stop gracefully: riproverà al prossimo caricamento
-            console.warn(`Calcolo esposizione interrotto dopo ${successCount} successi, riproverà al prossimo caricamento.`);
-            break;
-        }
-        // Aumenta delay per rispettare rate limit (max 10 req/s = 100ms tra richieste)
-        await new Promise(r => setTimeout(r, Math.max(150, elevationBackoffMs)));
-    }
-    
-    // Single POST after all calculations complete
-    if (successCount > 0) {
-        saveBivacchiToStorage(rawData);
-        fetch(API_BASE_URL + '/api/bivacchi', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rawData)
-        }).catch(() => {});
-    }
-    
-    isComputingAspect = false;
-    console.log(`Calcolo esposizione completato: ${successCount}/${toCompute.length} bivacchi calcolati e salvati.`);
+// ==================== STORAGE ====================
+let lastSaveTime = 0;
+async function saveBivacchiToStorage(data) {
+    if (Date.now() - lastSaveTime < 2000) return;
+    lastSaveTime = Date.now();
+    if (typeof DBService !== 'undefined') { try { await DBService.saveBivacchi(data); } catch {} }
+    try { localStorage.setItem('bivacchi-data', JSON.stringify(data)); } catch {}
 }
 
+// ==================== GLOBALS ====================
 let rawData = [];
-const listContainer = document.getElementById('bivacchi-list');
 let map;
 let markers = [];
-let markerClusterGroup = null; // MarkerCluster layer per performance
+let markerClusterGroup = null;
 let currentUser = null;
 let addressMap = null;
 let selectedCoords = null;
-let dataLoaded = false; // Flag per tracciare se i dati sono caricati
-let mapInitialized = false; // Flag per il primo caricamento della mappa
-let mapFitPending = false; // Fit in sospeso quando la mappa era nascosta
-let homeMarker = null; // Marker dell'indirizzo di casa
-let altSlider = null; // noUiSlider per altitudine
-let tempSlider = null; // noUiSlider per temperatura
-
-// Performance: throttled UI update durante fetch meteo
+let dataLoaded = false;
+let mapInitialized = false;
+let mapFitPending = false;
+let homeMarker = null;
+let locationMarker = null;
+let locationCircle = null;
 let pendingUIUpdate = false;
-const throttledUIUpdate = debounce(() => {
-    if (pendingUIUpdate) {
-        aggiornaInterfaccia();
-        pendingUIUpdate = false;
-    }
-}, 2000); // Aggiorna UI max ogni 2 secondi durante fetch background
+let currentView = 'map'; // 'map' or 'list'
+let selectedBivacco = null; // Currently selected bivacco for detail panel
+let currentMapLayer = 'standard';
+let radarInitialized = false;
+let radarActive = false;
+let localFavorites = JSON.parse(localStorage.getItem('bivacchi_local_favs') || '[]');
+let localNotes = JSON.parse(localStorage.getItem('bivacchi_local_notes') || '{}');
+let geocodingTimeout = null;
 
-// Performance: lazy loading lista - mostra solo N elementi iniziali
+const throttledUIUpdate = debounce(() => { if (pendingUIUpdate) { aggiornaInterfaccia(); pendingUIUpdate = false; } }, 2000);
+
 const LIST_PAGE_SIZE = 50;
 let currentListPage = 1;
 let currentFilteredData = [];
 
-function isMapVisible() {
-    const el = document.getElementById('map');
-    if (!el) return false;
-    const style = window.getComputedStyle(el);
-    const visible = style.display !== 'none' && el.offsetWidth > 0 && el.offsetHeight > 0;
-    return visible;
-}
+const listContainer = document.getElementById('bivacchi-list');
 
-// Funzione per calcolare altitudini con retry
-async function calculateElevationsWithRetry(toCalculate, retries = 5) {
-    for (const el of toCalculate) {
-        const lat = el.center?.lat ?? el.lat;
-        const lon = el.center?.lon ?? el.lon;
-        let success = false;
-        for (let attempt = 1; attempt <= retries; attempt++) {
-            try {
-                const resAlt = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
-                const dataAlt = await resAlt.json();
-                if (dataAlt.elevation && dataAlt.elevation.length > 0 && !isNaN(dataAlt.elevation[0])) {
-                    el.tags.ele = Math.round(dataAlt.elevation[0]);
-                    success = true;
-                    break;
-                }
-            } catch(e) {
-                console.error(`Tentativo ${attempt} per ${lat},${lon}:`, e);
-            }
-            if (attempt < retries) {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Delay più lungo tra tentativi
-            }
-        }
-        if (!success) {
-            // Fallback a open-elevation
-            try {
-                const resAlt = await fetch(`https://open-elevation.com/api/v1/lookup?locations=${lat},${lon}`);
-                const dataAlt = await resAlt.json();
-                if (dataAlt.results && dataAlt.results[0] && dataAlt.results[0].elevation !== undefined) {
-                    el.tags.ele = Math.round(dataAlt.results[0].elevation);
-                    success = true;
-                }
-            } catch(e) {
-                console.error(`Fallback fallito per ${lat},${lon}`);
-            }
-        }
-        if (!success) {
-            el.tags.ele = 0; // Ultimo fallback
-        }
-        
-        // Delay tra richieste
-        await new Promise(resolve => setTimeout(resolve, 500));
-    }
-}
-
-// Funzione per ottenere temperatura per un singolo bivacco
-async function fetchTemperature(el) {
-    const lat = el.center?.lat ?? el.lat;
-    const lon = el.center?.lon ?? el.lon;
-    if (!lat || !lon) return false;
-    
-    // TUTTE le chiamate API passano per la coda globale
-    return enqueueApiCall(async () => {
-        try {
-            // Usa dati orari + daily min/max per stima più robusta: temperatura, snowfall, snow_depth
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,snowfall,snow_depth&daily=temperature_2m_max,temperature_2m_min&past_days=2&forecast_days=1&timezone=auto`;
-            const resMeteo = await fetch(url);
-            if (resMeteo.status === 429) {
-                console.warn(`[Queue] 429 su weather ${lat},${lon}`);
-                return false;
-            }
-            const dataMeteo = await resMeteo.json();
-        const hourly = dataMeteo.hourly || {};
-        const temps = Array.isArray(hourly.temperature_2m) ? hourly.temperature_2m : [];
-        const snowfall = Array.isArray(hourly.snowfall) ? hourly.snowfall : [];
-        const snowDepth = Array.isArray(hourly.snow_depth) ? hourly.snow_depth : [];
-        const daily = dataMeteo.daily || {};
-
-        // Temperatura: usa l'ultimo valore disponibile
-        if (temps.length > 0) {
-            const lastTemp = temps[temps.length - 1];
-            if (lastTemp !== null && lastTemp !== undefined && !isNaN(lastTemp)) {
-                el.tags.temperature = Math.round(lastTemp);
-                el.tags.temperature_updated_at = Date.now();
-            }
-        }
-
-        // Min/Max giornalieri: usa il giorno corrente (timezone auto) per evitare mismatch
-        const dayList = Array.isArray(daily.time) ? daily.time : [];
-        let idxToday = -1;
-        if (dayList.length > 0) {
-            const todayStr = new Date().toISOString().split('T')[0];
-            idxToday = dayList.findIndex(t => t === todayStr);
-        }
-        const pickIdx = (arr) => {
-            if (!Array.isArray(arr) || arr.length === 0) return null;
-            if (idxToday >= 0 && idxToday < arr.length) return arr[idxToday];
-            return arr[arr.length - 1];
-        };
-
-        const vMin = pickIdx(daily.temperature_2m_min);
-        const vMax = pickIdx(daily.temperature_2m_max);
-        if (vMin !== null && vMin !== undefined && !isNaN(vMin)) {
-            el.tags.temperature_min = Math.round(vMin);
-        }
-        if (vMax !== null && vMax !== undefined && !isNaN(vMax)) {
-            el.tags.temperature_max = Math.round(vMax);
-        }
-
-        // Calcola nevicate recenti e neve al suolo
-        let recentSnowfallSum = 0;
-        if (snowfall.length > 0) {
-            const n = snowfall.length;
-            const start = Math.max(0, n - SNOW_RECENT_HOURS);
-            for (let i = start; i < n; i++) {
-                const v = snowfall[i];
-                if (v !== null && v !== undefined && !isNaN(v)) {
-                    recentSnowfallSum += v; // mm
-                }
-            }
-        }
-
-        // Ultimo snow depth disponibile
-        let lastSnowDepth = null;
-        if (snowDepth.length > 0) {
-            const v = snowDepth[snowDepth.length - 1];
-            if (v !== null && v !== undefined && !isNaN(v)) {
-                lastSnowDepth = Math.round(v); // cm
-            }
-        }
-
-        // Temperatura minima recente (per supportare la stima)
-        let recentMinTemp = null;
-        if (temps.length > 0) {
-            const n = temps.length;
-            const start = Math.max(0, n - SNOW_RECENT_HOURS);
-            for (let i = start; i < n; i++) {
-                const v = temps[i];
-                if (v !== null && v !== undefined && !isNaN(v)) {
-                    recentMinTemp = recentMinTemp === null ? v : Math.min(recentMinTemp, v);
-                }
-            }
-            if (recentMinTemp !== null) recentMinTemp = Math.round(recentMinTemp);
-        }
-
-        // Heuristic combinata: neve al suolo, nevicate recenti + temperature, quota
-        const ele = parseInt(el.tags?.ele ?? 0, 10) || 0;
-        let snowDetected = false;
-        let confidence = 'basso';
-        if (lastSnowDepth !== null && lastSnowDepth >= SNOW_DEPTH_THRESHOLD_CM) {
-            snowDetected = true;
-            confidence = 'alto';
-        } else if (recentSnowfallSum >= SNOWFALL_RECENT_THRESHOLD_MM && recentMinTemp !== null && recentMinTemp <= TEMP_FREEZE_THRESHOLD_C) {
-            snowDetected = true;
-            confidence = 'medio';
-        } else if (ele >= ALTITUDE_SNOW_SUPPORT_M && recentMinTemp !== null && recentMinTemp <= TEMP_NEAR_FREEZE_C) {
-            snowDetected = true;
-            confidence = 'basso';
-        }
-
-        el.tags.snow = snowDetected;
-        el.tags.snow_confidence = confidence;
-        if (lastSnowDepth !== null) el.tags.snow_depth_cm = lastSnowDepth;
-        el.tags.snowfall_48h_mm = Math.round(recentSnowfallSum);
-        if (recentMinTemp !== null) el.tags.temp_min_48h = recentMinTemp;
-        el.tags.snow_updated_at = Date.now();
-        return true;
-        } catch(e) {
-            console.error(`Errore temperatura per ${lat},${lon}:`, e);
-            return false;
-        }
+// ==================== MAP LAYERS ====================
+let osmLayer, satLayer;
+function initMapLayers() {
+    osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OSM',
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        keepBuffer: 6,
+        updateWhenZooming: false,
+        updateWhenIdle: true,
+        errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPj/HwADBwIAMCbHYQAAAABJRU5ErkJggg=='
+    });
+    satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; Esri',
+        maxZoom: 19,
+        maxNativeZoom: 18,
+        keepBuffer: 4,
+        updateWhenZooming: false,
+        updateWhenIdle: true,
+        errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPj/HwADBwIAMCbHYQAAAABJRU5ErkJggg=='
     });
 }
 
-// Funzione per ottenere temperature per i bivacchi (in background, non blocca)
-async function fetchTemperaturesInBackground(data) {
-    const now = Date.now();
-    let updateCount = 0;
-    const BATCH_SIZE = 10; // Salva ogni 10 aggiornamenti
-    
-    for (const el of data) {
-        const lastTemp = el.tags?.temperature_updated_at || 0;
-        const lastSnow = el.tags?.snow_updated_at || 0;
-        const lastUpdate = Math.max(lastTemp, lastSnow);
-        // Salta se non è stale
-        if (now - lastUpdate < WEATHER_STALE_MS) {
-            continue;
-        }
-        // Aggiorna meteo in modo asincrono
-        await fetchTemperature(el);
-        updateCount++;
-        
-        // Performance: batch saves e throttled UI updates
-        if (updateCount % BATCH_SIZE === 0) {
-            saveBivacchiToStorage(rawData);
-            pendingUIUpdate = true;
-            throttledUIUpdate();
-        }
-        // Delay tra richieste per non sovraccaricare l'API
-        await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    
-    // Final save and UI update
-    if (updateCount > 0) {
-        saveBivacchiToStorage(rawData);
-        aggiornaInterfaccia();
-        
-        // Single POST after all temperature updates complete
-        fetch(API_BASE_URL + '/api/bivacchi', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rawData)
-        }).catch(() => {});
-    }
+function switchMapLayer(layerName) {
+    if (layerName === currentMapLayer) return;
+    if (layerName === 'satellite') { map.removeLayer(osmLayer); satLayer.addTo(map); document.querySelector('.leaflet-tile-pane').style.filter = 'none'; }
+    else { map.removeLayer(satLayer); osmLayer.addTo(map); document.querySelector('.leaflet-tile-pane').style.filter = 'brightness(0.85) contrast(1.1) saturate(0.9)'; }
+    currentMapLayer = layerName;
+    document.querySelectorAll('.layer-option').forEach(btn => btn.classList.toggle('active', btn.dataset.layer === layerName));
 }
 
-// Helper per salvare dati bivacchi in IndexedDB e localStorage
-let lastSaveTime = 0;
-const SAVE_DEBOUNCE_MS = 2000; // Non salvare più frequentemente di ogni 2 secondi
+// ==================== GEOCODING SEARCH ====================
+function setupSearch() {
+    const input = document.getElementById('search-input');
+    const suggestions = document.getElementById('search-suggestions');
+    const spinner = document.getElementById('search-spinner');
 
-async function saveBivacchiToStorage(data) {
-    const now = Date.now();
-    
-    // Debounce: evita salvataggi troppo frequenti
-    if (now - lastSaveTime < SAVE_DEBOUNCE_MS) {
-        return;
-    }
-    lastSaveTime = now;
-    
-    // Salva in IndexedDB (preferito)
-    if (typeof DBService !== 'undefined') {
-        try {
-            await DBService.saveBivacchi(data);
-        } catch (e) {
-            console.error('[DB] Error saving to IndexedDB:', e);
+    input.addEventListener('input', () => {
+        const q = input.value.trim();
+        clearTimeout(geocodingTimeout);
+        if (q.length < 2) { suggestions.classList.remove('open'); return; }
+
+        // First show matching bivacchi instantly
+        const bivMatches = rawData.filter(el => (el.tags?.name || '').toLowerCase().includes(q.toLowerCase())).slice(0, 5);
+        let html = '';
+        if (bivMatches.length > 0) {
+            html += '<div class="search-divider">Bivacchi</div>';
+            bivMatches.forEach(el => {
+                html += `<div class="search-suggestion" data-type="bivacco" data-id="${el.id}">
+                    <span class="ss-icon">🏔️</span>
+                    <div><div class="ss-name">${escapeHtml(el.tags.name)}</div><div class="ss-detail">${el.tags.ele || '?'}m</div></div>
+                </div>`;
+            });
         }
-    }
-    // Fallback/backup in localStorage
-    try {
-        localStorage.setItem('bivacchi-data', JSON.stringify(data));
-    } catch (e) {
-        console.warn('[Storage] localStorage quota exceeded or unavailable');
-    }
-}
+        suggestions.innerHTML = html;
+        if (html) suggestions.classList.add('open');
 
-// Funzione per ottenere temperature per i bivacchi (blocca fino a completamento)
-async function fetchTemperaturesForAll(data) {
-    for (const el of data) {
-        await fetchTemperature(el);
-        // Delay tra richieste per non sovraccaricare l'API
-        await new Promise(resolve => setTimeout(resolve, 300));
-    }
-}
-
-// Funzione per caricare i dati dei bivacchi nel Nord-Est Italia
-async function caricaDatiNordEst() {
-    // 1. Prova a caricare da IndexedDB (preferito) o localStorage (fallback)
-    let cachedData = null;
-    
-    try {
-        if (typeof DBService !== 'undefined') {
-            cachedData = await DBService.getBivacchi();
-        }
-    } catch (e) {
-        console.log('[DB] IndexedDB not available, falling back to localStorage');
-    }
-    
-    // Fallback a localStorage se IndexedDB vuoto
-    if (!cachedData || cachedData.length === 0) {
-        const lsData = localStorage.getItem('bivacchi-data');
-        if (lsData) {
+        // Debounce Nominatim geocoding
+        spinner.style.display = 'flex';
+        geocodingTimeout = setTimeout(async () => {
             try {
-                cachedData = JSON.parse(lsData);
-            } catch (e) {
-                console.error("Errore lettura localStorage:", e);
-            }
+                const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5&countrycodes=it&accept-language=it`);
+                const results = await r.json();
+                if (results.length > 0) {
+                    html += '<div class="search-divider">Luoghi</div>';
+                    results.forEach(r => {
+                        html += `<div class="search-suggestion" data-type="place" data-lat="${r.lat}" data-lon="${r.lon}">
+                            <span class="ss-icon">📍</span>
+                            <div><div class="ss-name">${escapeHtml(r.display_name.split(',')[0])}</div><div class="ss-detail">${escapeHtml(r.display_name.split(',').slice(1,3).join(','))}</div></div>
+                        </div>`;
+                    });
+                    suggestions.innerHTML = html;
+                    suggestions.classList.add('open');
+                }
+            } catch {} finally { spinner.style.display = 'none'; }
+        }, 400);
+    });
+
+    suggestions.addEventListener('click', (e) => {
+        const item = e.target.closest('.search-suggestion');
+        if (!item) return;
+        suggestions.classList.remove('open');
+        input.value = '';
+        if (item.dataset.type === 'bivacco') {
+            const biv = rawData.find(el => el.id == item.dataset.id);
+            if (biv) mostraDettagli(biv);
+        } else if (item.dataset.type === 'place') {
+            const lat = parseFloat(item.dataset.lat), lon = parseFloat(item.dataset.lon);
+            switchToMapView();
+            map.setView([lat, lon], 14);
         }
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => { if (!document.getElementById('search-container').contains(e.target)) suggestions.classList.remove('open'); });
+}
+
+// ==================== VIEW TOGGLE ====================
+function switchToMapView() {
+    currentView = 'map';
+    document.getElementById('map-view').classList.add('active');
+    document.getElementById('list-view').classList.remove('active');
+    document.getElementById('icon-view-list').style.display = '';
+    document.getElementById('icon-view-map').style.display = 'none';
+    setTimeout(() => { if (map) { map.invalidateSize(); if (mapFitPending && markers.length > 0 && markerClusterGroup) { map.fitBounds(markerClusterGroup.getBounds().pad(0.1)); mapInitialized = true; mapFitPending = false; } } }, 100);
+}
+
+function switchToListView() {
+    currentView = 'list';
+    document.getElementById('list-view').classList.add('active');
+    document.getElementById('map-view').classList.remove('active');
+    document.getElementById('icon-view-list').style.display = 'none';
+    document.getElementById('icon-view-map').style.display = '';
+}
+
+// ==================== FILTER SIDEBAR ====================
+function openFilters() { document.getElementById('sidebar-filters').classList.add('open'); }
+function closeFilters() { document.getElementById('sidebar-filters').classList.remove('open'); }
+
+// ==================== FILTER BADGES ====================
+function updateFilterBadges() {
+    const badges = document.getElementById('filter-badges');
+    const minAlt = parseInt(document.getElementById('filter-alt-min').value), maxAlt = parseInt(document.getElementById('filter-alt-max').value);
+    const minTemp = parseInt(document.getElementById('filter-temp-min').value), maxTemp = parseInt(document.getElementById('filter-temp-max').value);
+    let html = '';
+    if (minAlt > 0 || maxAlt < 4810) html += `<span class="filter-badge" onclick="resetFilter('alt')">🏔️ ${minAlt}-${maxAlt}m ✕</span>`;
+    if (minTemp > -30 || maxTemp < 40) html += `<span class="filter-badge" onclick="resetFilter('temp')">🌡️ ${minTemp}°/${maxTemp}° ✕</span>`;
+    // Snow badge
+    const snowYesActive = document.getElementById('filter-snow-yes')?.classList.contains('active');
+    const snowNoActive = document.getElementById('filter-snow-no')?.classList.contains('active');
+    if (snowYesActive) html += `<span class="filter-badge" onclick="resetFilter('snow')">❄️ Neve ✕</span>`;
+    if (snowNoActive) html += `<span class="filter-badge" onclick="resetFilter('snow')">☀️ No neve ✕</span>`;
+    // Aspect badge
+    const activeAspectChips = document.querySelectorAll('#aspect-chips .filter-chip.active:not([data-aspect=all])');
+    if (activeAspectChips.length > 0) {
+        const aspects = [...activeAspectChips].map(c => c.dataset.aspect).join(',');
+        html += `<span class="filter-badge" onclick="resetFilter('aspect')">🧭 ${aspects} ✕</span>`;
     }
-    
-    if (cachedData && cachedData.length > 0) {
+    // Always show "Bivacco" badge when tracks are loaded (MountPro style)
+    if (typeof GPXService !== 'undefined' && GPXService.tracks.length > 0) {
+        html += `<span class="filter-badge badge-type">⛺ Bivacco</span>`;
+    }
+    const gpxSwitch = document.getElementById('gpx-prox-switch');
+    if (gpxSwitch?.classList.contains('active')) {
+        html += `<span class="filter-badge badge-gpx" onclick="resetFilter('gpx')">🔗 Sul Percorso ✕</span>`;
+    }
+    badges.innerHTML = html;
+}
+
+function resetFilter(type) {
+    if (type === 'alt') { document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4810; }
+    if (type === 'temp') { document.getElementById('filter-temp-min').value = -30; document.getElementById('filter-temp-max').value = 40; }
+    if (type === 'snow') { document.querySelectorAll('[data-snow]').forEach(c => c.classList.remove('active')); document.getElementById('filter-snow-all')?.classList.add('active'); }
+    if (type === 'aspect') { document.querySelectorAll('#aspect-chips .filter-chip').forEach(c => c.classList.remove('active')); document.querySelector('#aspect-chips [data-aspect="all"]')?.classList.add('active'); }
+    if (type === 'gpx') { document.getElementById('gpx-prox-switch').classList.remove('active'); }
+    updateFilterDisplays();
+    aggiornaInterfaccia();
+}
+
+function updateFilterDisplays() {
+    const minAltEl = document.getElementById('filter-alt-min'), maxAltEl = document.getElementById('filter-alt-max');
+    const minTempEl = document.getElementById('filter-temp-min'), maxTempEl = document.getElementById('filter-temp-max');
+    const minAlt = minAltEl.value, maxAlt = maxAltEl.value;
+    const minTemp = minTempEl.value, maxTemp = maxTempEl.value;
+    document.getElementById('alt-range-display').textContent = `${minAlt}m \u2013 ${maxAlt}m`;
+    document.getElementById('temp-range-display').textContent = `${minTemp}\u00B0C \u2013 ${maxTemp}\u00B0C`;
+    // Toggle at-max so max thumb stays on top when min reaches the maximum
+    minAltEl.classList.toggle('at-max', parseInt(minAlt) >= parseInt(maxAltEl.max));
+    minTempEl.classList.toggle('at-max', parseInt(minTemp) >= parseInt(maxTempEl.max));
+    const distEl = document.getElementById('filter-dist-max');
+    if (distEl) document.getElementById('dist-display').textContent = `${distEl.value} km`;
+    const gpxEl = document.getElementById('filter-gpx-proximity');
+    if (gpxEl) document.getElementById('gpx-prox-display').textContent = `${parseFloat(gpxEl.value).toFixed(1)} km`;
+    updateFilterBadges();
+}
+
+// ==================== FAVORITES (localStorage, no auth required) ====================
+function isLocalFavorite(id) { return localFavorites.includes(String(id)); }
+function toggleLocalFavorite(id) {
+    const sid = String(id);
+    if (localFavorites.includes(sid)) localFavorites = localFavorites.filter(x => x !== sid);
+    else localFavorites.push(sid);
+    localStorage.setItem('bivacchi_local_favs', JSON.stringify(localFavorites));
+}
+
+// ==================== NOTES (localStorage per bivacco) ====================
+function getNote(bivId) { return localNotes[String(bivId)] || ''; }
+function saveNote(bivId, text) {
+    if (text.trim()) localNotes[String(bivId)] = text.trim();
+    else delete localNotes[String(bivId)];
+    localStorage.setItem('bivacchi_local_notes', JSON.stringify(localNotes));
+}
+
+// ==================== SIGNAL ESTIMATION ====================
+function estimateSignal(el) {
+    const ele = parseInt(el.tags?.ele || 0);
+    const slope = el.tags?.slope_deg || 0;
+    const aspect = el.tags?.aspect_card || '';
+    // Simple heuristic: lower altitude = better, ridge (low slope at high alt) = better, valley = worse
+    let score = 3; // 0-5
+    if (ele < 1500) score = 4;
+    else if (ele < 2000) score = 3;
+    else if (ele < 2500) score = 2;
+    else if (ele < 3000) score = 1;
+    else score = 0;
+    // Ridge bonus
+    if (slope < 15 && ele > 2000) score = Math.min(5, score + 1);
+    // Valley penalty
+    if (slope > 30) score = Math.max(0, score - 1);
+    return score;
+}
+
+function renderSignalBars(score) {
+    const heights = [4,7,10,13,16];
+    return `<div class="signal-indicator">${heights.map((h,i) => `<div class="signal-bar${i < score ? ' active' : ''}" style="height:${h}px"></div>`).join('')}</div>`;
+}
+
+// ==================== WEATHER WIDGET ====================
+async function updateWeatherWidget() {
+    if (!map) return;
+    const center = map.getCenter();
+    try {
+        const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,weather_code`);
+        const d = await r.json();
+        if (d.current) {
+            const widget = document.getElementById('weather-widget');
+            widget.style.display = 'flex';
+            document.getElementById('ww-temp').textContent = `${Math.round(d.current.temperature_2m)}\u00B0C`;
+            document.getElementById('ww-hum').textContent = `${d.current.relative_humidity_2m}%`;
+            const code = d.current.weather_code;
+            let icon = '\u2600\uFE0F';
+            if (code >= 1 && code <= 3) icon = '\u26C5';
+            else if (code >= 45 && code <= 48) icon = '\uD83C\uDF2B\uFE0F';
+            else if (code >= 51 && code <= 67) icon = '\uD83C\uDF27\uFE0F';
+            else if (code >= 71 && code <= 77) icon = '\u2744\uFE0F';
+            else if (code >= 80 && code <= 82) icon = '\uD83C\uDF26\uFE0F';
+            else if (code >= 95) icon = '\u26C8\uFE0F';
+            document.getElementById('ww-icon').textContent = icon;
+        }
+    } catch {}
+}
+
+// ==================== WEATHER PANEL (detailed) ====================
+async function openWeatherPanel() {
+    const panel = document.getElementById('weather-panel');
+    const body = document.getElementById('weather-panel-body');
+    panel.style.display = 'flex';
+    body.innerHTML = '<p class="placeholder-text">Caricamento meteo dettagliato...</p>';
+    const center = map.getCenter();
+    try {
+        const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${center.lat}&longitude=${center.lng}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,apparent_temperature,cloud_cover,precipitation&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum&timezone=auto&forecast_days=3`);
+        const d = await r.json();
+        const c = d.current || {};
+        let html = `<div class="stat-grid" style="margin-bottom:16px">
+            <div class="stat-box"><div class="stat-label">Temperatura</div><div class="stat-value accent">${Math.round(c.temperature_2m || 0)}\u00B0C</div></div>
+            <div class="stat-box"><div class="stat-label">Percepita</div><div class="stat-value">${Math.round(c.apparent_temperature || 0)}\u00B0C</div></div>
+            <div class="stat-box"><div class="stat-label">Umidit\u00E0</div><div class="stat-value blue">${c.relative_humidity_2m || 0}%</div></div>
+            <div class="stat-box"><div class="stat-label">Vento</div><div class="stat-value">${Math.round(c.wind_speed_10m || 0)} km/h</div></div>
+            <div class="stat-box"><div class="stat-label">Pressione</div><div class="stat-value">${Math.round(c.surface_pressure || 0)} hPa</div></div>
+            <div class="stat-box"><div class="stat-label">Nuvolosit\u00E0</div><div class="stat-value">${c.cloud_cover || 0}%</div></div>
+        </div>`;
+        // Hourly
+        const hourly = d.hourly || {};
+        if (hourly.time?.length > 0) {
+            html += '<h3 style="font-size:13px;font-weight:600;margin-bottom:8px">Previsioni orarie</h3><div class="hourly-scroll">';
+            const now = new Date();
+            const startIdx = hourly.time.findIndex(t => new Date(t) >= now);
+            for (let i = Math.max(0,startIdx); i < Math.min(startIdx+24, hourly.time.length); i++) {
+                const time = new Date(hourly.time[i]);
+                const wc = hourly.weather_code?.[i] || 0;
+                let ic = '\u2600\uFE0F';
+                if (wc >= 1 && wc <= 3) ic = '\u26C5'; else if (wc >= 51 && wc <= 67) ic = '\uD83C\uDF27\uFE0F'; else if (wc >= 71 && wc <= 77) ic = '\u2744\uFE0F'; else if (wc >= 95) ic = '\u26C8\uFE0F';
+                html += `<div class="hourly-item"><div class="hourly-time">${String(time.getHours()).padStart(2,'0')}:00</div><div class="hourly-icon">${ic}</div><div class="hourly-temp">${Math.round(hourly.temperature_2m[i])}\u00B0</div></div>`;
+            }
+            html += '</div>';
+        }
+        // Daily
+        const daily = d.daily || {};
+        if (daily.time?.length > 0) {
+            html += '<h3 style="font-size:13px;font-weight:600;margin:16px 0 8px">Previsioni giornaliere</h3>';
+            daily.time.forEach((t,i) => {
+                const date = new Date(t);
+                const dayName = date.toLocaleDateString('it-IT', { weekday:'short', day:'numeric' });
+                html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--border-subtle);font-size:13px">
+                    <span style="color:var(--text-secondary)">${dayName}</span>
+                    <span><span style="color:var(--info)">${Math.round(daily.temperature_2m_min?.[i]||0)}\u00B0</span> / <span style="color:var(--accent)">${Math.round(daily.temperature_2m_max?.[i]||0)}\u00B0</span></span>
+                    <span style="color:var(--text-muted)">${daily.precipitation_sum?.[i] ? daily.precipitation_sum[i]+'mm' : '-'}</span>
+                </div>`;
+            });
+        }
+        body.innerHTML = html;
+    } catch (e) { body.innerHTML = '<p class="placeholder-text">Errore nel caricamento meteo.</p>'; }
+}
+
+// ==================== CUSTOM MARKERS ====================
+function createBivaccoIcon(el, isSelected = false) {
+    const cls = isSelected ? 'biv-marker biv-marker-selected' : 'biv-marker';
+    return L.divIcon({
+        className: cls,
+        html: `<div class="biv-marker-pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22l9-20 9 20"/><path d="M7.5 14h9"/></svg></div>`,
+        iconSize: isSelected ? [36, 36] : [28, 28],
+        iconAnchor: isSelected ? [18, 36] : [14, 28],
+        popupAnchor: [0, isSelected ? -36 : -28]
+    });
+}
+
+// ==================== GEOLOCATION ====================
+function locateUser() {
+    if (!navigator.geolocation) return;
+    const btn = document.getElementById('btn-locate');
+    btn.classList.add('active');
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const { latitude: lat, longitude: lon, heading } = pos.coords;
+            if (locationMarker) map.removeLayer(locationMarker);
+            if (locationCircle) map.removeLayer(locationCircle);
+            locationCircle = L.circle([lat, lon], { radius: pos.coords.accuracy, color: 'rgba(59,130,246,0.3)', fillColor: 'rgba(59,130,246,0.1)', fillOpacity: 0.5, weight: 1 }).addTo(map);
+            const headingHtml = heading ? `<div class="loc-marker-heading"></div>` : '';
+            locationMarker = L.marker([lat, lon], {
+                icon: L.divIcon({ className: '', html: `<div style="position:relative">${headingHtml}<div class="loc-marker"></div></div>`, iconSize: [18, 18], iconAnchor: [9, 9] })
+            }).addTo(map);
+            map.setView([lat, lon], 14);
+            setTimeout(() => btn.classList.remove('active'), 1000);
+        },
+        () => { btn.classList.remove('active'); alert('Impossibile ottenere la posizione'); },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+// ==================== DATA LOADING ====================
+async function caricaDatiNordEst() {
+    let cachedData = null;
+    try { if (typeof DBService !== 'undefined') cachedData = await DBService.getBivacchi(); } catch {}
+    if (!cachedData?.length) { try { cachedData = JSON.parse(localStorage.getItem('bivacchi-data')); } catch {} }
+    if (cachedData?.length > 0) {
         rawData = cachedData;
         dataLoaded = true;
-        await new Promise(resolve => setTimeout(resolve, 0));
         aggiornaInterfaccia();
-        
-        // Cache nel Service Worker per offline
         cacheBivacchiInSW(rawData);
-        
-        // Se online, avvia job in background (centralizzato)
-        if (isOnline) {
-            BackgroundDataManager.startAllJobs(rawData);
-        }
+        if (isOnline) BackgroundDataManager.startAllJobs(rawData);
     }
-
-    // 2. Se online, carica dal server
     if (isOnline) {
         try {
             const res = await fetch(API_BASE_URL + '/api/bivacchi');
             if (res.ok) {
                 const data = await res.json();
-                if (data.length > 0) {
-                    rawData = data;
-                    saveBivacchiToStorage(rawData);
-                    cacheBivacchiInSW(rawData);
-                    dataLoaded = true;
-                    aggiornaInterfaccia();
-                    
-                    // Avvia job in background (centralizzato) - NON duplica se già in corso
-                    BackgroundDataManager.startAllJobs(rawData);
-                    return;
-                }
+                if (data.length > 0) { rawData = data; saveBivacchiToStorage(rawData); cacheBivacchiInSW(rawData); dataLoaded = true; aggiornaInterfaccia(); BackgroundDataManager.startAllJobs(rawData); return; }
             }
-        } catch (e) {
-            console.error("Errore caricamento da server:", e);
-            // Se abbiamo dati in cache, continuiamo con quelli
-            if (rawData.length > 0) {
-                console.log('[PWA] Using cached data due to network error');
-                return;
-            }
-        }
-    } else {
-        // Offline: usa solo dati in cache
-        if (rawData.length > 0) {
-            console.log('[PWA] Offline mode: using cached data');
+        } catch (e) { if (rawData.length > 0) return; }
+    } else { if (rawData.length > 0) return; }
+    if (!isOnline) { listContainer.innerHTML = '<p class="placeholder-text">\uD83D\uDCF4 Nessun dato in cache. Connettiti per caricare.</p>'; return; }
+    listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi...</p>';
+    const query = `[out:json][timeout:180];(area[name="Veneto"][admin_level="4"];area[name="Trentino-Alto Adige"][admin_level="4"];area[name="Friuli-Venezia Giulia"][admin_level="4"];)->.r;(node["tourism"~"alpine_hut|wilderness_hut"]["name"~"bivacco",i](area.r);way["tourism"~"alpine_hut|wilderness_hut"]["name"~"bivacco",i](area.r);node["amenity"="shelter"]["name"~"bivacco",i](area.r);way["amenity"="shelter"]["name"~"bivacco",i](area.r);node["shelter_type"~"bivouac|basic_hut"](area.r);way["shelter_type"~"bivouac|basic_hut"](area.r););out center;`;
+    const urls = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+    for (const baseUrl of urls) {
+        try {
+            const res = await fetch(`${baseUrl}?data=${encodeURIComponent(query)}`);
+            if (!res.ok) continue;
+            const data = await res.json();
+            rawData = data.elements.filter(el => el.tags?.name?.trim());
+            dataLoaded = true; aggiornaInterfaccia();
+            fetch(API_BASE_URL+'/api/bivacchi', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(rawData) }).catch(() => {});
+            BackgroundDataManager.startAllJobs(rawData);
             return;
-        }
+        } catch {}
     }
-
-    // 3. Se online e senza dati, carica da API Overpass
-    if (!isOnline) {
-        listContainer.innerHTML = '<p class="placeholder-text">📴 Nessun dato in cache. Connettiti a internet per caricare i bivacchi.</p>';
-        return;
-    }
-    
-    listContainer.innerHTML = '<p class="placeholder-text">Caricamento bivacchi dal Nord-Est Italia...</p>';
-
-    // Query Overpass per i bivacchi in Veneto, Trentino e Friuli
-    const query = `
-        [out:json][timeout:180];
-        (
-          area[name="Veneto"][admin_level="4"];
-          area[name="Trentino-Alto Adige"][admin_level="4"];
-          area[name="Friuli-Venezia Giulia"][admin_level="4"];
-        )->.regioni;
-        (
-          node["tourism"~"alpine_hut|wilderness_hut"]["name"~"bivacco",i](area.regioni);
-          way["tourism"~"alpine_hut|wilderness_hut"]["name"~"bivacco",i](area.regioni);
-          node["amenity"="shelter"]["name"~"bivacco",i](area.regioni);
-          way["amenity"="shelter"]["name"~"bivacco",i](area.regioni);
-          node["shelter_type"~"bivouac|basic_hut"](area.regioni);
-          way["shelter_type"~"bivouac|basic_hut"](area.regioni);
-        );
-        out center;
-    `;
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-
-    try {
-        const res = await fetch(url);
-        if (!res.ok) {
-            let errorMsg = `Errore HTTP: ${res.status}`;
-            if (res.status === 429) {
-                errorMsg = "Troppe richieste al server. Riprova più tardi.";
-            } else if (res.status === 504) {
-                errorMsg = "Il server è sovraccarico. Riprova più tardi.";
-            }
-            throw new Error(errorMsg);
-        }
-        const data = await res.json();
-        rawData = data.elements.filter(el => el.tags?.name && el.tags.name.trim() !== '');
-
-        // Calcola altitudini mancanti con retry
-        const toCalculate = rawData.filter(el => !el.tags.ele && (el.center?.lat || el.lat) && (el.center?.lon || el.lon));
-        if (toCalculate.length > 0) {
-            listContainer.innerHTML = '<p class="placeholder-text">Calcolo altitudini...</p>';
-            await calculateElevationsWithRetry(toCalculate);
-        }
-
-        // Mostra i dati immediatamente senza aspettare le temperature
-        dataLoaded = true;
-        aggiornaInterfaccia();
-
-        // Salva sul server i dati di base
-        await fetch(API_BASE_URL + '/api/bivacchi', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rawData)
-        });
-
-        // Ottieni temperature in background per non bloccare l'UI
-        listContainer.innerHTML = '<div><p class="placeholder-text">Caricamento temperature...</p></div>';
-        fetchTemperaturesForAll(rawData).then(() => {
-            // Salva i dati con le temperature
-            fetch(API_BASE_URL + '/api/bivacchi', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(rawData)
-            }).catch(e => console.error("Errore salvataggio dati:", e));
-            // Aggiorna l'UI finale
-            aggiornaInterfaccia();
-            // Calcola esposizione/pendenza in background
-            computeAspectInBackground(rawData);
-            // Calcola ore di luce in background
-            fetchDaylightInBackground(rawData);
-        });
-    } catch (e) {
-        console.error("Errore Overpass API:", e);
-        listContainer.innerHTML = `<p class="placeholder-text error">${e.message}</p><button id="retry-btn" onclick="caricaDatiVeneto()">Riprova</button>`;
-    }
+    listContainer.innerHTML = '<p class="placeholder-text" style="color:var(--danger)">Errore caricamento. <button onclick="caricaDatiNordEst()">Riprova</button></p>';
 }
 
-// Funzione per aggiornare la lista
+// ==================== INTERFACE UPDATE ====================
 function aggiornaInterfaccia() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    let minAlt = 0, maxAlt = 4000;
-    if (altSlider) {
-        const [aMin, aMax] = altSlider.get().map(v => Math.round(parseFloat(v)));
-        minAlt = aMin; maxAlt = aMax;
-    }
-    let minTemp = -20, maxTemp = 40;
-    if (tempSlider) {
-        const [tMin, tMax] = tempSlider.get().map(v => Math.round(parseFloat(v)));
-        minTemp = tMin; maxTemp = tMax;
-    }
-    
-    // Get filter values (desktop or mobile)
-    let maxDist = 50;
-    let sortBy = 'nome';
-    
-    // Check which view is active and use appropriate inputs
-    if (window.innerWidth <= 1024) {
-        // Mobile: prioritize mobile inputs
-        const distInputM = document.getElementById('filter-dist-max-mobile');
-        const sortInputM = document.getElementById('sort-by-mobile');
-        if (distInputM) maxDist = parseInt(distInputM.value, 10);
-        if (sortInputM) sortBy = sortInputM.value;
-    } else {
-        // Desktop: use desktop inputs
-        const distInput = document.getElementById('filter-dist-max');
-        const sortInput = document.getElementById('sort-by');
-        if (distInput) maxDist = parseInt(distInput.value, 10);
-        if (sortInput) sortBy = sortInput.value;
-    }
-    
-    // Update desktop displays
-    const altMinSpan = document.getElementById('alt-min-val');
-    const altMaxSpan = document.getElementById('alt-max-val');
-    const tempMinSpan = document.getElementById('temp-min-val');
-    const tempMaxSpan = document.getElementById('temp-max-val');
-    const distSpan = document.getElementById('dist-max-val');
-    
-    if (altMinSpan) altMinSpan.innerText = minAlt;
-    if (altMaxSpan) altMaxSpan.innerText = maxAlt;
-    if (tempMinSpan) tempMinSpan.innerText = minTemp;
-    if (tempMaxSpan) tempMaxSpan.innerText = maxTemp;
-    if (distSpan) distSpan.innerText = maxDist;
-    
-    // Update mobile displays
-    const altMinSpanM = document.getElementById('alt-min-val-mobile');
-    const altMaxSpanM = document.getElementById('alt-max-val-mobile');
-    const tempMinSpanM = document.getElementById('temp-min-val-mobile');
-    const tempMaxSpanM = document.getElementById('temp-max-val-mobile');
-    const distSpanM = document.getElementById('dist-max-val-mobile');
-    
-    if (altMinSpanM) altMinSpanM.innerText = minAlt;
-    if (altMaxSpanM) altMaxSpanM.innerText = maxAlt;
-    if (tempMinSpanM) tempMinSpanM.innerText = minTemp;
-    if (tempMaxSpanM) tempMaxSpanM.innerText = maxTemp;
-    if (distSpanM) distSpanM.innerText = maxDist;
+    const minAlt = parseInt(document.getElementById('filter-alt-min').value);
+    const maxAlt = parseInt(document.getElementById('filter-alt-max').value);
+    const minTemp = parseInt(document.getElementById('filter-temp-min').value);
+    const maxTemp = parseInt(document.getElementById('filter-temp-max').value);
+    const maxDist = parseInt(document.getElementById('filter-dist-max').value);
+    const sortBy = document.getElementById('sort-by').value;
+    const gpxProxActive = document.getElementById('gpx-prox-switch')?.classList.contains('active');
+    const gpxProxDist = parseFloat(document.getElementById('filter-gpx-proximity')?.value || 2);
 
-    // Mostra filtro distanza solo se utente loggato con indirizzo impostato
-    const distanceFilterGroup = document.getElementById('distance-filter-group');
-    const distanceFilterGroupMobile = document.getElementById('distance-filter-group-mobile');
-    const distanceSortOptions = document.querySelectorAll('.distance-sort-option');
-    const distanceSortOptionsMobile = document.querySelectorAll('.distance-sort-option-mobile');
-    
-    if (currentUser && currentUser.home_address) {
-        if (distanceFilterGroup) distanceFilterGroup.style.display = 'block';
-        if (distanceFilterGroupMobile) distanceFilterGroupMobile.style.display = 'block';
-        distanceSortOptions.forEach(opt => opt.style.display = '');
-        distanceSortOptionsMobile.forEach(opt => opt.style.display = '');
-    } else {
-        if (distanceFilterGroup) distanceFilterGroup.style.display = 'none';
-        if (distanceFilterGroupMobile) distanceFilterGroupMobile.style.display = 'none';
-        distanceSortOptions.forEach(opt => opt.style.display = 'none');
-        distanceSortOptionsMobile.forEach(opt => opt.style.display = 'none');
-    }
+    // Detect if temperature filter has been changed from defaults
+    const tempFilterActive = (minTemp > -30 || maxTemp < 40);
 
-    listContainer.innerHTML = '';
+    // Snow filter
+    const snowAll = document.getElementById('filter-snow-all');
+    const snowYes = document.getElementById('filter-snow-yes');
+    const snowNo = document.getElementById('filter-snow-no');
+    let snowFilter = 'all';
+    if (snowYes?.classList.contains('active')) snowFilter = 'yes';
+    else if (snowNo?.classList.contains('active')) snowFilter = 'no';
+
+    // Aspect filter
+    const activeAspects = [];
+    document.querySelectorAll('#aspect-chips .filter-chip.active').forEach(chip => {
+        activeAspects.push(chip.dataset.aspect);
+    });
+    const aspectFilterActive = !activeAspects.includes('all') && activeAspects.length > 0;
+
+    // Show distance filter if user has home address
+    if (currentUser?.home_address) {
+        document.getElementById('distance-filter-section').style.display = '';
+        document.querySelectorAll('.dist-sort-opt').forEach(o => o.style.display = '');
+    }
 
     const uniqueIds = new Set();
-    
     const filtrati = rawData.filter(el => {
-        if (uniqueIds.has(el.id)) {
-            return false;
+        if (uniqueIds.has(el.id)) return false;
+        const nome = (el.tags?.name || '').toLowerCase();
+        const alt = parseInt(el.tags?.ele || 0);
+        if (!nome.includes(searchTerm)) return false;
+        if (alt < minAlt || alt > maxAlt) return false;
+        // Temperature filter: if user changed range, exclude bivacchi without temp data
+        if (tempFilterActive) {
+            if (el.tags?.temperature === undefined) return false;
+            const t = parseFloat(el.tags.temperature);
+            if (t < minTemp || t > maxTemp) return false;
         }
-
-        const nome = (el.tags?.name || "").toLowerCase();
-        const alt = el.tags?.ele !== undefined && !isNaN(parseInt(el.tags.ele, 10)) ? parseInt(el.tags.ele, 10) : 0;
-        
-        const matchNome = nome.includes(searchTerm);
-        const matchAlt = (alt >= minAlt && alt <= maxAlt);
-        
-        // Filtro temperatura (usa il valore se presente, altrimenti N/A non filtra)
-        let matchTemp = true;
-        if (el.tags?.temperature !== undefined) {
-            const temp = parseInt(el.tags.temperature, 10);
-            matchTemp = (temp >= minTemp && temp <= maxTemp);
+        // Snow filter
+        if (snowFilter === 'yes' && el.tags?.snow !== true) return false;
+        if (snowFilter === 'no' && el.tags?.snow === true) return false;
+        // Aspect/Exposure filter
+        if (aspectFilterActive) {
+            const elAspect = el.tags?.aspect_card || '';
+            if (!elAspect || !activeAspects.includes(elAspect)) return false;
         }
-        
-        // Filtro distanza da casa
-        let matchDist = true;
-        if (currentUser && currentUser.home_address) {
-            const dist = calculateDistance(
-                currentUser.home_address.lat,
-                currentUser.home_address.lon,
-                el.center?.lat ?? el.lat,
-                el.center?.lon ?? el.lon
-            );
-            matchDist = dist <= maxDist;
+        if (currentUser?.home_address) { const d = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, el.center?.lat ?? el.lat, el.center?.lon ?? el.lon); if (d > maxDist) return false; }
+        if (gpxProxActive && typeof GPXService !== 'undefined' && GPXService.tracks.length > 0) {
+            const elLat = el.center?.lat ?? el.lat, elLon = el.center?.lon ?? el.lon;
+            let nearTrack = false;
+            for (const track of GPXService.tracks) {
+                for (const pt of track.latlngs) {
+                    if (calculateDistance(pt[0], pt[1], elLat, elLon) <= gpxProxDist) { nearTrack = true; break; }
+                }
+                if (nearTrack) break;
+            }
+            if (!nearTrack) return false;
         }
-        
-        if (matchNome && matchAlt && matchTemp && matchDist) {
-            uniqueIds.add(el.id);
-            return true;
-        }
-        return false;
+        uniqueIds.add(el.id);
+        return true;
     });
 
-    if (filtrati.length === 0) {
-        listContainer.innerHTML = '<p class="placeholder-text">Nessun bivacco trovato con i filtri attuali.</p>';
-        updateMap([]);
-        return;
-    }
-
-    // Ordinamento
+    // Sort
     filtrati.sort((a, b) => {
         switch(sortBy) {
-            case 'nome':
-                return (a.tags.name || '').localeCompare(b.tags.name || '');
-            case 'nome-desc':
-                return (b.tags.name || '').localeCompare(a.tags.name || '');
-            case 'alt-asc':
-                return (parseInt(a.tags.ele || 0, 10)) - (parseInt(b.tags.ele || 0, 10));
-            case 'alt-desc':
-                return (parseInt(b.tags.ele || 0, 10)) - (parseInt(a.tags.ele || 0, 10));
-            case 'temp-asc':
-                return (parseInt(a.tags.temperature || 0, 10)) - (parseInt(b.tags.temperature || 0, 10));
-            case 'temp-desc':
-                return (parseInt(b.tags.temperature || 0, 10)) - (parseInt(a.tags.temperature || 0, 10));
-            case 'dist-asc':
-                if (currentUser && currentUser.home_address) {
-                    const distA = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, a.center?.lat ?? a.lat, a.center?.lon ?? a.lon);
-                    const distB = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, b.center?.lat ?? b.lat, b.center?.lon ?? b.lon);
-                    return distA - distB;
-                }
-                return 0;
-            case 'dist-desc':
-                if (currentUser && currentUser.home_address) {
-                    const distA = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, a.center?.lat ?? a.lat, a.center?.lon ?? a.lon);
-                    const distB = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, b.center?.lat ?? b.lat, b.center?.lon ?? b.lon);
-                    return distB - distA;
-                }
-                return 0;
-            default:
-                return 0;
+            case 'nome': return (a.tags.name||'').localeCompare(b.tags.name||'');
+            case 'nome-desc': return (b.tags.name||'').localeCompare(a.tags.name||'');
+            case 'alt-asc': return parseInt(a.tags.ele||0) - parseInt(b.tags.ele||0);
+            case 'alt-desc': return parseInt(b.tags.ele||0) - parseInt(a.tags.ele||0);
+            case 'temp-asc': return parseInt(a.tags.temperature||0) - parseInt(b.tags.temperature||0);
+            case 'temp-desc': return parseInt(b.tags.temperature||0) - parseInt(a.tags.temperature||0);
+            case 'dist-asc': case 'dist-desc':
+                if (!currentUser?.home_address) return 0;
+                const dA = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, a.center?.lat??a.lat, a.center?.lon??a.lon);
+                const dB = calculateDistance(currentUser.home_address.lat, currentUser.home_address.lon, b.center?.lat??b.lat, b.center?.lon??b.lon);
+                return sortBy === 'dist-asc' ? dA-dB : dB-dA;
+            default: return 0;
         }
     });
 
-    // Performance: salva i dati filtrati e usa lazy loading
     currentFilteredData = filtrati;
     currentListPage = 1;
     renderListPage();
-
-    // Aggiorna la mappa
     updateMap(filtrati);
+    updateFilterBadges();
 }
 
-// Funzione per renderizzare una pagina della lista (lazy loading)
+function getBivaccoTypeBadge(el) {
+    const st = el.tags?.shelter_type;
+    const t = el.tags?.tourism;
+    if (st === 'basic_hut' || st === 'bivouac' || t === 'wilderness_hut') return 'BIVACCO';
+    if (t === 'alpine_hut') return 'RIFUGIO';
+    if (st === 'rock_shelter') return 'RIPARO';
+    if (st === 'weather_shelter') return 'RICOVERO';
+    return 'BIVACCO';
+}
+
+function getBivaccoDescription(el) {
+    if (el.tags?.description) return el.tags.description;
+    if (el.tags?.['description:it']) return el.tags['description:it'];
+    // Build a generic description from available tags
+    const parts = [];
+    const typeName = getBivaccoTypeBadge(el);
+    if (typeName === 'BIVACCO') parts.push('Bivacco non custodito.');
+    else if (typeName === 'RIFUGIO') parts.push('Rifugio alpino.');
+    else parts.push('Punto di appoggio.');
+    return parts.join(' ');
+}
+
+function getCapacityChip(el) {
+    const cap = el.tags?.capacity || el.tags?.beds;
+    if (!cap) return { icon: 'tent', label: 'N/D' };
+    return { icon: 'bed', label: `${cap} Posti` };
+}
+
+function getHeatingChip(el) {
+    if (el.tags?.fireplace === 'yes') return { icon: 'fire', label: 'Stufa' };
+    if (el.tags?.stove === 'yes') return { icon: 'fire', label: 'Stufa' };
+    return { icon: 'house', label: 'Chiuso' };
+}
+
+function getManagedChip(el) {
+    if (el.tags?.operator) return { icon: 'grid', label: 'Gestito' };
+    return { icon: 'grid', label: 'Non gestito' };
+}
+
+function getWaterChip(el) {
+    if (el.tags?.drinking_water === 'yes' || el.tags?.water_source) return { icon: 'water', label: 'Acqua' };
+    return { icon: 'water-off', label: 'No acqua' };
+}
+
+function chipIconSVG(type) {
+    const icons = {
+        tent: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20 L12 4 L22 20Z"/><path d="M12 20V12"/></svg>',
+        bed: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>',
+        fire: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14 0-5.5 3-6.5 1 1.5 2 3.5 2 5.5 0 2.5-1.5 3.5-2 4 .5.5 1 1 1 2.5a2.5 2.5 0 0 1-5 0"/></svg>',
+        house: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+        grid: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+        water: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+        'water-off': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" opacity=".4"/><line x1="4" y1="4" x2="20" y2="20" stroke-width="2"/></svg>',
+    };
+    return icons[type] || '';
+}
+
 function renderListPage() {
-    const startIdx = 0;
     const endIdx = currentListPage * LIST_PAGE_SIZE;
-    const itemsToShow = currentFilteredData.slice(startIdx, endIdx);
-    
+    const items = currentFilteredData.slice(0, endIdx);
     listContainer.innerHTML = '';
-    
-    // Usa DocumentFragment per performance
-    const fragment = document.createDocumentFragment();
-    
-    itemsToShow.forEach(el => {
-        const item = document.createElement('div');
-        item.className = 'bivacco-item';
-        const isFavorite = currentUser && currentUser.favorites && currentUser.favorites.includes(el.id.toString());
-        const heartColor = isFavorite ? '❤️' : '🤍';
-        
-        let distanceText = '';
-        if (currentUser && currentUser.home_address) {
-            const dist = calculateDistance(
-                currentUser.home_address.lat,
-                currentUser.home_address.lon,
-                el.center?.lat ?? el.lat,
-                el.center?.lon ?? el.lon
-            );
-            distanceText = ` | ${dist} km`;
-        }
-        
-        // Usa il sistema di validazione per determinare lo stato dei dati
-        const eleStatus = validateElevation(el);
-        const tempStatus = validateTemperature(el);
-        const snow = el.tags?.snow;
-        
-        // Formatta elevazione
-        let eleDisplay;
-        if (eleStatus === DataStatus.AVAILABLE) {
-            eleDisplay = `${el.tags.ele}m`;
-        } else if (BackgroundDataManager.isRunning && BackgroundDataManager.currentJob === 'elevations') {
-            eleDisplay = '<span class="data-loading">...</span>';
-        } else {
-            eleDisplay = '<span class="data-unavailable">-</span>';
-        }
-        
-        // Formatta temperatura
-        let tempDisplay;
-        if (tempStatus === DataStatus.AVAILABLE) {
-            tempDisplay = `${el.tags.temperature}°C`;
-        } else if (tempStatus === DataStatus.STALE) {
-            tempDisplay = `<span class="data-stale">${el.tags.temperature}°C</span>`;
-        } else if (BackgroundDataManager.isRunning && BackgroundDataManager.currentJob === 'weather') {
-            tempDisplay = '<span class="data-loading">...</span>';
-        } else {
-            tempDisplay = '<span class="data-unavailable">-</span>';
-        }
-        
-        // Formatta neve
-        const snowDisplay = snow === undefined ? '' : (snow ? ' | ❄️' : '');
-        
-        item.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h4>${el.tags.name || 'Senza nome'}</h4>
-                    <p>${eleDisplay} | ${tempDisplay}${snowDisplay}${distanceText}</p>
-                </div>
-                ${currentUser ? `<button onclick="event.stopPropagation(); toggleFavorite('${el.id}')" class="heart-btn">${heartColor}</button>` : ''}
-            </div>
-        `;
-        item.onclick = () => mostraDettagli(el);
-        fragment.appendChild(item);
-    });
-    
-    listContainer.appendChild(fragment);
-    
-    // Mostra pulsante "Carica altri" se ci sono più elementi
-    if (endIdx < currentFilteredData.length) {
-        const loadMoreBtn = document.createElement('button');
-        loadMoreBtn.className = 'load-more-btn';
-        loadMoreBtn.textContent = `Mostra altri (${currentFilteredData.length - endIdx} rimanenti)`;
-        loadMoreBtn.onclick = () => {
-            currentListPage++;
-            renderListPage();
-        };
-        listContainer.appendChild(loadMoreBtn);
-    }
-    
-    // Mostra contatore
+    if (items.length === 0) { listContainer.innerHTML = '<p class="placeholder-text">Nessun bivacco trovato.</p>'; return; }
+
+    const frag = document.createDocumentFragment();
+    // Counter
     const counter = document.createElement('div');
     counter.className = 'list-counter';
-    counter.textContent = `Mostrati ${Math.min(endIdx, currentFilteredData.length)} di ${currentFilteredData.length} bivacchi`;
-    listContainer.insertBefore(counter, listContainer.firstChild);
+    counter.textContent = `${Math.min(endIdx, currentFilteredData.length)} di ${currentFilteredData.length} bivacchi`;
+    frag.appendChild(counter);
+
+    items.forEach(el => {
+        const card = document.createElement('div');
+        card.className = 'biv-card';
+        const alt = el.tags?.ele || '0';
+        const isFav = isLocalFavorite(el.id) || (currentUser?.favorites?.includes(String(el.id)));
+        const typeBadge = getBivaccoTypeBadge(el);
+        const desc = getBivaccoDescription(el);
+        const chipCap = getCapacityChip(el);
+        const chipHeat = getHeatingChip(el);
+        const chipManaged = getManagedChip(el);
+        const chipWater = getWaterChip(el);
+
+        card.innerHTML = `
+            <div class="biv-card-header">
+                <h3 class="biv-card-name">${escapeHtml(el.tags.name || 'Bivacco')}</h3>
+                <button class="biv-card-fav" onclick="event.stopPropagation();toggleFavorite('${el.id}')" aria-label="Preferito">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="${isFav ? 'var(--danger)' : 'none'}" stroke="${isFav ? 'var(--danger)' : 'var(--text-muted)'}" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+            </div>
+            <div class="biv-card-meta">
+                <span class="biv-type-badge">${typeBadge}</span>
+                <span class="biv-alt-label">${alt}m</span>
+            </div>
+            <p class="biv-card-desc">${escapeHtml(desc).substring(0, 120)}${desc.length > 120 ? '...' : ''}</p>
+            <div class="biv-card-chips">
+                <div class="biv-chip">${chipIconSVG(chipCap.icon)}<span>${chipCap.label}</span></div>
+                <div class="biv-chip biv-chip-accent">${chipIconSVG(chipHeat.icon)}<span>${chipHeat.label}</span></div>
+                <div class="biv-chip">${chipIconSVG(chipManaged.icon)}<span>${chipManaged.label}</span></div>
+                <div class="biv-chip">${chipIconSVG(chipWater.icon)}<span>${chipWater.label}</span></div>
+            </div>`;
+        card.onclick = () => mostraDettagli(el);
+        frag.appendChild(card);
+    });
+
+    if (endIdx < currentFilteredData.length) {
+        const btn = document.createElement('button');
+        btn.className = 'load-more-btn';
+        btn.textContent = `Mostra altri (${currentFilteredData.length - endIdx} rimanenti)`;
+        btn.onclick = () => { currentListPage++; renderListPage(); };
+        frag.appendChild(btn);
+    }
+    listContainer.appendChild(frag);
 }
 
-// Funzione per aggiornare la mappa con i bivacchi filtrati
+// ==================== MAP UPDATE ====================
+function getSignalLabel(score) {
+    if (score >= 4) return '4G';
+    if (score >= 3) return '3G';
+    if (score >= 2) return '2G';
+    if (score >= 1) return 'E';
+    return '--';
+}
+
+function buildPopupHTML(el) {
+    const alt = el.tags?.ele || '0';
+    const typeBadge = getBivaccoTypeBadge(el);
+    const signal = estimateSignal(el);
+    const sigLabel = getSignalLabel(signal);
+    const isFav = isLocalFavorite(el.id) || (currentUser?.favorites?.includes(String(el.id)));
+    const sigBars = [4,7,10,13,16].map((h,i) =>
+        `<div style="width:3px;height:${h}px;border-radius:1px;background:${i < signal ? 'var(--success)' : 'var(--bg-hover)'}"></div>`
+    ).join('');
+
+    return `<div class="map-popup">
+        <div class="map-popup-header">
+            <span class="biv-type-badge">${typeBadge}</span>
+            <span class="map-popup-alt">${alt}m</span>
+        </div>
+        <div class="map-popup-name">${escapeHtml(el.tags?.name || 'Bivacco')}</div>
+        <div class="map-popup-signal">
+            <div style="display:flex;align-items:flex-end;gap:2px;height:16px">${sigBars}</div>
+            <span class="map-popup-sig-label">${sigLabel}</span>
+            <span class="map-popup-sig-note">Stimato</span>
+        </div>
+        <div class="map-popup-actions">
+            <button class="map-popup-btn" onclick="mostraDettagli(window._popupBivacchi['${el.id}'])">Vedi Dettagli</button>
+            <button class="map-popup-fav" onclick="event.stopPropagation();toggleFavorite('${el.id}')" aria-label="Preferito">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="${isFav ? 'var(--danger)' : 'none'}" stroke="${isFav ? 'var(--danger)' : 'var(--text-muted)'}" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+        </div>
+    </div>`;
+}
+
+// Store references so popup buttons can access bivacco data
+window._popupBivacchi = {};
+
 function updateMap(filtrati) {
-    // Rimuovi cluster group esistente
-    if (markerClusterGroup) {
-        map.removeLayer(markerClusterGroup);
-    }
-    
-    // Crea nuovo cluster group con impostazioni ottimizzate
-    markerClusterGroup = L.markerClusterGroup({
-        chunkedLoading: true, // Carica marker a chunks per non bloccare UI
-        chunkProgress: null,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        maxClusterRadius: 50, // Raggio clustering in pixel
-        disableClusteringAtZoom: 16, // Mostra marker singoli a zoom alto
-        animate: false // Disabilita animazioni per performance
-    });
-    
+    if (markerClusterGroup) map.removeLayer(markerClusterGroup);
+    markerClusterGroup = L.markerClusterGroup({ chunkedLoading: true, showCoverageOnHover: false, maxClusterRadius: 50, disableClusteringAtZoom: 16, animate: false });
     markers = [];
-
-    // Aggiungi marker della casa se impostato
-    if (currentUser && currentUser.home_address) {
-        // Rimuovi eventuale marker casa precedente
-        if (homeMarker) {
-            map.removeLayer(homeMarker);
-            homeMarker = null;
-        }
+    window._popupBivacchi = {};
+    if (currentUser?.home_address) {
+        if (homeMarker) map.removeLayer(homeMarker);
         homeMarker = L.marker([currentUser.home_address.lat, currentUser.home_address.lon], {
-            icon: L.icon({
-                iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2YzOWMxMiIgZD0iTTEwIDIwdjYuOTM2bTAtNi45MzZWMGwxMiAxMHYxMEgxMHpNMTAgMjBIMHYtMTBsMTAtOHYxOHptOCAwdjZtLTQtNmgtNHYtNmg0djZ6Ii8+PC9zdmc+',
-                iconSize: [32, 32],
-                iconAnchor: [16, 32]
-            })
-        }).bindPopup('🏠 Casa').addTo(map);
+            icon: L.divIcon({ className: '', html: '<div style="font-size:24px">\uD83C\uDFE0</div>', iconSize: [24,24], iconAnchor: [12,24] })
+        }).bindPopup('\uD83C\uDFE0 Casa').addTo(map);
     }
-
-    // Aggiungi nuovi marker al cluster group
     filtrati.forEach(el => {
-        const lat = el.center?.lat ?? el.lat;
-        const lon = el.center?.lon ?? el.lon;
-        if (lat && lon) {
-            const marker = L.marker([lat, lon]);
-            marker.bindPopup(`<b>${el.tags.name || 'Bivacco'}</b><br>Altitudine: ${el.tags.ele || 0}m`);
-            marker.on('click', () => mostraDettagli(el));
-            markers.push(marker);
-        }
+        const lat = el.center?.lat ?? el.lat, lon = el.center?.lon ?? el.lon;
+        if (!lat || !lon) return;
+        window._popupBivacchi[el.id] = el;
+        const marker = L.marker([lat, lon], { icon: createBivaccoIcon(el) });
+        marker.bindPopup(() => buildPopupHTML(el), {
+            className: 'biv-popup-wrapper',
+            maxWidth: 280,
+            minWidth: 240,
+            closeButton: false,
+            autoPanPadding: [40, 60]
+        });
+        markers.push(marker);
     });
-    
-    // Aggiungi tutti i marker al cluster group in una sola operazione
     markerClusterGroup.addLayers(markers);
     map.addLayer(markerClusterGroup);
-
-    // Adatta la vista SOLO al primo caricamento, non ad ogni filtro
-    // E fallo solo quando la mappa è visibile (mobile può essere nascosta)
     if (!mapInitialized && markers.length > 0) {
-        if (isMapVisible()) {
-            map.fitBounds(markerClusterGroup.getBounds().pad(0.1));
-            mapInitialized = true;
-            mapFitPending = false;
-        } else {
-            // Rimanda il fit quando la mappa verrà mostrata
-            mapFitPending = true;
-        }
+        const mapEl = document.getElementById('map');
+        if (mapEl.offsetWidth > 0) { map.fitBounds(markerClusterGroup.getBounds().pad(0.1)); mapInitialized = true; }
+        else mapFitPending = true;
     }
 }
 
-// Funzione per mostrare il pannello di dettaglio
+// ==================== DETAIL PANEL ====================
 async function mostraDettagli(el) {
-    const modal = document.getElementById('detail-view');
+    selectedBivacco = el;
+    const panel = document.getElementById('detail-panel');
     const container = document.getElementById('detail-data');
-    modal.style.display = "flex";
-    container.innerHTML = "Caricamento dettagli...";
 
-    const lat = el.center?.lat ?? el.lat;
-    const lon = el.center?.lon ?? el.lon;
-    let quota = el.tags.ele || 0;
+    // Clear immediately so old content never flashes
+    container.innerHTML = '';
 
-    // Aggiorna temperature/min/max se mancanti o stale
-    const lastTempUpdate = el.tags?.temperature_updated_at || 0;
-    const tempStale = Date.now() - lastTempUpdate > WEATHER_STALE_MS;
-    if (tempStale || el.tags?.temperature_min === undefined || el.tags?.temperature_max === undefined) {
-        await fetchTemperature(el);
-        saveBivacchiToStorage(rawData);
-    }
+    const lat = el.center?.lat ?? el.lat, lon = el.center?.lon ?? el.lon;
+    const quota = el.tags?.ele || 0;
+    const isFav = isLocalFavorite(el.id) || (currentUser?.favorites?.includes(String(el.id)));
+    const favBtn = document.getElementById('btn-detail-fav');
+    const favIcon = document.getElementById('detail-fav-icon');
+    if (isFav) { favBtn.classList.add('active'); favIcon.setAttribute('fill', 'var(--danger)'); }
+    else { favBtn.classList.remove('active'); favIcon.setAttribute('fill', 'none'); }
 
-    let meteoInfo = "Non disponibile";
-    if (lat && lon) {
-        // Usa la coda globale anche per questa chiamata
-        try {
-            const dataM = await enqueueApiCall(async () => {
-                const resMeteo = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-                if (resMeteo.status === 429) {
-                    console.warn(`[Queue] 429 su current_weather ${lat},${lon}`);
-                    return null;
-                }
-                return await resMeteo.json();
-            });
-            if (dataM && dataM.current_weather) {
-                meteoInfo = `${dataM.current_weather.temperature}°C`;
-            }
-        } catch(e) {
-            console.error("Errore API meteo:", e);
-        }
-    }
+    // Fetch fresh weather if stale
+    if (Date.now() - (el.tags?.temperature_updated_at || 0) > WEATHER_STALE_MS) { await fetchTemperature(el); saveBivacchiToStorage(rawData); }
 
-    // Costruisci la sezione dei dati aggiuntivi
-    let additionalInfo = '';
-    
-    // Altezza (height)
-    if (el.tags.height) {
-        const heightVal = el.tags.height;
-        const heightNum = parseFloat(heightVal);
-        const heightDisplay = !isNaN(heightNum) ? `${heightNum} m` : heightVal;
-        additionalInfo += `<p><strong>📏 Altezza:</strong> ${heightDisplay}</p>`;
-    }
-    
-    // Descrizione (description)
-    if (el.tags.description) {
-        additionalInfo += `<p><strong>📝 Descrizione:</strong> ${el.tags.description}</p>`;
-    }
-    
-    // Materassi (mattress)
-    if (el.tags.mattress) {
-        const mattressDisplay = el.tags.mattress === 'yes' ? 'Sì' : el.tags.mattress;
-        additionalInfo += `<p><strong>🛏️ Materassi:</strong> ${mattressDisplay}</p>`;
-    }
-    
-    // Capacità (capacity)
-    if (el.tags.capacity) {
-        additionalInfo += `<p><strong>👥 Capacità:</strong> ${el.tags.capacity} persone</p>`;
-    }
-    
-    // Fireplace
-    if (el.tags.fireplace) {
-        const fireplaceDisplay = el.tags.fireplace === 'yes' ? 'Sì' : el.tags.fireplace;
-        additionalInfo += `<p><strong>🔥 Camino:</strong> ${fireplaceDisplay}</p>`;
-    }
-    
-    // Toilets (bagno)
-    if (el.tags.toilets) {
-        const toiletsDisplay = el.tags.toilets === 'yes' ? 'Sì' : el.tags.toilets;
-        additionalInfo += `<p><strong>🚽 Bagno:</strong> ${toiletsDisplay}</p>`;
+    const signal = estimateSignal(el);
+    const note = getNote(el.id);
+
+    let html = `<div class="detail-title">${escapeHtml(el.tags.name || 'Bivacco')}</div>
+    <div class="detail-subtitle">
+        <span>${el.tags.shelter_type || el.tags.tourism || 'Bivacco'}</span>
+        ${el.tags?.capacity ? `<span>\u00B7 ${el.tags.capacity} posti</span>` : ''}
+        ${lat ? `<span>\u00B7 ${lat.toFixed(4)}, ${lon.toFixed(4)}</span>` : ''}
+    </div>`;
+
+    // Main stats
+    html += `<div class="detail-section"><div class="stat-grid">
+        <div class="stat-box"><div class="stat-label">Altitudine</div><div class="stat-value accent">${quota}m</div></div>
+        <div class="stat-box"><div class="stat-label">Temperatura</div><div class="stat-value blue">${el.tags?.temperature !== undefined ? el.tags.temperature+'\u00B0C' : '--'}</div></div>
+        <div class="stat-box"><div class="stat-label">Min / Max</div><div class="stat-value">${el.tags?.temperature_min !== undefined ? el.tags.temperature_min : '--'}\u00B0 / ${el.tags?.temperature_max !== undefined ? el.tags.temperature_max : '--'}\u00B0</div></div>
+        <div class="stat-box"><div class="stat-label">Neve</div><div class="stat-value">${el.tags?.snow === true ? '\u2744\uFE0F S\u00EC' : (el.tags?.snow === false ? 'No' : '--')}</div></div>
+    </div></div>`;
+
+    // Terrain
+    html += `<div class="detail-section"><div class="detail-section-title">Terreno & Segnale</div><div class="stat-grid">
+        <div class="stat-box"><div class="stat-label">Esposizione</div><div class="stat-value">${el.tags?.aspect_card || '--'}</div></div>
+        <div class="stat-box"><div class="stat-label">Pendenza</div><div class="stat-value">${el.tags?.slope_deg !== undefined ? el.tags.slope_deg+'\u00B0' : '--'}</div></div>
+        <div class="stat-box"><div class="stat-label">Segnale Cell.</div><div class="stat-value">${renderSignalBars(signal)}</div></div>
+        <div class="stat-box"><div class="stat-label">Ore di Luce</div><div class="stat-value">${el.tags?.daylight_hours ? el.tags.daylight_hours+'h' : '--'}</div></div>
+    </div></div>`;
+
+    // Daylight
+    if (el.tags?.sunrise && el.tags?.sunset) {
+        html += `<div class="detail-section"><div class="detail-section-title">Alba & Tramonto</div>
+            <div style="display:flex;justify-content:space-around;padding:8px 0">
+                <div style="text-align:center"><div style="font-size:24px">\uD83C\uDF05</div><div style="font-weight:600">${el.tags.sunrise}</div><div class="text-muted" style="font-size:12px">Alba</div></div>
+                <div style="text-align:center"><div style="font-size:24px">\uD83C\uDF07</div><div style="font-weight:600">${el.tags.sunset}</div><div class="text-muted" style="font-size:12px">Tramonto</div></div>
+            </div></div>`;
     }
 
-    const tempMin = el.tags?.temperature_min;
-    const tempMax = el.tags?.temperature_max;
-    
-    // Mostra placeholder per dati non ancora calcolati
-    const aspectDisplay = el.tags?.aspect_card ? `${el.tags.aspect_card}${el.tags?.aspect_deg !== undefined ? ` (${el.tags.aspect_deg}°)` : ''}` : '⏳ Caricamento...';
-    const slopeDisplay = el.tags?.slope_deg !== undefined ? `${el.tags.slope_deg}°` : '⏳ Caricamento...';
+    // Additional info
+    let extra = '';
+    if (el.tags?.height) extra += `<p>\uD83D\uDCCF Altezza: ${el.tags.height}</p>`;
+    if (el.tags?.description) extra += `<p>\uD83D\uDCDD ${escapeHtml(el.tags.description)}</p>`;
+    if (el.tags?.mattress) extra += `<p>\uD83D\uDECF\uFE0F Materassi: ${el.tags.mattress === 'yes' ? 'S\u00EC' : el.tags.mattress}</p>`;
+    if (el.tags?.fireplace) extra += `<p>\uD83D\uDD25 Camino: ${el.tags.fireplace === 'yes' ? 'S\u00EC' : el.tags.fireplace}</p>`;
+    if (el.tags?.toilets) extra += `<p>\uD83D\uDEBD Bagno: ${el.tags.toilets === 'yes' ? 'S\u00EC' : el.tags.toilets}</p>`;
+    if (el.tags?.drinking_water) extra += `<p>\uD83D\uDCA7 Acqua: ${el.tags.drinking_water === 'yes' ? 'S\u00EC' : el.tags.drinking_water}</p>`;
+    if (extra) html += `<div class="detail-section"><div class="detail-section-title">Informazioni</div>${extra}</div>`;
 
-    container.innerHTML = `
-        <h2>${el.tags.name || "Bivacco"}</h2>
-        <hr>
-        <p><strong>🏔️ Altitudine:</strong> ${quota} m</p>
-        ${el.tags?.sunrise && el.tags?.sunset ? `<p><strong>☀️ Ore di luce:</strong> Alba ${el.tags.sunrise} - Tramonto ${el.tags.sunset} (${el.tags.daylight_hours || 'N/A'}h)</p>` : ''}
-        <p><strong>🧭 Esposizione:</strong> ${aspectDisplay}</p>
-        <p><strong>📐 Pendenza:</strong> ${slopeDisplay}</p>
-        <p><strong>🌡️ Temperatura attuale:</strong> ${meteoInfo}</p>
-        ${(tempMin !== undefined || tempMax !== undefined) ? `<p><strong>🌡️ Min/Max oggi:</strong> ${tempMin !== undefined ? tempMin + '°C' : 'N/A'} / ${tempMax !== undefined ? tempMax + '°C' : 'N/A'}</p>` : ''}
-        <p><strong>❄️ Neve nella zona:</strong> ${el.tags?.snow === true ? 'Sì' : (el.tags?.snow === false ? 'No' : 'N/A')}</p>
-        ${lat && lon ? `<p><strong>📍 Coordinate:</strong> ${lat.toFixed(5)}, ${lon.toFixed(5)}</p>` : ''}
-        <p><strong>🏠 Tipo:</strong> ${el.tags.shelter_type || el.tags.tourism || el.tags.building || 'Non specificato'}</p>
-        ${additionalInfo ? `<hr>${additionalInfo}` : ''}
-        <br>
-        ${lat && lon ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" class="nav-btn">Portami qui</a>` : ''}
-        <a href="https://www.openstreetmap.org/${el.type}/${el.id}" target="_blank" class="osm-btn">Vedi su OpenStreetMap</a>
-        <hr>
-        <div id="comments-section"></div>
-    `;
+    // Notes
+    html += `<div class="detail-section"><div class="detail-section-title">Note Personali</div>
+        <textarea class="notes-area" id="detail-notes" placeholder="Scrivi le tue note...">${escapeHtml(note)}</textarea>
+        <button class="btn-ghost-full mt-2" onclick="saveNote('${el.id}', document.getElementById('detail-notes').value); this.textContent='Salvato \u2713'; setTimeout(()=>this.textContent='Salva Note',1500)">Salva Note</button>
+    </div>`;
 
+    // Navigation links
+    html += `<div class="detail-section">
+        ${lat ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" class="nav-btn">Portami qui</a>` : ''}
+        <a href="https://www.openstreetmap.org/${el.type}/${el.id}" target="_blank" class="osm-btn">OpenStreetMap</a>
+    </div>`;
+
+    // Comments section
+    html += '<div class="detail-section" id="comments-section"></div>';
+
+    container.innerHTML = html;
+    panel.classList.add('open');
+
+    // Center map on selected bivacco
+    if (currentView === 'map' && lat && lon) map.setView([lat, lon], Math.max(map.getZoom(), 13));
+
+    // Load comments
     renderComments(el);
 }
 
-function formatDateTime(isoString) {
-    if (!isoString) return '';
-    const d = new Date(isoString);
-    return d.toLocaleString('it-IT', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
+function closeDetailPanel() { document.getElementById('detail-panel').classList.remove('open'); selectedBivacco = null; }
+
+// ==================== COMMENTS ====================
+function formatDateTime(iso) { if (!iso) return ''; return new Date(iso).toLocaleString('it-IT', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); }
 
 async function renderComments(el) {
     const section = document.getElementById('comments-section');
     if (!section) return;
-    section.innerHTML = '<p class="small-text">Caricamento commenti...</p>';
-
+    section.innerHTML = '<div class="detail-section-title">Commenti</div><p class="small-text">Caricamento...</p>';
     let comments = [];
-    try {
-        const res = await fetch(`${API_BASE_URL}/api/bivacchi/${el.id}/comments`);
-        if (res.ok) {
-            comments = await res.json();
-        } else {
-            section.innerHTML = '<p class="form-error">Errore nel caricamento commenti.</p>';
-            return;
-        }
-    } catch (e) {
-        section.innerHTML = '<p class="form-error">Errore di rete nel caricamento commenti.</p>';
-        return;
-    }
-
-    const commentsHtml = comments.length > 0
-        ? comments.map(c => `
-            <div class="comment-item">
-                <div class="comment-header"><strong>${escapeHtml(c.userName || 'Utente')}</strong> · <span class="small-text">${formatDateTime(c.created_at)}</span></div>
-                <p>${escapeHtml(c.text)}</p>
-            </div>
-        `).join('')
-        : '<p class="small-text">Nessun commento ancora.</p>';
-
-    const formHtml = currentUser ? `
-        <div class="comment-form">
-            <textarea id="comment-input" class="form-input" rows="3" placeholder="Scrivi un commento..."></textarea>
-            <button id="comment-submit" class="form-btn">Invia commento</button>
-        </div>
-    ` : '<p class="small-text">Accedi per lasciare un commento.</p>';
-
-    section.innerHTML = `
-        <h4>Commenti</h4>
-        <div id="comment-list">${commentsHtml}</div>
-        ${formHtml}
-    `;
-
+    try { const res = await fetch(`${API_BASE_URL}/api/bivacchi/${el.id}/comments`); if (res.ok) comments = await res.json(); } catch {}
+    const commentsHtml = comments.length > 0 ? comments.map(c => `<div class="comment-item"><div class="comment-header"><strong>${escapeHtml(c.userName||'Utente')}</strong><span>${formatDateTime(c.created_at)}</span></div><p>${escapeHtml(c.text)}</p></div>`).join('') : '<p class="small-text">Nessun commento.</p>';
+    const formHtml = currentUser ? `<div class="comment-form"><textarea id="comment-input" class="form-input" rows="2" placeholder="Scrivi un commento..."></textarea><button id="comment-submit" class="btn-accent-full" style="margin-top:8px">Invia</button></div>` : '<p class="small-text">Accedi per commentare.</p>';
+    section.innerHTML = `<div class="detail-section-title">Commenti</div>${commentsHtml}${formHtml}`;
     if (currentUser) {
-        const btn = document.getElementById('comment-submit');
-        const input = document.getElementById('comment-input');
-        if (btn && input) {
+        const btn = document.getElementById('comment-submit'), inp = document.getElementById('comment-input');
+        if (btn && inp) {
             btn.onclick = async () => {
-                const text = input.value.trim();
-                if (!text) {
-                    input.focus();
-                    return;
-                }
-                
-                if (!isOnline) {
-                    // Optimistic update
-                    const fakeComment = {
-                        userName: currentUser.name,
-                        text: text,
-                        created_at: new Date().toISOString()
-                    };
-                    
-                    // Add to UI immediately
-                    const list = document.getElementById('comment-list');
-                    if (list) {
-                        const newCommentHtml = `
-                            <div class="comment-item" style="border-left: 3px solid #f39c12;">
-                                <div class="comment-header">
-                                    <strong>${escapeHtml(currentUser.name)}</strong> · 
-                                    <span class="small-text">In attesa di sync...</span>
-                                </div>
-                                <p>${escapeHtml(text)}</p>
-                            </div>
-                        `;
-                        // Insert at top or replace empty
-                        if (list.innerHTML.includes('Nessun commento ancora')) {
-                            list.innerHTML = newCommentHtml;
-                        } else {
-                            list.innerHTML = newCommentHtml + list.innerHTML;
-                        }
-                    }
-                    
-                    // Add to queue
-                    SyncManager.addToQueue({
-                        type: 'COMMENT',
-                        bivaccoId: el.id,
-                        text: text
-                    });
-                    
-                    input.value = '';
-                    return;
-                }
-
-                btn.disabled = true;
-                btn.innerText = 'Invio...';
-                try {
-                    const res = await fetch(`${API_BASE_URL}/api/bivacchi/${el.id}/comments`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text })
-                    });
-                    if (res.ok) {
-                        input.value = '';
-                        await renderComments(el); // reload list
-                    } else {
-                        const data = await res.json().catch(() => ({}));
-                        alert(data.error || 'Errore nell\'invio del commento');
-                    }
-                } catch (e) {
-                    alert('Errore di rete nell\'invio del commento');
-                } finally {
-                    btn.disabled = false;
-                    btn.innerText = 'Invia commento';
-                }
+                const text = inp.value.trim(); if (!text) return;
+                if (!isOnline) { SyncManager.addToQueue({ type:'COMMENT', bivaccoId:el.id, text }); inp.value = ''; return; }
+                btn.disabled = true; btn.textContent = 'Invio...';
+                try { const r = await fetch(`${API_BASE_URL}/api/bivacchi/${el.id}/comments`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text}) }); if (r.ok) { inp.value = ''; renderComments(el); } }
+                catch {} finally { btn.disabled = false; btn.textContent = 'Invia'; }
             };
         }
     }
 }
 
-// Event Listeners
-['search-input', 'filter-dist-max', 'sort-by'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-        el.addEventListener('input', debounce(aggiornaInterfaccia, 300));
-    }
-});
-
-// Mobile filter listeners
-['filter-dist-max-mobile', 'sort-by-mobile'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-        el.addEventListener('input', debounce(aggiornaInterfaccia, 300));
-    }
-});
-
-document.getElementById('detail-view').addEventListener('click', function(e) {
-    if (e.target === this) {
-        this.style.display = 'none';
-    }
-});
-
-// Funzione per inizializzare la mappa
-function initMap() {
-    // Forza sempre il livello di zoom iniziale corretto
-    map = L.map('map', {
-        zoomControl: true,
-        zoomSnap: 1,
-        zoomDelta: 1,
-        minZoom: 5,
-        maxZoom: 18,
-        // Impedisce a Leaflet di gestire lo zoom touch in modo "aggressivo"
-        touchZoom: true,
-        scrollWheelZoom: true,
-        doubleClickZoom: true,
-        boxZoom: true,
-        keyboard: true,
-        // mobile: non bloccare lo zoom
-        tap: false
-    }).setView([46.2, 11.5], 7); // Centro Nord-Est Italia
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    
-    // Inizializza il servizio radar
-    initRadarControls();
-}
-
-// Inizializza i controlli radar
-function initRadarControls() {
-    if (typeof RadarService === 'undefined') {
-        console.warn('RadarService non disponibile');
-        return;
-    }
-    
-    const toggleBtn = document.getElementById('radar-toggle-btn');
-    const controlPanel = document.getElementById('radar-control-panel');
-    const closeBtn = document.getElementById('radar-close-btn');
-    const playBtn = document.getElementById('radar-play-btn');
-    const opacitySlider = document.getElementById('radar-opacity');
-    const colorScheme = document.getElementById('radar-color-scheme');
-    
-    if (!toggleBtn || !controlPanel) return;
-    
-    let radarInitialized = false;
-    
-    // Toggle pannello radar
-    toggleBtn.addEventListener('click', async () => {
-        const isVisible = controlPanel.style.display !== 'none';
-        
-        if (!isVisible) {
-            controlPanel.style.display = 'block';
-            toggleBtn.classList.add('active');
-            
-            // Inizializza radar al primo utilizzo
-            if (!radarInitialized && map) {
-                try {
-                    await RadarService.init(map);
-                    radarInitialized = true;
-                    // Show radar after initialization
-                    RadarService.showRadar();
-                } catch (err) {
-                    console.error('Errore inizializzazione radar:', err);
-                    alert('Impossibile caricare i dati radar. Riprova più tardi.');
-                    controlPanel.style.display = 'none';
-                    toggleBtn.classList.remove('active');
-                    return;
-                }
-            } else if (radarInitialized) {
-                // Radar già inizializzato, mostralo
-                RadarService.showRadar();
-            }
-        } else {
-            controlPanel.style.display = 'none';
-            toggleBtn.classList.remove('active');
-            RadarService.stop();
-        }
-    });
-    
-    // Chiudi pannello
-    closeBtn?.addEventListener('click', () => {
-        controlPanel.style.display = 'none';
-        toggleBtn.classList.remove('active');
-        RadarService.stop();
-    });
-    
-    // Play/Pause
-    playBtn?.addEventListener('click', () => {
-        if (RadarService.isPlaying) {
-            RadarService.pause();
-            playBtn.textContent = '▶️';
-        } else {
-            RadarService.play();
-            playBtn.textContent = '⏸️';
-        }
-    });
-    
-    // Opacità
-    opacitySlider?.addEventListener('input', (e) => {
-        RadarService.setOpacity(parseInt(e.target.value) / 100);
-    });
-    
-    // Schema colori
-    colorScheme?.addEventListener('change', (e) => {
-        RadarService.setColorScheme(parseInt(e.target.value));
-    });
-}
-
-// Avvio iniziale
-async function initApp() {
-    await checkAuth();
-    initSliders();
-    initMap();
-    caricaDatiNordEst();
-}
-function initSliders() {
-    const altEl = document.getElementById('altitude-slider');
-    const tempEl = document.getElementById('temperature-slider');
-    const altElMobile = document.getElementById('altitude-slider-mobile');
-    const tempElMobile = document.getElementById('temperature-slider-mobile');
-    
-    if (altEl && window.noUiSlider) {
-        altSlider = noUiSlider.create(altEl, {
-            start: [0, 4000],
-            connect: true,
-            step: 100,
-            range: { min: 0, max: 4000 },
-            behaviour: 'drag'
-        });
-        const altMinSpan = document.getElementById('alt-min-val');
-        const altMaxSpan = document.getElementById('alt-max-val');
-        altSlider.on('update', (values) => {
-            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
-            if (altMinSpan) altMinSpan.innerText = minV;
-            if (altMaxSpan) altMaxSpan.innerText = maxV;
-        });
-        altSlider.on('set', debounce(aggiornaInterfaccia, 200));
-    }
-    
-    if (tempEl && window.noUiSlider) {
-        tempSlider = noUiSlider.create(tempEl, {
-            start: [-20, 40],
-            connect: true,
-            step: 1,
-            range: { min: -20, max: 40 },
-            behaviour: 'drag'
-        });
-        const tMinSpan = document.getElementById('temp-min-val');
-        const tMaxSpan = document.getElementById('temp-max-val');
-        tempSlider.on('update', (values) => {
-            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
-            if (tMinSpan) tMinSpan.innerText = minV;
-            if (tMaxSpan) tMaxSpan.innerText = maxV;
-        });
-        tempSlider.on('set', debounce(aggiornaInterfaccia, 200));
-    }
-    
-    // Mobile sliders
-    let altSliderMobile = null;
-    let tempSliderMobile = null;
-    
-    if (altElMobile && window.noUiSlider) {
-        altSliderMobile = noUiSlider.create(altElMobile, {
-            start: [0, 4000],
-            connect: true,
-            step: 100,
-            range: { min: 0, max: 4000 },
-            behaviour: 'drag'
-        });
-        const altMinSpanM = document.getElementById('alt-min-val-mobile');
-        const altMaxSpanM = document.getElementById('alt-max-val-mobile');
-        altSliderMobile.on('update', (values) => {
-            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
-            if (altMinSpanM) altMinSpanM.innerText = minV;
-            if (altMaxSpanM) altMaxSpanM.innerText = maxV;
-            // Sync with desktop slider
-            if (altSlider) altSlider.set([minV, maxV]);
-        });
-        altSliderMobile.on('set', debounce(aggiornaInterfaccia, 200));
-    }
-    
-    if (tempElMobile && window.noUiSlider) {
-        tempSliderMobile = noUiSlider.create(tempElMobile, {
-            start: [-20, 40],
-            connect: true,
-            step: 1,
-            range: { min: -20, max: 40 },
-            behaviour: 'drag'
-        });
-        const tMinSpanM = document.getElementById('temp-min-val-mobile');
-        const tMaxSpanM = document.getElementById('temp-max-val-mobile');
-        tempSliderMobile.on('update', (values) => {
-            const [minV, maxV] = values.map(v => Math.round(parseFloat(v)));
-            if (tMinSpanM) tMinSpanM.innerText = minV;
-            if (tMaxSpanM) tMaxSpanM.innerText = maxV;
-            // Sync with desktop slider
-            if (tempSlider) tempSlider.set([minV, maxV]);
-        });
-        tempSliderMobile.on('set', debounce(aggiornaInterfaccia, 200));
-    }
-}
-
-initApp();
-
-// Funzione per controllare autenticazione
+// ==================== AUTH ====================
 async function checkAuth() {
-    try {
-        const res = await fetch(API_BASE_URL + '/api/me');
-        if (res.ok) {
-            const user = await res.json();
-            if (user) {
-                currentUser = user;
-                updateAuthUI();
-            }
-        }
-    } catch (e) {
-        console.error("Errore verifica autenticazione:", e);
-    }
+    try { const res = await fetch(API_BASE_URL+'/api/me'); if (res.ok) { const user = await res.json(); if (user) { currentUser = user; updateAuthUI(); } } } catch {}
 }
 
 function updateAuthUI() {
-    const authArea = document.getElementById('auth-area');
-    const hasGPX = typeof GPXService !== 'undefined' && GPXService.currentStats;
-    const isAdmin = currentUser.role === 'admin';
-    authArea.innerHTML = `
-        <label class="gpx-upload-btn" title="Carica traccia GPX">
-            📍 GPX
-            <input type="file" id="gpx-file-input" accept=".gpx" style="display:none;">
-        </label>
-        <button id="gpx-info-btn" class="gpx-upload-btn" title="Mostra/Nascondi info traccia" style="display:${hasGPX ? 'inline-flex' : 'none'};" onclick="GPXService.toggleStatsPanel()">
-            ℹ️ Info
-        </button>
-        ${isAdmin ? '<a href="/admin.html" class="auth-btn" style="text-decoration:none;" title="Admin Portal">🛠️</a>' : ''}
-        <span class="user-name">${currentUser.name}</span>
-        <button id="profile-btn" class="auth-btn">👤 Profilo</button>
-    `;
-    document.getElementById('profile-btn').addEventListener('click', () => {
-        openProfileModal();
-    });
-    // Re-attach GPX listener after DOM update
-    setupGPXUploadListener();
+    const btn = document.getElementById('auth-btn');
+    if (currentUser) {
+        btn.title = currentUser.name;
+        btn.classList.add('active');
+        btn.onclick = openProfileModal;
+    } else {
+        btn.title = 'Accedi';
+        btn.classList.remove('active');
+        btn.onclick = openAuthModal;
+    }
 }
 
-function openAuthModal() {
-    document.getElementById('auth-modal').style.display = 'flex';
-    document.getElementById('auth-error').innerHTML = '';
-}
-
-function closeAuthModal() {
-    document.getElementById('auth-modal').style.display = 'none';
-    document.getElementById('auth-error').innerHTML = '';
-}
-
+function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; document.getElementById('auth-error').innerHTML = ''; }
+function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
 function openProfileModal() {
     document.getElementById('profile-name').innerText = currentUser.name;
     document.getElementById('profile-email').innerText = currentUser.email;
-    const date = new Date(currentUser.created_at);
-    const formattedDate = date.toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('profile-date').innerText = formattedDate;
-    
-    // Indirizzo casa
-    if (currentUser.home_address) {
-        document.getElementById('profile-address').innerText = currentUser.home_address.address;
-    } else {
-        document.getElementById('profile-address').innerText = 'Non impostato';
-    }
-
-    // Preferiti
+    document.getElementById('profile-date').innerText = new Date(currentUser.created_at).toLocaleDateString('it-IT', { year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('profile-address').innerText = currentUser.home_address?.address || 'Non impostato';
     loadFavorites();
     document.getElementById('profile-modal').style.display = 'flex';
 }
+function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
+function showRegister() { document.getElementById('auth-form').style.display = 'none'; document.getElementById('register-form').style.display = 'block'; }
+function showLogin() { document.getElementById('auth-form').style.display = 'block'; document.getElementById('register-form').style.display = 'none'; }
 
-function closeProfileModal() {
-    document.getElementById('profile-modal').style.display = 'none';
+async function handleLogin() {
+    const email = document.getElementById('login-email').value, password = document.getElementById('login-password').value;
+    if (!email || !password) { document.getElementById('auth-error').innerText = 'Compila tutti i campi'; return; }
+    try { const res = await fetch(API_BASE_URL+'/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email,password}) }); const data = await res.json(); if (res.ok) { currentUser = data.user; closeAuthModal(); updateAuthUI(); if (dataLoaded) aggiornaInterfaccia(); } else { document.getElementById('auth-error').innerText = data.error; } } catch { document.getElementById('auth-error').innerText = 'Errore login'; }
+}
+
+async function handleRegister() {
+    const name = document.getElementById('register-name').value, email = document.getElementById('register-email').value, password = document.getElementById('register-password').value;
+    if (!name || !email || !password) { document.getElementById('auth-error').innerText = 'Compila tutti i campi'; return; }
+    try { const res = await fetch(API_BASE_URL+'/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,email,password}) }); const data = await res.json(); if (res.ok) { currentUser = data.user; closeAuthModal(); updateAuthUI(); if (dataLoaded) aggiornaInterfaccia(); } else { document.getElementById('auth-error').innerText = data.error; } } catch { document.getElementById('auth-error').innerText = 'Errore registrazione'; }
+}
+
+async function handleLogout() {
+    try { const res = await fetch(API_BASE_URL+'/api/logout', { method:'POST' }); if (res.ok) { currentUser = null; closeProfileModal(); updateAuthUI(); aggiornaInterfaccia(); } } catch {}
+}
+
+async function toggleFavorite(bivaccoId) {
+    toggleLocalFavorite(bivaccoId);
+    if (currentUser) {
+        if (isOnline) { try { const res = await fetch(`/api/favorites/${bivaccoId}`, { method:'POST' }); if (res.ok) currentUser.favorites = (await res.json()).favorites; } catch {} }
+        else { SyncManager.addToQueue({ type:'FAVORITE', bivaccoId: String(bivaccoId) }); }
+    }
+    aggiornaInterfaccia();
+    if (selectedBivacco && String(selectedBivacco.id) === String(bivaccoId)) mostraDettagli(selectedBivacco);
+}
+
+function loadFavorites() {
+    const list = document.getElementById('favorites-list');
+    const favIds = [...new Set([...localFavorites, ...(currentUser?.favorites || [])])];
+    const favBivacchi = rawData.filter(el => favIds.includes(String(el.id)));
+    if (favBivacchi.length === 0) { list.innerHTML = '<p>Nessun bivacco preferito</p>'; return; }
+    list.innerHTML = favBivacchi.map(el => `<div class="favorite-item"><span>${escapeHtml(el.tags.name)} (${el.tags.ele||0}m)</span><button onclick="toggleFavorite('${el.id}')" style="background:none;border:none;cursor:pointer">\u2716</button></div>`).join('');
 }
 
 function openAddressModal() {
@@ -2383,314 +1390,366 @@ function openAddressModal() {
     setTimeout(() => {
         if (!addressMap) {
             addressMap = L.map('address-map').setView([46.2, 11.5], 7);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(addressMap);
-            addressMap.on('click', (e) => {
-                selectedCoords = e.latlng;
-                document.getElementById('coords-display').innerText = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
-            });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '\u00A9 OSM' }).addTo(addressMap);
+            addressMap.on('click', (e) => { selectedCoords = e.latlng; document.getElementById('coords-display').innerText = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`; });
         }
         addressMap.invalidateSize();
     }, 100);
 }
-
-function closeAddressModal() {
-    document.getElementById('address-modal').style.display = 'none';
-    selectedCoords = null;
-}
-
-function showRegister() {
-    document.getElementById('auth-form').style.display = 'none';
-    document.getElementById('register-form').style.display = 'block';
-}
-
-function showLogin() {
-    document.getElementById('auth-form').style.display = 'block';
-    document.getElementById('register-form').style.display = 'none';
-}
-
-async function handleLogin() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-
-    if (!email || !password) {
-        document.getElementById('auth-error').innerText = 'Compila tutti i campi';
-        return;
-    }
-
-    try {
-        const res = await fetch(API_BASE_URL + '/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            currentUser = data.user;
-            closeAuthModal();
-            updateAuthUI();
-            // Aggiorna UI se i dati sono già caricati
-            if (dataLoaded) {
-                aggiornaInterfaccia(); // Aggiorna UI per mostrare cuori
-            }
-            document.getElementById('auth-error').innerText = '';
-        } else {
-            document.getElementById('auth-error').innerText = data.error;
-        }
-    } catch (e) {
-        document.getElementById('auth-error').innerText = 'Errore login';
-    }
-}
-
-async function handleRegister() {
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-
-    if (!name || !email || !password) {
-        document.getElementById('auth-error').innerText = 'Compila tutti i campi';
-        return;
-    }
-
-    try {
-        const res = await fetch(API_BASE_URL + '/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            currentUser = data.user;
-            closeAuthModal();
-            updateAuthUI();
-            // Aggiorna UI se i dati sono già caricati
-            if (dataLoaded) {
-                aggiornaInterfaccia(); // Aggiorna UI per mostrare cuori e feature da logged
-            }
-            document.getElementById('auth-error').innerText = '';
-        } else {
-            document.getElementById('auth-error').innerText = data.error;
-        }
-    } catch (e) {
-        document.getElementById('auth-error').innerText = 'Errore registrazione';
-    }
-}
-
-async function handleLogout() {
-    try {
-        const res = await fetch(API_BASE_URL + '/api/logout', { method: 'POST' });
-        if (res.ok) {
-            currentUser = null;
-            closeProfileModal();
-            document.getElementById('auth-area').innerHTML = '<button id="auth-btn" class="auth-btn">🔐 Accedi</button>';
-            document.getElementById('auth-btn').addEventListener('click', openAuthModal);
-            aggiornaInterfaccia(); // Aggiorna UI per nascondere cuori e feature da logged
-        }
-    } catch (e) {
-        console.error("Errore logout:", e);
-    }
-}
-
-// Event listener per pulsante accedi
-document.getElementById('auth-btn').addEventListener('click', openAuthModal);
-
-// Gestione pulsanti vista mobile (floating buttons)
-const viewListMobile = document.getElementById('view-list-mobile');
-const viewMapMobile = document.getElementById('view-map-mobile');
-
-if (viewListMobile && viewMapMobile) {
-    viewListMobile.addEventListener('click', () => {
-        document.getElementById('bivacchi-list').style.display = 'block';
-        document.getElementById('map').style.display = 'none';
-        viewListMobile.classList.add('active');
-        viewMapMobile.classList.remove('active');
-    });
-
-    viewMapMobile.addEventListener('click', () => {
-        document.getElementById('bivacchi-list').style.display = 'none';
-        document.getElementById('map').style.display = 'block';
-        viewMapMobile.classList.add('active');
-        viewListMobile.classList.remove('active');
-        // Riadatta la mappa
-        setTimeout(() => {
-            if (map) {
-                map.invalidateSize();
-                // Se il fit era in sospeso (mappa nascosta), effettualo ora una volta
-                if (mapFitPending && markers.length > 0) {
-                    const group = new L.featureGroup(markers);
-                    map.fitBounds(group.getBounds().pad(0.1));
-                    mapInitialized = true;
-                    mapFitPending = false;
-                }
-            }
-        }, 100);
-    });
-}
-
-// Mobile filter button handler
-const mobileFilterBtn = document.getElementById('mobile-filter-btn');
-if (mobileFilterBtn) {
-    mobileFilterBtn.addEventListener('click', openMobileFilters);
-}
-
-function openMobileFilters() {
-    document.getElementById('mobile-filters-modal').style.display = 'flex';
-}
-
-function closeMobileFilters() {
-    document.getElementById('mobile-filters-modal').style.display = 'none';
-}
-
-// Funzioni per preferiti e indirizzo casa
-async function toggleFavorite(bivaccoId) {
-    if (!currentUser) {
-        openAuthModal();
-        return;
-    }
-
-    if (!isOnline) {
-        // Optimistic update for offline
-        let favs = currentUser.favorites || [];
-        const strId = bivaccoId.toString();
-        if (favs.includes(strId)) {
-            favs = favs.filter(id => id !== strId);
-        } else {
-            favs.push(strId);
-        }
-        currentUser.favorites = favs;
-        
-        // Add to sync queue
-        SyncManager.addToQueue({
-            type: 'FAVORITE',
-            bivaccoId: strId,
-            payload: {}
-        });
-        
-        aggiornaInterfaccia();
-        return;
-    }
-
-    try {
-        const res = await fetch(`/api/favorites/${bivaccoId}`, { method: 'POST' });
-        if (res.ok) {
-            const data = await res.json();
-            currentUser.favorites = data.favorites;
-            aggiornaInterfaccia();
-        }
-    } catch (e) {
-        console.error("Errore toggle preferito:", e);
-    }
-}
-
-function loadFavorites() {
-    const favoritesList = document.getElementById('favorites-list');
-    if (!currentUser.favorites || currentUser.favorites.length === 0) {
-        favoritesList.innerHTML = '<p>Nessun bivacco preferito</p>';
-        return;
-    }
-
-    const favBivacchi = rawData.filter(el => currentUser.favorites.includes(el.id.toString()));
-    if (favBivacchi.length === 0) {
-        favoritesList.innerHTML = '<p>Nessun bivacco preferito</p>';
-        return;
-    }
-
-    favoritesList.innerHTML = favBivacchi.map(el => `
-        <div class="favorite-item">
-            <span class="favorite-item-name">${el.tags.name} (${el.tags.ele || 0}m)</span>
-            <button onclick="removeFavorite('${el.id}')" class="favorite-remove">✕</button>
-        </div>
-    `).join('');
-}
-
-async function removeFavorite(bivaccoId) {
-    await toggleFavorite(bivaccoId);
-    loadFavorites();
-}
+function closeAddressModal() { document.getElementById('address-modal').style.display = 'none'; selectedCoords = null; }
 
 async function handleSaveAddress() {
     const address = document.getElementById('address-input').value;
-    
-    if (!address || !selectedCoords) {
-        document.getElementById('address-error').innerText = 'Compila indirizzo e seleziona coordinata sulla mappa';
-        return;
-    }
-    
-    if (!isOnline) {
-        // Optimistic update
-        currentUser.home_address = {
-            address: address,
-            lat: selectedCoords.lat,
-            lon: selectedCoords.lng
-        };
-        
-        SyncManager.addToQueue({
-            type: 'ADDRESS',
-            payload: {
-                address,
-                lat: selectedCoords.lat,
-                lon: selectedCoords.lng
-            }
-        });
-        
-        closeAddressModal();
-        openProfileModal();
-        aggiornaInterfaccia();
-        return;
-    }
-
-    try {
-        const res = await fetch(API_BASE_URL + '/api/home-address', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                address,
-                lat: selectedCoords.lat,
-                lon: selectedCoords.lng
-            })
-        });
-
-        if (res.ok) {
-            const data = await res.json();
-            currentUser.home_address = data.home_address;
-            closeAddressModal();
-            openProfileModal();
-            aggiornaInterfaccia();
-        }
-    } catch (e) {
-        document.getElementById('address-error').innerText = 'Errore salvataggio indirizzo';
-    }
+    if (!address || !selectedCoords) { document.getElementById('address-error').innerText = 'Compila indirizzo e seleziona coordinate'; return; }
+    if (!isOnline) { currentUser.home_address = { address, lat: selectedCoords.lat, lon: selectedCoords.lng }; SyncManager.addToQueue({ type:'ADDRESS', payload:{ address, lat:selectedCoords.lat, lon:selectedCoords.lng } }); closeAddressModal(); openProfileModal(); aggiornaInterfaccia(); return; }
+    try { const res = await fetch(API_BASE_URL+'/api/home-address', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ address, lat:selectedCoords.lat, lon:selectedCoords.lng }) }); if (res.ok) { currentUser.home_address = (await res.json()).home_address; closeAddressModal(); openProfileModal(); aggiornaInterfaccia(); } } catch { document.getElementById('address-error').innerText = 'Errore salvataggio'; }
 }
 
-// Funzione per calcolare distanza tra due punti (Haversine formula)
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Raggio terrestre in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return Math.round(R * c * 10) / 10; // km
+    const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+    return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 10) / 10;
 }
 
-// ==================== GPX UPLOAD HANDLER ====================
-function setupGPXUploadListener() {
-    const gpxInput = document.getElementById('gpx-file-input');
-    if (gpxInput) {
-        gpxInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && typeof GPXService !== 'undefined' && typeof map !== 'undefined') {
-                GPXService.handleFileUpload(file, map);
+// ==================== RADAR ====================
+function initRadarControls() {
+    if (typeof RadarService === 'undefined') return;
+    const toggleRow = document.getElementById('btn-toggle-radar');
+    const sw = document.getElementById('radar-switch');
+    const panel = document.getElementById('radar-control-panel');
+    const closeBtn = document.getElementById('radar-close-btn');
+    const playBtn = document.getElementById('radar-play-btn');
+    const opacitySlider = document.getElementById('radar-opacity');
+    const colorScheme = document.getElementById('radar-color-scheme');
+
+    function syncPlayBtn() {
+        if (playBtn) playBtn.textContent = RadarService.isPlaying ? '⏸️' : '▶️';
+    }
+
+    toggleRow?.addEventListener('click', async () => {
+        radarActive = !radarActive;
+        sw.classList.toggle('active', radarActive);
+        if (radarActive) {
+            panel.style.display = 'block';
+            if (!radarInitialized) {
+                try {
+                    await RadarService.init(map);
+                    radarInitialized = true;
+                    await RadarService.showRadar();
+                } catch (err) {
+                    console.error('[Radar] Init error:', err);
+                    radarActive = false;
+                    sw.classList.remove('active');
+                    panel.style.display = 'none';
+                    return;
+                }
+            } else {
+                await RadarService.showRadar();
             }
-            // Reset input so same file can be loaded again
-            e.target.value = '';
-        });
+            syncPlayBtn();
+        } else {
+            panel.style.display = 'none';
+            // hideRadar keeps tiles cached; stop() would also clear them
+            RadarService.hideRadar();
+            syncPlayBtn();
+        }
+    });
+
+    closeBtn?.addEventListener('click', () => {
+        radarActive = false;
+        sw.classList.remove('active');
+        panel.style.display = 'none';
+        RadarService.hideRadar();
+        syncPlayBtn();
+    });
+
+    playBtn?.addEventListener('click', () => {
+        if (RadarService.isPlaying) { RadarService.pause(); } else { RadarService.play(); }
+        syncPlayBtn();
+    });
+
+    opacitySlider?.addEventListener('input', (e) => RadarService.setOpacity(parseInt(e.target.value) / 100));
+    colorScheme?.addEventListener('change', (e) => RadarService.setColorScheme(parseInt(e.target.value)));
+}
+
+// ==================== GPX ====================
+function setupGPXUploadListener() {
+    const inp = document.getElementById('gpx-file-input');
+    if (inp) inp.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && typeof GPXService !== 'undefined' && map) {
+            GPXService.handleFileUpload(file, map);
+            // Show GPX proximity filter
+            document.getElementById('gpx-proximity-section').style.display = '';
+        }
+        e.target.value = '';
+    });
+    // Init panel swipe/close/add events
+    if (typeof GPXService !== 'undefined') {
+        GPXService.initPanelEvents();
     }
 }
 
-// Initialize GPX listener on page load
-setupGPXUploadListener();
+// ==================== INIT ====================
+function initMap() {
+    map = L.map('map', { zoomControl: false, minZoom: 5, maxZoom: 18, tap: false }).setView([46.2, 11.5], 7);
+    initMapLayers();
+    osmLayer.addTo(map);
+    // Update weather widget on map move
+    map.on('moveend', debounce(updateWeatherWidget, 3000));
+    initRadarControls();
+    // Set map reference for GPXService
+    if (typeof GPXService !== 'undefined') GPXService.mapRef = map;
+}
+
+async function initApp() {
+    await checkAuth();
+    updateAuthUI();
+    initMap();
+    setupSearch();
+    setupGPXUploadListener();
+    setupEventListeners();
+    caricaDatiNordEst();
+    // Initial weather widget
+    setTimeout(updateWeatherWidget, 2000);
+}
+
+function setupEventListeners() {
+    // View toggle
+    document.getElementById('btn-toggle-view').addEventListener('click', () => { if (currentView === 'map') switchToListView(); else switchToMapView(); });
+
+    // Filters
+    document.getElementById('btn-open-filters').addEventListener('click', openFilters);
+    document.getElementById('btn-close-filters').addEventListener('click', closeFilters);
+    document.getElementById('sidebar-backdrop').addEventListener('click', closeFilters);
+
+    // Filter inputs
+    ['filter-alt-min','filter-alt-max','filter-temp-min','filter-temp-max','filter-dist-max','filter-gpx-proximity'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', debounce(() => { updateFilterDisplays(); aggiornaInterfaccia(); }, 200));
+    });
+    document.getElementById('sort-by').addEventListener('change', aggiornaInterfaccia);
+
+    // Snow filter chips
+    document.querySelectorAll('[data-snow]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('[data-snow]').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            aggiornaInterfaccia();
+        });
+    });
+    // Default: "all" selected
+    document.getElementById('filter-snow-all')?.classList.add('active');
+
+    // Aspect filter chips (multi-select, "Tutte" resets)
+    document.querySelectorAll('#aspect-chips .filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (chip.dataset.aspect === 'all') {
+                document.querySelectorAll('#aspect-chips .filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            } else {
+                document.querySelector('#aspect-chips [data-aspect="all"]')?.classList.remove('active');
+                chip.classList.toggle('active');
+                // If none selected, revert to "Tutte"
+                if (!document.querySelector('#aspect-chips .filter-chip.active')) {
+                    document.querySelector('#aspect-chips [data-aspect="all"]')?.classList.add('active');
+                }
+            }
+            aggiornaInterfaccia();
+        });
+    });
+
+    // GPX proximity toggle
+    document.getElementById('gpx-prox-switch')?.addEventListener('click', function() { this.classList.toggle('active'); aggiornaInterfaccia(); });
+
+    // Reset & Clear
+    document.getElementById('btn-reset-filters')?.addEventListener('click', () => {
+        document.getElementById('filter-alt-min').value = 0; document.getElementById('filter-alt-max').value = 4810;
+        document.getElementById('filter-temp-min').value = -30; document.getElementById('filter-temp-max').value = 40;
+        document.getElementById('filter-dist-max').value = 50;
+        document.getElementById('sort-by').value = 'nome';
+        document.getElementById('gpx-prox-switch')?.classList.remove('active');
+        // Reset snow
+        document.querySelectorAll('[data-snow]').forEach(c => c.classList.remove('active'));
+        document.getElementById('filter-snow-all')?.classList.add('active');
+        // Reset aspect
+        document.querySelectorAll('#aspect-chips .filter-chip').forEach(c => c.classList.remove('active'));
+        document.querySelector('#aspect-chips [data-aspect="all"]')?.classList.add('active');
+        updateFilterDisplays(); aggiornaInterfaccia();
+    });
+    document.getElementById('btn-clear-db')?.addEventListener('click', async () => {
+        if (!confirm('Svuotare il database locale?')) return;
+        if (typeof DBService !== 'undefined') await DBService.clearAll();
+        localStorage.removeItem('bivacchi-data');
+        rawData = []; aggiornaInterfaccia();
+    });
+
+    // Detail panel
+    document.getElementById('btn-detail-back').addEventListener('click', closeDetailPanel);
+    document.getElementById('btn-detail-navigate').addEventListener('click', () => {
+        if (selectedBivacco) {
+            const lat = selectedBivacco.center?.lat ?? selectedBivacco.lat, lon = selectedBivacco.center?.lon ?? selectedBivacco.lon;
+            if (lat && lon) window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`, '_blank');
+        }
+    });
+    document.getElementById('btn-detail-fav').addEventListener('click', () => { if (selectedBivacco) toggleFavorite(selectedBivacco.id); });
+
+    // Auth
+    document.getElementById('auth-btn').addEventListener('click', () => { if (currentUser) openProfileModal(); else openAuthModal(); });
+
+    // Map controls
+    document.getElementById('btn-locate').addEventListener('click', locateUser);
+    document.getElementById('btn-zoom-in').addEventListener('click', () => map.zoomIn());
+    document.getElementById('btn-zoom-out').addEventListener('click', () => map.zoomOut());
+
+    // Layers
+    const layersBtn = document.getElementById('btn-layers');
+    const layersMenu = document.getElementById('layers-menu');
+    layersBtn.addEventListener('click', () => { const open = layersMenu.style.display !== 'none'; layersMenu.style.display = open ? 'none' : 'block'; layersBtn.classList.toggle('active', !open); });
+    document.querySelectorAll('.layer-option').forEach(btn => btn.addEventListener('click', () => switchMapLayer(btn.dataset.layer)));
+
+    // Trails
+    const trailsBtn = document.getElementById('btn-trails');
+    const trailsMenu = document.getElementById('trails-menu');
+    trailsBtn.addEventListener('click', () => {
+        // If tracks are loaded, toggle between opening panel and menu
+        if (typeof GPXService !== 'undefined' && GPXService.tracks.length > 0) {
+            const tp = document.getElementById('track-panel');
+            if (tp?.classList.contains('tp-open')) {
+                GPXService.closePanel();
+            } else {
+                GPXService.openPanel();
+            }
+        } else {
+            const open = trailsMenu.style.display !== 'none';
+            trailsMenu.style.display = open ? 'none' : 'block';
+            trailsBtn.classList.toggle('active', !open);
+        }
+    });
+    document.getElementById('btn-load-gpx-menu')?.addEventListener('click', () => { document.getElementById('gpx-file-input').click(); trailsMenu.style.display = 'none'; trailsBtn.classList.remove('active'); });
+
+    // Weather widget
+    document.getElementById('weather-widget').addEventListener('click', openWeatherPanel);
+    document.getElementById('btn-close-weather').addEventListener('click', () => document.getElementById('weather-panel').style.display = 'none');
+
+    // Track panel close
+    document.getElementById('btn-close-track')?.addEventListener('click', () => {
+        if (typeof GPXService !== 'undefined') GPXService.closePanel();
+    });
+
+    // Close flyout menus when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('layers-ctrl-group').contains(e.target)) { layersMenu.style.display = 'none'; layersBtn.classList.remove('active'); }
+        if (!document.getElementById('trails-ctrl-group').contains(e.target)) { trailsMenu.style.display = 'none'; trailsBtn.classList.remove('active'); }
+    });
+
+    // ── Android back button / PWA history navigation ──
+    setupBackNavigation();
+}
+
+// ==================== PWA BACK NAVIGATION ====================
+function setupBackNavigation() {
+    // Push initial state
+    if (!history.state) history.replaceState({ view: 'main' }, '');
+
+    window.addEventListener('popstate', (e) => {
+        const state = e.state;
+        // Try closing overlays in priority order
+        // 1. Auth / Profile modals
+        const authModal = document.getElementById('auth-modal');
+        const profileModal = document.getElementById('profile-modal');
+        if (authModal?.style.display !== 'none' && authModal?.style.display) {
+            authModal.style.display = 'none';
+            pushNavState('main');
+            return;
+        }
+        if (profileModal?.style.display !== 'none' && profileModal?.style.display) {
+            profileModal.style.display = 'none';
+            pushNavState('main');
+            return;
+        }
+
+        // 2. Weather panel
+        const weatherPanel = document.getElementById('weather-panel');
+        if (weatherPanel?.style.display !== 'none' && weatherPanel?.style.display) {
+            weatherPanel.style.display = 'none';
+            pushNavState('main');
+            return;
+        }
+
+        // 3. Detail panel
+        const detailPanel = document.getElementById('detail-panel');
+        if (detailPanel?.classList.contains('open')) {
+            closeDetailPanel();
+            pushNavState('main');
+            return;
+        }
+
+        // 4. Filter sidebar
+        const sidebar = document.getElementById('sidebar-filters');
+        if (sidebar?.classList.contains('open')) {
+            closeFilters();
+            pushNavState('main');
+            return;
+        }
+
+        // 5. Track panel
+        const trackPanel = document.getElementById('track-panel');
+        if (trackPanel?.classList.contains('tp-open')) {
+            if (typeof GPXService !== 'undefined') GPXService.closePanel();
+            pushNavState('main');
+            return;
+        }
+
+        // 6. Flyout menus
+        const layersMenu = document.getElementById('layers-menu');
+        const trailsMenu = document.getElementById('trails-menu');
+        if (layersMenu?.style.display !== 'none' && layersMenu?.style.display) {
+            layersMenu.style.display = 'none';
+            document.getElementById('btn-layers')?.classList.remove('active');
+            pushNavState('main');
+            return;
+        }
+        if (trailsMenu?.style.display !== 'none' && trailsMenu?.style.display) {
+            trailsMenu.style.display = 'none';
+            document.getElementById('btn-trails')?.classList.remove('active');
+            pushNavState('main');
+            return;
+        }
+
+        // 7. List view → go back to map
+        if (currentView === 'list') {
+            switchToMapView();
+            pushNavState('main');
+            return;
+        }
+
+        // If nothing to close, push state back to prevent app exit
+        pushNavState('main');
+    });
+}
+
+function pushNavState(view) {
+    history.pushState({ view }, '');
+}
+
+// Patch functions that open panels to push history state
+const _origMostraDettagli = mostraDettagli;
+mostraDettagli = async function(el) {
+    pushNavState('detail');
+    return _origMostraDettagli(el);
+};
+
+const _origOpenFilters = openFilters;
+openFilters = function() {
+    pushNavState('filters');
+    return _origOpenFilters();
+};
+
+const _origSwitchToListView = switchToListView;
+switchToListView = function() {
+    pushNavState('list');
+    return _origSwitchToListView();
+};
+
+initApp();

@@ -1,5 +1,5 @@
 // Service Worker per Bivacchi PWA
-const CACHE_VERSION = 'bivacchi-v15';
+const CACHE_VERSION = 'bivacchi-v20';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DATA_CACHE = `${CACHE_VERSION}-data`;
 const MAP_CACHE = `${CACHE_VERSION}-maps`;
@@ -16,10 +16,21 @@ const STATIC_ASSETS = [
     '/radarService.js',
     '/manifest.json',
     '/icons/icon.svg',
+    '/icons/icon-72x72.png',
+    '/icons/icon-96x96.png',
+    '/icons/icon-128x128.png',
+    '/icons/icon-144x144.png',
+    '/icons/icon-152x152.png',
+    '/icons/icon-192x192.png',
+    '/icons/icon-384x384.png',
+    '/icons/icon-512x512.png',
+    '/offline.html',
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-    'https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.css',
-    'https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.js'
+    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css',
+    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css',
+    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
 
 // Patterns per le API da cachare
@@ -29,10 +40,10 @@ const API_PATTERNS = [
 ];
 
 // Pattern per tile mappa (cache con limite)
-const MAP_TILE_PATTERN = /tile\.openstreetmap\.org/;
+const MAP_TILE_PATTERN = /tile\.openstreetmap\.org|server\.arcgisonline\.com/;
 
 // Limite tile mappa in cache (per non riempire storage)
-const MAX_MAP_TILES = 500;
+const MAX_MAP_TILES = 2000;
 
 // Install: pre-cache risorse statiche
 self.addEventListener('install', (event) => {
@@ -101,6 +112,15 @@ self.addEventListener('fetch', (event) => {
     }
 
     // Default: Stale-while-revalidate per altre risorse
+    // For navigation requests, fall back to offline page if everything fails
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            cacheFirstWithNetworkFallback(event.request, STATIC_CACHE)
+                .catch(() => caches.match('/offline.html'))
+        );
+        return;
+    }
+
     event.respondWith(staleWhileRevalidate(event.request, STATIC_CACHE));
 });
 
@@ -157,9 +177,10 @@ async function cacheFirstWithNetworkFallback(request, cacheName, isMapTile = fal
         return networkResponse;
     } catch (err) {
         console.log('[SW] Fetch failed for:', request.url);
-        // Per tile mappa, ritorna placeholder trasparente
+        // Per tile mappa, ritorna placeholder trasparente 1x1 PNG
         if (isMapTile) {
-            return new Response('', { status: 404 });
+            const TRANSPARENT_PNG = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPj/HwADBwIAMCbHYQAAAABJRU5ErkJggg=='), c => c.charCodeAt(0));
+            return new Response(TRANSPARENT_PNG.buffer, { headers: { 'Content-Type': 'image/png' }, status: 200 });
         }
         throw err;
     }

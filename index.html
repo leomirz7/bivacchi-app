@@ -3,244 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=10, minimum-scale=0.5">
-    <title>Bivacchi Nord-Est Italia</title>
+    <title>Bivacchi Italia</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Trova bivacchi nelle Alpi del Nord-Est Italia con meteo, neve e filtri avanzati">
+    <meta name="description" content="Trova bivacchi nelle Alpi italiane con meteo, neve e filtri avanzati">
     <meta name="theme-color" content="#ea580c">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Bivacchi">
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Icons -->
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
     <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
-    <link rel="apple-touch-icon" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128x128.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 </head>
 <body>
 
-    <!-- Progress indicator per background tasks -->
+    <!-- Progress indicator -->
     <div id="progress-bar-container" class="progress-bar-container">
         <div id="progress-bar" class="progress-bar"></div>
     </div>
     <div id="progress-label" class="progress-label"></div>
 
-    <div class="app-container">
-        
-        <main class="main-content">
-            <header>
-                <div class="header-top">
-                    <h2>🏔️ Bivacchi del Nord-Est Italia</h2>
-                    <div id="auth-area">
-                        <label class="gpx-upload-btn" title="Carica traccia GPX">
-                            📍 GPX
-                            <input type="file" id="gpx-file-input" accept=".gpx" style="display:none;">
-                        </label>
-                        <button id="gpx-info-btn" class="gpx-upload-btn" title="Mostra/Nascondi info traccia" style="display:none;" onclick="GPXService.toggleStatsPanel()">
-                            ℹ️ Info
-                        </button>
-                        <button id="auth-btn" class="auth-btn">🔐 Accedi</button>
-                    </div>
-                </div>
-                <input type="text" id="search-input" placeholder="Cerca per nome...">
-            </header>
-            
-            <section class="filters" id="desktop-filters">
-                <div class="filter-group">
-                    <label>Altitudine: <span id="alt-min-val">0</span>m – <span id="alt-max-val">4000</span>m</label>
-                    <div id="altitude-slider"></div>
-                </div>
-                <div class="filter-group">
-                    <label>Temperatura: <span id="temp-min-val">-20</span>°C – <span id="temp-max-val">40</span>°C</label>
-                    <div id="temperature-slider"></div>
-                </div>
-                <div id="distance-filter-group" class="filter-group" style="display:none;">
-                    <label>Distanza Max da casa: <span id="dist-max-val">50</span>km</label>
-                    <input type="range" id="filter-dist-max" min="0" max="100" step="5" value="50">
-                </div>
-                <div class="filter-group">
-                    <label>Ordina per:</label>
-                    <select id="sort-by">
-                        <option value="nome">Nome (A-Z)</option>
-                        <option value="nome-desc">Nome (Z-A)</option>
-                        <option value="alt-asc">Altitudine (crescente)</option>
-                        <option value="alt-desc">Altitudine (decrescente)</option>
-                        <option value="temp-asc">Temperatura (crescente)</option>
-                        <option value="temp-desc">Temperatura (decrescente)</option>
-                        <option value="dist-asc" class="distance-sort-option" style="display:none;">Distanza da casa (crescente)</option>
-                        <option value="dist-desc" class="distance-sort-option" style="display:none;">Distanza da casa (decrescente)</option>
-                    </select>
-                </div>
-            </section>
-            
-            <button id="mobile-filter-btn" class="mobile-filter-btn">🔧 Filtri</button>
-
-            <div class="content-wrapper">
-                <div id="bivacchi-list" class="list-container">
-                    <p class="placeholder-text">Caricamento dei bivacchi nel Nord-Est Italia...</p>
-                </div>
-                <div id="map" class="map-container">
-                    <!-- Radar Controls -->
-                    <button id="radar-toggle-btn" class="radar-toggle-btn" title="Radar precipitazioni">
-                        🌧️
+    <div class="app-root">
+        <!-- ====== MAIN CONTENT ====== -->
+        <main class="main-area">
+            <!-- FLOATING HEADER -->
+            <header class="floating-header" id="floating-header">
+                <div class="header-row">
+                    <button id="btn-toggle-view" class="hdr-btn" title="Cambia vista">
+                        <svg id="icon-view-list" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        <svg id="icon-view-map" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
                     </button>
-                    <div id="radar-control-panel" class="radar-control-panel" style="display: none;">
-                        <div class="radar-header">
-                            <span>Radar Precipitazioni</span>
-                            <button id="radar-close-btn" class="radar-close-btn">&times;</button>
+                    <!-- Geocoding Search -->
+                    <div class="search-container" id="search-container">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="search-input" placeholder="Cerca luogo o bivacco..." autocomplete="off">
+                        <div id="search-spinner" class="search-spinner" style="display:none">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-anim"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                         </div>
-                        <div class="radar-timeline">
-                            <div class="radar-time-labels">
-                                <span id="radar-time-start">-2h</span>
-                                <span id="radar-time-current">Ora</span>
-                                <span id="radar-time-end">+30m</span>
-                            </div>
-                            <div class="radar-progress-container">
-                                <div id="radar-progress" class="radar-progress" style="width: 0%"></div>
+                        <div id="search-suggestions" class="search-suggestions"></div>
+                    </div>
+                    <!-- Filter btn -->
+                    <button id="btn-open-filters" class="hdr-btn" title="Filtri">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                    </button>
+                    <!-- Auth btn -->
+                    <button id="auth-btn" class="hdr-btn" title="Accedi">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </button>
+                </div>
+                <!-- Active Filter Badges -->
+                <div id="filter-badges" class="filter-badges"></div>
+            </header>
+
+            <!-- MAP VIEW (default, full-screen) -->
+            <div id="map-view" class="view-panel active">
+                <div id="map" class="map-full"></div>
+
+                <!-- Weather Widget -->
+                <div id="weather-widget" class="weather-widget" style="display:none">
+                    <div class="ww-icon" id="ww-icon">🌤️</div>
+                    <div class="ww-data">
+                        <span class="ww-temp" id="ww-temp">--°C</span>
+                        <span class="ww-hum" id="ww-hum">--%</span>
+                    </div>
+                </div>
+
+                <!-- Right side map controls -->
+                <div class="map-controls-right">
+                    <!-- GPX / Trails -->
+                    <div class="ctrl-group" id="trails-ctrl-group">
+                        <div id="trails-menu" class="flyout-menu" style="display:none">
+                            <h4 class="flyout-title">Gestione Percorsi</h4>
+                            <div id="trails-content">
+                                <div class="trails-empty">
+                                    <p>Nessuna traccia caricata.</p>
+                                    <button id="btn-load-gpx-menu" class="btn-accent-sm">Carica GPX</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="radar-controls-row">
-                            <button id="radar-play-btn" class="radar-play-btn">▶️</button>
-                            <div class="radar-settings">
-                                <label>
-                                    Opacità:
-                                    <input type="range" id="radar-opacity" min="0" max="100" value="60">
-                                </label>
-                                <label>
-                                    Colori:
-                                    <select id="radar-color-scheme">
-                                        <option value="0">Universale</option>
-                                        <option value="1">NOAA</option>
-                                        <option value="2">Rosso/Verde</option>
-                                        <option value="3">TITAN</option>
-                                        <option value="4">The Weather Channel</option>
-                                        <option value="6">Dark Sky</option>
-                                    </select>
-                                </label>
+                        <button id="btn-trails" class="map-ctrl-btn" title="Percorsi GPX">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </button>
+                    </div>
+                    <!-- Layers -->
+                    <div class="ctrl-group" id="layers-ctrl-group">
+                        <div id="layers-menu" class="flyout-menu" style="display:none">
+                            <h4 class="flyout-label">TIPO MAPPA</h4>
+                            <div class="layer-options">
+                                <button class="layer-option active" data-layer="standard">
+                                    <div class="layer-preview osm-preview"></div>
+                                    <span>Standard</span>
+                                </button>
+                                <button class="layer-option" data-layer="satellite">
+                                    <div class="layer-preview sat-preview"></div>
+                                    <span>Satellite</span>
+                                </button>
                             </div>
+                            <h4 class="flyout-label" style="margin-top:12px">OVERLAY</h4>
+                            <label class="toggle-row" id="btn-toggle-radar">
+                                <span>Radar Precipitazioni</span>
+                                <div class="toggle-switch" id="radar-switch"><div class="toggle-knob"></div></div>
+                            </label>
+                        </div>
+                        <button id="btn-layers" class="map-ctrl-btn" title="Livelli mappa">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        </button>
+                    </div>
+                    <!-- Locate -->
+                    <button id="btn-locate" class="map-ctrl-btn" title="La mia posizione">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/><line x1="12" y1="1.05" x2="12" y2="7"/><line x1="12" y1="17.01" x2="12" y2="22.96"/></svg>
+                    </button>
+                    <!-- Zoom -->
+                    <div class="zoom-group">
+                        <button id="btn-zoom-in" class="map-ctrl-btn" title="Zoom in">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                        <button id="btn-zoom-out" class="map-ctrl-btn" title="Zoom out">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Radar Controls (shown when radar active) -->
+                <div id="radar-control-panel" class="radar-control-panel" style="display:none">
+                    <div class="radar-header">
+                        <span>Radar Precipitazioni</span>
+                        <button id="radar-close-btn" class="btn-icon-xs">&times;</button>
+                    </div>
+                    <div class="radar-timeline">
+                        <div class="radar-time-labels">
+                            <span id="radar-time-start">-2h</span>
+                            <span id="radar-time-current">Ora</span>
+                            <span id="radar-time-end">+30m</span>
+                        </div>
+                        <div class="radar-progress-container">
+                            <div id="radar-progress" class="radar-progress"></div>
                         </div>
                     </div>
+                    <div class="radar-controls-row">
+                        <button id="radar-play-btn" class="radar-play-btn">▶️</button>
+                        <div class="radar-settings">
+                            <label>Opacità: <input type="range" id="radar-opacity" min="0" max="100" value="60"></label>
+                            <label>Colori: <select id="radar-color-scheme">
+                                <option value="0">Universale</option>
+                                <option value="1">NOAA</option>
+                                <option value="2">Rosso/Verde</option>
+                                <option value="3">TITAN</option>
+                                <option value="4" selected>TWC</option>
+                                <option value="6">Dark Sky</option>
+                            </select></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIST VIEW -->
+            <div id="list-view" class="view-panel">
+                <div class="list-scroll" id="bivacchi-list">
+                    <p class="placeholder-text">Caricamento dei bivacchi...</p>
                 </div>
             </div>
         </main>
 
-    </div>
+        <!-- ====== FILTER SIDEBAR (slides from left) ====== -->
+        <aside id="sidebar-filters" class="sidebar-overlay">
+            <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+            <div class="sidebar-content" id="sidebar-content">
+                <div class="sidebar-header">
+                    <h2>Filtri</h2>
+                    <button id="btn-close-filters" class="btn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                </div>
+                <div class="sidebar-body">
+                    <!-- Altitude -->
+                    <section class="filter-section">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">ALTITUDINE</h3>
+                            <span class="filter-value" id="alt-range-display">0m – 4810m</span>
+                        </div>
+                        <div class="range-dual">
+                            <input type="range" id="filter-alt-min" min="0" max="4810" value="0" step="50" class="range-input range-min">
+                            <input type="range" id="filter-alt-max" min="0" max="4810" value="4810" step="50" class="range-input range-max">
+                        </div>
+                    </section>
+                    <!-- Temperature -->
+                    <section class="filter-section">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">TEMPERATURA</h3>
+                            <span class="filter-value" id="temp-range-display">-30°C – 40°C</span>
+                        </div>
+                        <div class="range-dual">
+                            <input type="range" id="filter-temp-min" min="-30" max="40" value="-30" step="1" class="range-input range-min">
+                            <input type="range" id="filter-temp-max" min="-30" max="40" value="40" step="1" class="range-input range-max">
+                        </div>
+                    </section>
+                    <!-- Snow -->
+                    <section class="filter-section">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">NEVE</h3>
+                        </div>
+                        <div class="filter-chips">
+                            <div class="filter-chip" id="filter-snow-all" data-snow="all">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                                <span>Tutti</span>
+                            </div>
+                            <div class="filter-chip" id="filter-snow-yes" data-snow="yes">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="8" y1="20" x2="8.01" y2="20"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="12" y1="22" x2="12.01" y2="22"/><line x1="16" y1="16" x2="16.01" y2="16"/><line x1="16" y1="20" x2="16.01" y2="20"/></svg>
+                                <span>Con neve</span>
+                            </div>
+                            <div class="filter-chip" id="filter-snow-no" data-snow="no">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                                <span>Senza neve</span>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Aspect/Exposure -->
+                    <section class="filter-section">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">ESPOSIZIONE</h3>
+                        </div>
+                        <div class="filter-chips" id="aspect-chips">
+                            <div class="filter-chip active" data-aspect="all">Tutte</div>
+                            <div class="filter-chip" data-aspect="N">N</div>
+                            <div class="filter-chip" data-aspect="NE">NE</div>
+                            <div class="filter-chip" data-aspect="E">E</div>
+                            <div class="filter-chip" data-aspect="SE">SE</div>
+                            <div class="filter-chip" data-aspect="S">S</div>
+                            <div class="filter-chip" data-aspect="SW">SW</div>
+                            <div class="filter-chip" data-aspect="W">W</div>
+                            <div class="filter-chip" data-aspect="NW">NW</div>
+                        </div>
+                    </section>
+                    <!-- Distance -->
+                    <section class="filter-section" id="distance-filter-section" style="display:none">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">DISTANZA DA CASA</h3>
+                            <span class="filter-value" id="dist-display">50 km</span>
+                        </div>
+                        <input type="range" id="filter-dist-max" min="0" max="200" value="50" step="5" class="range-input">
+                    </section>
+                    <!-- Sort -->
+                    <section class="filter-section">
+                        <h3 class="filter-label">ORDINA PER</h3>
+                        <select id="sort-by" class="filter-select">
+                            <option value="nome">Nome (A-Z)</option>
+                            <option value="nome-desc">Nome (Z-A)</option>
+                            <option value="alt-asc">Altitudine ↑</option>
+                            <option value="alt-desc">Altitudine ↓</option>
+                            <option value="temp-asc">Temperatura ↑</option>
+                            <option value="temp-desc">Temperatura ↓</option>
+                            <option value="dist-asc" class="dist-sort-opt" style="display:none">Distanza ↑</option>
+                            <option value="dist-desc" class="dist-sort-opt" style="display:none">Distanza ↓</option>
+                        </select>
+                    </section>
+                    <!-- GPX Proximity Filter -->
+                    <section class="filter-section" id="gpx-proximity-section" style="display:none">
+                        <div class="filter-label-row">
+                            <h3 class="filter-label">VICINI AL PERCORSO</h3>
+                            <span class="filter-value" id="gpx-prox-display">2.0 km</span>
+                        </div>
+                        <input type="range" id="filter-gpx-proximity" min="0.1" max="10" value="2" step="0.1" class="range-input">
+                        <label class="toggle-row" style="margin-top:8px">
+                            <span>Filtra per percorso</span>
+                            <div class="toggle-switch" id="gpx-prox-switch"><div class="toggle-knob"></div></div>
+                        </label>
+                    </section>
+                    <!-- Actions -->
+                    <section class="filter-section">
+                        <h3 class="filter-label">GESTIONE</h3>
+                        <button id="btn-reset-filters" class="btn-ghost-full">Resetta Filtri</button>
+                        <button id="btn-clear-db" class="btn-danger-full" style="margin-top:8px">Svuota Database Locale</button>
+                    </section>
+                </div>
+            </div>
+        </aside>
 
-    <div class="mobile-view-toggle">
-        <button id="view-list-mobile" class="active">📋 Lista</button>
-        <button id="view-map-mobile">🗺️ Mappa</button>
-    </div>
+        <!-- ====== DETAIL PANEL (full-screen slide-in from right) ====== -->
+        <div id="detail-panel" class="detail-panel">
+            <div class="detail-header">
+                <button id="btn-detail-back" class="btn-icon-round">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div class="detail-header-actions">
+                    <button id="btn-detail-navigate" class="btn-icon-sm" title="Naviga">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                    </button>
+                    <button id="btn-detail-fav" class="btn-icon-sm" title="Preferito">
+                        <svg id="detail-fav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="detail-scroll" id="detail-data"></div>
+        </div>
 
-    <div id="mobile-filters-modal" class="modal" style="display:none;">
-        <div class="modal-content filters-modal-content">
-            <span class="close-btn" onclick="closeMobileFilters()">&times;</span>
-            <h3>Filtri e Ordinamento</h3>
-            <div class="mobile-filters-content">
-                <div class="filter-group">
-                    <label>Altitudine: <span id="alt-min-val-mobile">0</span>m – <span id="alt-max-val-mobile">4000</span>m</label>
-                    <div id="altitude-slider-mobile"></div>
+        <!-- ====== WEATHER PANEL (full-screen) ====== -->
+        <div id="weather-panel" class="weather-panel" style="display:none">
+            <div class="wp-header">
+                <h2>Meteo Area</h2>
+                <button id="btn-close-weather" class="btn-icon-round">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="wp-body" id="weather-panel-body"></div>
+        </div>
+
+        <!-- ====== GPX TRACK PANEL (bottom sheet – MountPro style) ====== -->
+        <div id="track-panel" class="track-panel">
+            <div class="tp-handle" id="tp-handle">
+                <div class="handle-bar"></div>
+            </div>
+            <div class="tp-header">
+                <div class="tp-title-area">
+                    <svg class="tp-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <span class="tp-title" id="track-name-label">Traccia</span>
+                    <button id="btn-add-gpx" class="tp-add-btn" title="Aggiungi GPX">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
                 </div>
-                <div class="filter-group">
-                    <label>Temperatura: <span id="temp-min-val-mobile">-20</span>°C – <span id="temp-max-val-mobile">40</span>°C</label>
-                    <div id="temperature-slider-mobile"></div>
+                <button id="btn-close-track" class="tp-close-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="tp-body" id="track-panel-body"></div>
+        </div>
+
+        <!-- ====== AUTH MODAL ====== -->
+        <div id="auth-modal" class="modal-overlay" style="display:none">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+                <div id="auth-form">
+                    <h3>Accedi</h3>
+                    <input type="email" id="login-email" placeholder="Email" class="form-input">
+                    <input type="password" id="login-password" placeholder="Password" class="form-input">
+                    <button onclick="handleLogin()" class="btn-accent-full">Accedi</button>
+                    <p class="form-link">Non hai un account? <a href="#" onclick="showRegister()">Registrati</a></p>
                 </div>
-                <div id="distance-filter-group-mobile" class="filter-group" style="display:none;">
-                    <label>Distanza Max da casa: <span id="dist-max-val-mobile">50</span>km</label>
-                    <input type="range" id="filter-dist-max-mobile" min="0" max="100" step="5" value="50">
+                <div id="register-form" style="display:none">
+                    <h3>Registrati</h3>
+                    <input type="text" id="register-name" placeholder="Nome" class="form-input">
+                    <input type="email" id="register-email" placeholder="Email" class="form-input">
+                    <input type="password" id="register-password" placeholder="Password" class="form-input">
+                    <button onclick="handleRegister()" class="btn-accent-full">Registrati</button>
+                    <p class="form-link">Hai già un account? <a href="#" onclick="showLogin()">Accedi</a></p>
                 </div>
-                <div class="filter-group">
-                    <label>Ordina per:</label>
-                    <select id="sort-by-mobile">
-                        <option value="nome">Nome (A-Z)</option>
-                        <option value="nome-desc">Nome (Z-A)</option>
-                        <option value="alt-asc">Altitudine (crescente)</option>
-                        <option value="alt-desc">Altitudine (decrescente)</option>
-                        <option value="temp-asc">Temperatura (crescente)</option>
-                        <option value="temp-desc">Temperatura (decrescente)</option>
-                        <option value="dist-asc" class="distance-sort-option-mobile" style="display:none;">Distanza da casa (crescente)</option>
-                        <option value="dist-desc" class="distance-sort-option-mobile" style="display:none;">Distanza da casa (decrescente)</option>
-                    </select>
-                </div>
-                <button onclick="closeMobileFilters()" class="form-btn">Applica Filtri</button>
+                <div id="auth-error" class="form-error"></div>
             </div>
         </div>
-    </div>
 
-    <div id="detail-view" class="modal" style="display:none;">
-        <div class="modal-content detail-modal-content">
-            <span class="close-btn" onclick="document.getElementById('detail-view').style.display='none'">&times;</span>
-            <div id="detail-data">
+        <!-- ====== PROFILE MODAL ====== -->
+        <div id="profile-modal" class="modal-overlay" style="display:none">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+                <div id="profile-data">
+                    <h3>Profilo Utente</h3>
+                    <p><strong>Nome:</strong> <span id="profile-name"></span></p>
+                    <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                    <p><strong>Registrato:</strong> <span id="profile-date"></span></p>
+                    <p><strong>Indirizzo casa:</strong> <span id="profile-address">Non impostato</span> <button onclick="openAddressModal()" class="btn-link">Modifica</button></p>
+                    <h4>Bivacchi Preferiti</h4>
+                    <div id="favorites-list" class="favorites-list"><p>Nessun bivacco preferito</p></div>
+                    <button onclick="handleLogout()" class="btn-danger-full" style="margin-top:16px">Logout</button>
                 </div>
-        </div>
-    </div>
-
-    <div id="auth-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
-            <div id="auth-form">
-                <h3>Accedi</h3>
-                <input type="email" id="login-email" placeholder="Email" class="form-input">
-                <input type="password" id="login-password" placeholder="Password" class="form-input">
-                <button onclick="handleLogin()" class="form-btn">Accedi</button>
-                <p class="form-divider">Non hai un account? <a href="#" onclick="showRegister()">Registrati</a></p>
-            </div>
-            <div id="register-form" style="display:none;">
-                <h3>Registrati</h3>
-                <input type="text" id="register-name" placeholder="Nome" class="form-input">
-                <input type="email" id="register-email" placeholder="Email" class="form-input">
-                <input type="password" id="register-password" placeholder="Password" class="form-input">
-                <button onclick="handleRegister()" class="form-btn">Registrati</button>
-                <p class="form-divider">Hai già un account? <a href="#" onclick="showLogin()">Accedi</a></p>
-            </div>
-            <div id="auth-error" class="form-error"></div>
-        </div>
-    </div>
-
-    <div id="profile-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
-            <div id="profile-data">
-                <h3>Profilo Utente</h3>
-                <p><strong>Nome:</strong> <span id="profile-name"></span></p>
-                <p><strong>Email:</strong> <span id="profile-email"></span></p>
-                <p><strong>Registrato:</strong> <span id="profile-date"></span></p>
-                <p><strong>Indirizzo casa:</strong> <span id="profile-address">Non impostato</span> <button onclick="openAddressModal()" class="form-btn small-btn">Modifica</button></p>
-                <h4>Bivacchi Preferiti</h4>
-                <div id="favorites-list" class="favorites-list">
-                    <p>Nessun bivacco preferito</p>
-                </div>
-                <button onclick="handleLogout()" class="form-btn logout-btn">Logout</button>
             </div>
         </div>
-    </div>
 
-    <div id="address-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAddressModal()">&times;</span>
-            <div id="address-form">
+        <!-- ====== ADDRESS MODAL ====== -->
+        <div id="address-modal" class="modal-overlay" style="display:none">
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeAddressModal()">&times;</button>
                 <h3>Indirizzo Casa</h3>
                 <input type="text" id="address-input" placeholder="Es: Via Roma 10, Roma" class="form-input">
-                <p class="small-text">Seleziona le coordinate sulla mappa cliccando su di essa</p>
-                <div id="address-map" style="height: 300px; border: 1px solid #ccc; margin-bottom: 15px; border-radius: 5px;"></div>
+                <p class="small-text">Clicca sulla mappa per selezionare le coordinate</p>
+                <div id="address-map" style="height:250px;border-radius:12px;overflow:hidden;margin-bottom:12px;"></div>
                 <p id="address-coords" class="small-text">Coordinate: <span id="coords-display">Non selezionate</span></p>
-                <button onclick="handleSaveAddress()" class="form-btn">Salva Indirizzo</button>
+                <button onclick="handleSaveAddress()" class="btn-accent-full">Salva Indirizzo</button>
                 <div id="address-error" class="form-error"></div>
             </div>
+        </div>
+
+        <!-- Hidden file input -->
+        <input type="file" id="gpx-file-input" accept=".gpx" style="display:none">
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" class="pwa-install-banner" style="display:none">
+        <div class="pwa-install-content">
+            <img src="icons/icon-96x96.png" alt="Bivacchi" class="pwa-install-icon">
+            <div class="pwa-install-text">
+                <strong>Installa Bivacchi</strong>
+                <span>Aggiungi alla schermata home per accesso rapido e offline</span>
+            </div>
+        </div>
+        <div class="pwa-install-actions">
+            <button id="pwa-install-dismiss" class="pwa-btn-dismiss">Non ora</button>
+            <button id="pwa-install-accept" class="pwa-btn-install">Installa</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.0/dist/nouislider.min.js"></script>
     <script src="dbService.js"></script>
     <script src="gpxService.js"></script>
     <script src="radarService.js"></script>

@@ -1,311 +1,231 @@
 // ============================================
-// RainViewer Radar Service
-// Free precipitation radar overlay for Leaflet maps
+// RainViewer Radar Service — smooth pre-loaded animation
 // ============================================
 
 const RadarService = {
-    // RainViewer API endpoint
     API_URL: 'https://api.rainviewer.com/public/weather-maps.json',
-    
+
     // State
-    radarLayers: [],
-    currentFrameIndex: 0,
+    map: null,
+    radarLayers: [],       // one L.tileLayer per frame, all kept on map at opacity 0
+    timestamps: [],        // raw API frame objects
+    host: '',
+    currentFrameIndex: -1,
     animationInterval: null,
     isPlaying: false,
-    timestamps: [],
-    baseLayer: null,
-    
+    _active: false,        // whether radar is currently shown to the user
+
     // Settings
-    animationSpeed: 500, // ms between frames
-    opacity: 0.6,
-    colorScheme: 4, // 1-8, see RainViewer docs. 4 = Universal Blue
+    animationSpeed: 600,   // ms between frames
+    opacity: 0.7,
+    colorScheme: 4,        // 4 = TWC (good contrast on dark map)
     smooth: 1,
     snow: 1,
-    
-    /**
-     * Initialize radar overlay on a Leaflet map
-     * @param {L.Map} map - Leaflet map instance
-     */
+
+    // ── Init: fetch data, pre-add all layers to map at opacity 0 ──
     async init(map) {
         this.map = map;
-        // Controls are already in HTML, no need to create them dynamically
-        
-        try {
-            await this.loadRadarData();
-            console.log('[Radar] Initialized with', this.timestamps.length, 'frames');
-            // Don't show radar yet - wait for user to open the panel
-            // showRadar() will be called when panel opens
-        } catch (error) {
-            console.error('[Radar] Failed to initialize:', error);
-            throw error;
-        }
+        await this._fetchAndBuild();
+        console.log('[Radar] Initialized with', this.timestamps.length, 'frames');
     },
-    
-    /**
-     * Load radar data from RainViewer API
-     */
-    async loadRadarData() {
-        const response = await fetch(this.API_URL);
-        if (!response.ok) throw new Error('Failed to fetch radar data');
-        
-        const data = await response.json();
-        
-        // Get past radar frames
-        const past = data.radar?.past || [];
-        // Get forecast frames (if available)
-        const forecast = data.radar?.nowcast || [];
-        
-        // Combine past + forecast
-        this.timestamps = [...past, ...forecast];
+
+    async _fetchAndBuild() {
+        const res = await fetch(this.API_URL);
+        if (!res.ok) throw new Error('RainViewer API error');
+        const data = await res.json();
+
         this.host = data.host;
-        
-        // Clear existing layers
-        this.clearLayers();
-        
-        // Pre-create tile layers for each timestamp
-        this.radarLayers = this.timestamps.map(frame => {
-            return L.tileLayer(
-                `${this.host}${frame.path}/256/{z}/{x}/{y}/${this.colorScheme}/${this.smooth}_${this.snow}.png`,
-                {
-                    opacity: 0,
-                    zIndex: 100
-                }
-            );
-        });
-        
-        // Show last frame by default
-        if (this.radarLayers.length > 0) {
-            this.currentFrameIndex = this.radarLayers.length - 1;
-        }
-    },
-    
-    // NOTE: UI controls are now defined statically in index.html
-    // Event listeners are set up in script.js initRadarControls()
-    
-    /**
-     * Show radar overlay
-     */
-    async showRadar() {
-        if (this.radarLayers.length === 0) {
-            try {
-                await this.loadRadarData();
-            } catch (e) {
-                console.error('[Radar] Failed to load data:', e);
-                return;
-            }
-        }
-        
-        // Update time labels
-        this.updateTimeLabels();
-        
-        // Show current frame
-        this.showFrame(this.currentFrameIndex);
-    },
-    
-    /**
-     * Hide radar overlay
-     */
-    hideRadar() {
-        this.pause();
-        this.clearLayers();
-    },
-    
-    /**
-     * Show a specific frame
-     */
-    showFrame(index) {
-        if (index < 0 || index >= this.radarLayers.length) return;
-        
-        // Hide all layers
-        this.radarLayers.forEach((layer, i) => {
-            if (this.map.hasLayer(layer)) {
-                layer.setOpacity(0);
-            }
-        });
-        
-        // Show selected layer
-        const layer = this.radarLayers[index];
-        if (!this.map.hasLayer(layer)) {
+        const past     = data.radar?.past     || [];
+        const nowcast  = data.radar?.nowcast  || [];
+        const frames   = [...past, ...nowcast];
+
+        // Remove old layers from map without destroying the array reference yet
+        this._removeAllFromMap();
+        this.radarLayers = [];
+        this.timestamps  = [];
+
+        frames.forEach(frame => {
+            const url = `${this.host}${frame.path}/256/{z}/{x}/{y}/${this.colorScheme}/${this.smooth}_${this.snow}.png`;
+            const layer = L.tileLayer(url, {
+                opacity:     0,
+                zIndex:      200,
+                tileSize:    256,
+                // Keep tiles in memory even at opacity 0 so they're ready instantly
+                keepBuffer:  4,
+            });
+            // Pre-add to map immediately so tiles start downloading in background
             layer.addTo(this.map);
+            this.radarLayers.push(layer);
+            this.timestamps.push(frame);
+        });
+
+        // Default to the last past frame (most recent observation)
+        const lastPastIdx = past.length > 0 ? past.length - 1 : 0;
+        this.currentFrameIndex = lastPastIdx;
+    },
+
+    // ── Show the radar (called when user toggles it on) ──
+    async showRadar() {
+        this._active = true;
+
+        if (this.radarLayers.length === 0) {
+            try { await this._fetchAndBuild(); }
+            catch (e) { console.error('[Radar] Load failed:', e); return; }
         }
-        layer.setOpacity(this.opacity);
-        
+
+        this.updateTimeLabels();
+        this._applyFrame(this.currentFrameIndex);
+        // Auto-play animation
+        this.play();
+    },
+
+    // ── Hide the radar (keep layers on map at opacity 0 to preserve cache) ──
+    hideRadar() {
+        this._active = false;
+        this.pause();
+        // Just zero-out all layers – don't remove them so tiles stay cached
+        this.radarLayers.forEach(l => l.setOpacity(0));
+    },
+
+    // ── Core: switch to frame[index], fade out previous ──
+    _applyFrame(index) {
+        if (index < 0 || index >= this.radarLayers.length) return;
+
+        const prev = this.currentFrameIndex;
         this.currentFrameIndex = index;
-        
-        // Update UI
-        this.updateCurrentTimeLabel();
-        this.updateProgress();
+
+        // Fade out previous frame
+        if (prev >= 0 && prev !== index && this.radarLayers[prev]) {
+            this.radarLayers[prev].setOpacity(0);
+        }
+
+        // Fade in current frame
+        this.radarLayers[index].setOpacity(this.opacity);
+
+        this._updateUI();
     },
-    
-    /**
-     * Go to specific frame
-     */
-    goToFrame(index) {
-        this.showFrame(index);
-    },
-    
-    /**
-     * Next frame
-     */
+
+    showFrame(index)  { this._applyFrame(index); },
+    goToFrame(index)  { this._applyFrame(index); },
+
     nextFrame() {
         const next = (this.currentFrameIndex + 1) % this.radarLayers.length;
-        this.showFrame(next);
+        this._applyFrame(next);
     },
-    
-    /**
-     * Previous frame
-     */
+
     previousFrame() {
-        const prev = this.currentFrameIndex - 1;
-        this.showFrame(prev < 0 ? this.radarLayers.length - 1 : prev);
+        const len  = this.radarLayers.length;
+        const prev = (this.currentFrameIndex - 1 + len) % len;
+        this._applyFrame(prev);
     },
-    
-    /**
-     * Start animation
-     */
+
+    // ── Animation ──
     play() {
-        if (this.isPlaying) return;
+        if (this.isPlaying || this.radarLayers.length === 0) return;
         this.isPlaying = true;
-        
         const playBtn = document.getElementById('radar-play-btn');
         if (playBtn) playBtn.textContent = '⏸️';
-        
-        this.animationInterval = setInterval(() => {
-            this.nextFrame();
-        }, this.animationSpeed);
+
+        this.animationInterval = setInterval(() => this.nextFrame(), this.animationSpeed);
     },
-    
-    /**
-     * Pause animation
-     */
+
     pause() {
+        if (!this.isPlaying) return;
         this.isPlaying = false;
-        
         const playBtn = document.getElementById('radar-play-btn');
         if (playBtn) playBtn.textContent = '▶️';
-        
-        if (this.animationInterval) {
-            clearInterval(this.animationInterval);
-            this.animationInterval = null;
-        }
+        clearInterval(this.animationInterval);
+        this.animationInterval = null;
     },
-    
-    /**
-     * Update time labels
-     */
-    updateTimeLabels() {
-        if (this.timestamps.length === 0) return;
-        
-        const startLabel = document.getElementById('radar-time-start');
-        const endLabel = document.getElementById('radar-time-end');
-        
-        if (startLabel) {
-            startLabel.textContent = this.formatTime(this.timestamps[0].time);
-        }
-        if (endLabel) {
-            endLabel.textContent = this.formatTime(this.timestamps[this.timestamps.length - 1].time);
-        }
-        
-        this.updateCurrentTimeLabel();
-    },
-    
-    /**
-     * Update current time label
-     */
-    updateCurrentTimeLabel() {
-        const currentLabel = document.getElementById('radar-time-current');
-        if (currentLabel && this.timestamps[this.currentFrameIndex]) {
-            const time = this.timestamps[this.currentFrameIndex].time;
-            currentLabel.textContent = this.formatTime(time);
-            
-            // Show "NOW" or "+X min" for forecast
-            const now = Math.floor(Date.now() / 1000);
-            const diff = time - now;
-            
-            if (Math.abs(diff) < 300) { // Within 5 minutes
-                currentLabel.textContent += ' (ORA)';
-            } else if (diff > 0) {
-                const mins = Math.round(diff / 60);
-                currentLabel.textContent += ` (+${mins}min)`;
-            }
-        }
-    },
-    
-    /**
-     * Format Unix timestamp to HH:MM
-     */
-    formatTime(unixTime) {
-        const date = new Date(unixTime * 1000);
-        return date.toLocaleTimeString('it-IT', { 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        });
-    },
-    
-    /**
-     * Clear all radar layers from map
-     */
-    clearLayers() {
-        this.radarLayers.forEach(layer => {
-            if (this.map && this.map.hasLayer(layer)) {
-                this.map.removeLayer(layer);
-            }
-        });
-    },
-    
-    /**
-     * Refresh radar data
-     */
-    async refresh() {
-        this.pause();
-        this.clearLayers();
-        await this.loadRadarData();
-        this.showRadar();
-    },
-    
-    /**
-     * Stop animation and hide radar
-     */
+
     stop() {
         this.pause();
         this.hideRadar();
     },
-    
-    /**
-     * Set radar layer opacity
-     * @param {number} opacity - Value between 0 and 1
-     */
-    setOpacity(opacity) {
-        this.opacity = Math.max(0, Math.min(1, opacity));
-        if (this.radarLayers[this.currentFrameIndex]) {
+
+    // ── Settings ──
+    setOpacity(val) {
+        this.opacity = Math.max(0, Math.min(1, val));
+        // Only update the currently-visible frame
+        if (this._active && this.radarLayers[this.currentFrameIndex]) {
             this.radarLayers[this.currentFrameIndex].setOpacity(this.opacity);
         }
     },
-    
-    /**
-     * Set color scheme and reload layers
-     * @param {number} scheme - RainViewer color scheme (0-8)
-     */
+
     async setColorScheme(scheme) {
         this.colorScheme = scheme;
-        // Reload data with new color scheme
-        await this.loadRadarData();
-        if (this.radarLayers.length > 0) {
-            this.showFrame(this.currentFrameIndex);
+        const wasPlaying = this.isPlaying;
+        this.pause();
+        this._removeAllFromMap();
+        await this._fetchAndBuild();
+        if (this._active) {
+            this.updateTimeLabels();
+            this._applyFrame(this.currentFrameIndex);
+            if (wasPlaying) this.play();
         }
     },
-    
-    /**
-     * Update progress bar in UI
-     */
-    updateProgress() {
-        const progress = document.getElementById('radar-progress');
-        if (progress && this.radarLayers.length > 0) {
-            const percent = (this.currentFrameIndex / (this.radarLayers.length - 1)) * 100;
-            progress.style.width = `${percent}%`;
+
+    async refresh() {
+        const wasPlaying = this.isPlaying;
+        this.pause();
+        this._removeAllFromMap();
+        await this._fetchAndBuild();
+        if (this._active) {
+            this.updateTimeLabels();
+            this._applyFrame(this.currentFrameIndex);
+            if (wasPlaying) this.play();
         }
-    }
+    },
+
+    // ── UI helpers ──
+    _updateUI() {
+        this.updateCurrentTimeLabel();
+        this.updateProgress();
+    },
+
+    updateTimeLabels() {
+        if (this.timestamps.length === 0) return;
+        const s = document.getElementById('radar-time-start');
+        const e = document.getElementById('radar-time-end');
+        if (s) s.textContent = this.formatTime(this.timestamps[0].time);
+        if (e) e.textContent = this.formatTime(this.timestamps[this.timestamps.length - 1].time);
+        this.updateCurrentTimeLabel();
+    },
+
+    updateCurrentTimeLabel() {
+        const el = document.getElementById('radar-time-current');
+        if (!el || !this.timestamps[this.currentFrameIndex]) return;
+        const time = this.timestamps[this.currentFrameIndex].time;
+        let label = this.formatTime(time);
+        const now  = Math.floor(Date.now() / 1000);
+        const diff = time - now;
+        if (Math.abs(diff) < 300)      label += ' (ORA)';
+        else if (diff > 0)             label += ` (+${Math.round(diff / 60)}min)`;
+        el.textContent = label;
+    },
+
+    updateProgress() {
+        const bar = document.getElementById('radar-progress');
+        if (bar && this.radarLayers.length > 1) {
+            bar.style.width = `${(this.currentFrameIndex / (this.radarLayers.length - 1)) * 100}%`;
+        }
+    },
+
+    formatTime(unixTime) {
+        return new Date(unixTime * 1000).toLocaleTimeString('it-IT', {
+            hour: '2-digit', minute: '2-digit'
+        });
+    },
+
+    // ── Internal: remove all layers from map (but keep radarLayers array) ──
+    _removeAllFromMap() {
+        this.radarLayers.forEach(l => {
+            if (this.map?.hasLayer(l)) this.map.removeLayer(l);
+        });
+    },
+
+    // Legacy alias kept for any external callers
+    clearLayers() { this._removeAllFromMap(); }
 };
 
-// Make it globally available
 window.RadarService = RadarService;
